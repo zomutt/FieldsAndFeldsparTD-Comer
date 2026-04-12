@@ -24,6 +24,10 @@ public class CastleStats
     private float armor;
     public float Armor => armor;
 
+    // The castle is intended to be able to protect itself.
+    private float damage;
+    public float Damage => damage;
+
     // Gold is used as the currency for towers and upgrades. It is obtained by killing enemies.
     // Gold lives on Castle because it is more or less the equivalent of "points"
     private int currentGold;
@@ -86,12 +90,12 @@ public class CastleStats
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         Debug.Log($"Castle repaired! New castle HP: {currentHealth}");
     }
-    public void TakeDamage(int damage)
+    public void TakeDamage(float rawDamage)
     {
         if (isInvincible) return;
 
         float armorReduction = (1 - armor);      // Ex: 1.00 - .1 = 90% damage taken
-        float incomingDamage = damage * armorReduction;
+        float incomingDamage = rawDamage * armorReduction;
         currentHealth -= incomingDamage;
         Debug.Log($"Castle has been damaged! Damage taken: {incomingDamage}, New HP: {currentHealth}");
         UIController.Instance.UpdateUI();
