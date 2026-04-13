@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
-
+using System.Collections.Generic;
 public class CastleStats
 {
     /// <summary>
@@ -37,10 +38,14 @@ public class CastleStats
     private bool hasShield;
     public bool HasShield => hasShield;
 
-    // This works for both the shields and the coroutine.
+    // This works for both the shields and the iframe coroutine.
+
     private bool isInvincible;
     public bool IsInvincible => isInvincible;
-
+    public void SetInvincible(bool value)
+    {
+        isInvincible = value;
+    }
     // If the player loses during a level, they do not restart from the beginning of the game.
     // They start at the beginning of the level and get to keep whatever upgrades they had initially.
     // Ex: If during level one they get +5 maxHP, they go into level two with that +5 maxHP
@@ -65,6 +70,7 @@ public class CastleStats
         maxHealth = savedMaxHealth;
         armor = SavedArmor;
         currentGold = SavedGold;
+        isInvincible = false;
     }
     public void SetStatsInitial()
     {
@@ -98,9 +104,11 @@ public class CastleStats
         float incomingDamage = rawDamage * armorReduction;
         currentHealth -= incomingDamage;
         Debug.Log($"Castle has been damaged! Damage taken: {incomingDamage}, New HP: {currentHealth}");
+        CastleDamageHandler.Instance.BeginIframe();
         UIController.Instance.UpdateUI();
         if (currentHealth <= 0)
         {
+            CastleDamageHandler.Instance.ClearAllDamageCoroutines();
             Debug.Log("CastleStats: Castle destroyed! Game over.");
             GameManager.Instance.CastleDestroyed();
         }

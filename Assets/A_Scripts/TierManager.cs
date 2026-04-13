@@ -8,4 +8,7 @@ public class TierManager : MonoBehaviour
     private int tier2Mobs;
     private int tier3Mobs;
     private int bossMobs;     // Typically 1, but this allows for flexibility for having 3 weaker bosses as a boss wave
+
+    private int enemiesKilled;
+    internal int EnemiesKilled => enemiesKilled;
 }
