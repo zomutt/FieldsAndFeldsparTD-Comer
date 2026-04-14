@@ -5,24 +5,21 @@ using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
-/// Manages Tier 1 spawns using object pooling.
+/// Manages spawns using object pooling.
 /// Spawns enemies from three lane-specific spawners, each with its own lane target.
-/// These tier scripts are kept separate for clarity and debugging at my current skill level.
-/// I plan to consolidate all tiers into a single system for my portfolio once I have more experience with multi-tier structures.
 /// </summary>
 
 public class WaveSpawnPool : MonoBehaviour
 {
     [Header("Prefabs and Spawn Delay")]
-    [SerializeField] private GameObject[] tier1Prefabs;
+    [SerializeField] private GameObject[] tierPrefabs;
     [SerializeField] private float spawnDelay;
 
 
     [Header("Amount To Spawn (Must be divisible by 3)")]
-    [Tooltip("Since there are 3 spawners, anything not divisible by 3 will cause overshoots and bugs.")]
+    [Tooltip("This is checked on validate.")]
     // Public because TierManager needs to know how many mobs are supposed to be in each tier
-    internal int amountToPool;
-
+    public int amountToPool;
 
     [Header("Spawners")]
     // These are what the mobs spawn from, the left/right is from perspective of the castle
@@ -30,17 +27,17 @@ public class WaveSpawnPool : MonoBehaviour
     [SerializeField] private Transform spawnerLeft;
     [SerializeField] private Transform spawnerRight;
 
-
-    [Header("Lane Targets")]
-    // The lane targets are used to prevent funneling and leaking to one side
-    [SerializeField] private Transform laneTargetMid;
-    [SerializeField] private Transform laneTargetLeft;
-    [SerializeField] private Transform laneTargetRight;
-
-
     private int amountSpawned;
     private List<GameObject> pooledObjects;
 
+    private void OnValidate()
+    {
+        if (amountToPool % 3 != 0)
+        {
+            Debug.LogWarning($"{name}: amountToPool must be divisible by 3. Adjusting automatically.");
+            amountToPool -= amountToPool % 3;
+        }
+    }
     private void Start()
     {
         pooledObjects = new List<GameObject>();
@@ -48,7 +45,7 @@ public class WaveSpawnPool : MonoBehaviour
 
         for (int i = 0; i < amountToPool; i++)
         {
-            newMob = Instantiate(tier1Prefabs[Random.Range(0, tier1Prefabs.Length)]);
+            newMob = Instantiate(tierPrefabs[Random.Range(0, tierPrefabs.Length)]);
             newMob.SetActive(false);
             pooledObjects.Add(newMob);
         }
@@ -61,12 +58,12 @@ public class WaveSpawnPool : MonoBehaviour
         if (amountSpawned >= amountToPool)
         {
             // Coroutine should already be stopped, but this is a failsafe.
-            Debug.Log("All Tier 1 enemies spawned.");
+            Debug.Log("All enemies for this wave spawned.");
             StopAllCoroutines();
             gameObject.SetActive(false);
         }
     }
-    private GameObject GetPooledT1Object()
+    private GameObject GetPooledObject()
     {
         for (int i = 0; i < amountToPool; i++)
         {
@@ -86,28 +83,25 @@ public class WaveSpawnPool : MonoBehaviour
             {
                 yield break;
             }
-
             // The game loop has mobs coming from all 3 points slightly staggered out
-            SpawnMob(spawnerMid, laneTargetMid );
-            SpawnMob(spawnerLeft, laneTargetLeft);
-            SpawnMob(spawnerRight, laneTargetRight);
-
-            Debug.Log($"Tier 1 enemies spawned: {amountSpawned}/{amountToPool}");
+            SpawnMob(spawnerMid);
+            SpawnMob(spawnerLeft);
+            SpawnMob(spawnerRight);
             yield return new WaitForSeconds(spawnDelay);
         }
     }
-    private void SpawnMob(Transform spawner, Transform laneTarget)
+    private void SpawnMob(Transform spawner)
     {
-        GameObject tier1Mob = GetPooledT1Object();
-        if (tier1Mob == null) return;
-        tier1Mob.transform.position = spawner.position;
-        NavMeshAgent agent = tier1Mob.GetComponent<NavMeshAgent>();
+        GameObject mob = GetPooledObject();
+        if (mob == null) return;
+        mob.transform.position = spawner.position;
+        NavMeshAgent agent = mob.GetComponent<NavMeshAgent>();
 
         // Send mob to its lane target (mid lane, left lane, right lane)
-        agent.SetDestination(laneTarget.position);
+        agent.SetDestination(spawner.position);
 
         // Activate and count so the TierManager knows when to end the tier
-        tier1Mob.SetActive(true);
+        mob.SetActive(true);
         amountSpawned++;
     }
 }

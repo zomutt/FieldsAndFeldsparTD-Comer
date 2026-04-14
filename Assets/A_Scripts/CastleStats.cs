@@ -25,7 +25,7 @@ public class CastleStats
     private float armor;
     public float Armor => armor;
 
-    // The castle is intended to be able to protect itself.
+    // The castle is intended to be able to defend itself.
     private float damage;
     public float Damage => damage;
 
@@ -78,7 +78,9 @@ public class CastleStats
         currentHealth = maxHealth;
 
         currentGold = 100;
+
         hasShield = false;
+        isInvincible = false;
 
         savedArmor = .1f;
 
@@ -102,10 +104,13 @@ public class CastleStats
 
         float armorReduction = (1 - armor);      // Ex: 1.00 - .1 = 90% damage taken
         float incomingDamage = rawDamage * armorReduction;
+
         currentHealth -= incomingDamage;
         Debug.Log($"Castle has been damaged! Damage taken: {incomingDamage}, New HP: {currentHealth}");
+
         CastleDamageHandler.Instance.BeginIframe();
         UIController.Instance.UpdateUI();
+
         if (currentHealth <= 0)
         {
             CastleDamageHandler.Instance.ClearAllDamageCoroutines();
