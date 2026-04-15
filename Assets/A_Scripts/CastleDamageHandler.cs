@@ -7,7 +7,7 @@ public class CastleDamageHandler : MonoBehaviour
     /// This is a helper script so that the CastleStats can cleanly call Coroutines since it is a non-MonoBehaviour class.
     /// </summary>
     public static CastleDamageHandler Instance;
-
+    [SerializeField] private float castleIframe;
     private void Awake()
     {
         Instance = this;
@@ -21,7 +21,7 @@ public class CastleDamageHandler : MonoBehaviour
     {
         Debug.Log("Castle iframe called");
         CastleStats.Instance.SetInvincible(true);
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(castleIframe);
         CastleStats.Instance.SetInvincible(false);
     }
 

@@ -22,6 +22,7 @@ public abstract class EnemyBase : MonoBehaviour
     {
         currentHealth = maxHealth;
         cooldown = attackSpeed;    // Ready to attack
+        gameObject.tag = "Enemy";
     }
     protected virtual void Update()
     {

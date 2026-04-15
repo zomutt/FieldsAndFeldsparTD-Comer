@@ -14,10 +14,10 @@ public class TowerStats
 
     private float savedShooterDamage;          // Upgrades are saved and stored when advancing level. This tells the tower what to revert to if the player loses a round after advancing.
 
-    private float shooterRange;
-    public float ShooterRange => shooterRange;
+    private float shooterCD;
+    public float ShooterCD => shooterCD;
 
-    private float savedShooterRange;
+    private float savedShooterCD;
 
     private float shooterCost;
     public float ShooterCost => shooterCost;
@@ -28,10 +28,10 @@ public class TowerStats
 
     private float savedAoeDamage;
 
-    private float aoeRange;
-    public float AoeRange => aoeRange;
+    private float aoeCD;
+    public float AoeCD => aoeCD;
 
-    private float savedAoeRange;
+    private float savedAoeCD;
 
     private float aoeCost;
     public float AoeCost => aoeCost;
@@ -48,10 +48,10 @@ public class TowerStats
     {
         // Called when level is won
         savedShooterDamage = shooterDamage;
-        savedShooterRange = shooterRange;
+        savedShooterCD = shooterCD;
 
         savedAoeDamage = aoeDamage;
-        savedAoeRange = aoeRange;
+        savedAoeCD = aoeCD;
 
         savedGoldPerSec = goldPerSec;
     }
@@ -59,10 +59,10 @@ public class TowerStats
     {
         // Called when level is lost
         shooterDamage = savedShooterDamage;
-        shooterRange = savedShooterRange;
+        shooterCD = savedShooterCD;
 
         aoeDamage = savedAoeDamage;
-        aoeRange = savedAoeRange;
+        aoeCD = savedAoeCD;
 
         goldPerSec = savedGoldPerSec;
     }
@@ -71,10 +71,10 @@ public class TowerStats
         shooterDamage += damage;
         Debug.Log($"New shooter tower damage: {shooterDamage}");
     }
-    internal void UpgradeShooterRange(float range)
+    internal void UpgradeShooterCD(float cd)
     { 
-        shooterRange += range;
-        Debug.Log($"New shooter range: {shooterRange}");
+        shooterCD -= cd;
+        Debug.Log($"New shooter range: {shooterCD}");
     }
     internal void IncreaseShooterCost(float cost)
     {
@@ -86,10 +86,10 @@ public class TowerStats
         aoeDamage += damage;
         Debug.Log($"New aoe damage: {aoeDamage}");
     }
-    internal void UpgradeAoeRange(float range)
+    internal void UpgradeAoeCD(float range)
     {
-        aoeRange += range;
-        Debug.Log($"New aoe range: {aoeRange}");
+        aoeCD += range;
+        Debug.Log($"New aoe range: {aoeCD}");
     }
     internal void IncreaseAoeCost(float cost)
     {

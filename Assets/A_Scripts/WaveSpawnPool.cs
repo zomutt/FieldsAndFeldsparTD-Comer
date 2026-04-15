@@ -5,8 +5,10 @@ using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
-/// Manages spawns using object pooling.
-/// Spawns enemies from three lane-specific spawners, each with its own lane target.
+/// This is a universal spawner script for all 3 enemy tiers.
+/// Spawns enemies from three lane-specific spawners that are randomly picked from the given prefabs.
+/// Each tier has it's own GameObject where the specifics of what to spawn and how many to spawn are placed.
+/// The TierManager.cs controls which wave-specific spawner is active or inactive.
 /// </summary>
 
 public class WaveSpawnPool : MonoBehaviour
@@ -17,7 +19,7 @@ public class WaveSpawnPool : MonoBehaviour
 
 
     [Header("Amount To Spawn (Must be divisible by 3)")]
-    [Tooltip("This is checked on validate.")]
+    [Tooltip("This is corrected on validate if the divident is not evenly divisible by 3.")]
     // Public because TierManager needs to know how many mobs are supposed to be in each tier
     public int amountToPool;
 
@@ -95,12 +97,6 @@ public class WaveSpawnPool : MonoBehaviour
         GameObject mob = GetPooledObject();
         if (mob == null) return;
         mob.transform.position = spawner.position;
-        NavMeshAgent agent = mob.GetComponent<NavMeshAgent>();
-
-        // Send mob to its lane target (mid lane, left lane, right lane)
-        agent.SetDestination(spawner.position);
-
-        // Activate and count so the TierManager knows when to end the tier
         mob.SetActive(true);
         amountSpawned++;
     }
