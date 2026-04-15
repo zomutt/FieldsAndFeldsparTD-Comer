@@ -18,7 +18,7 @@ public class WaveSpawnPool : MonoBehaviour
     [SerializeField] private float spawnDelay;
 
 
-    [Header("Amount To Spawn (Must be divisible by 3)")]
+    [Header("Amount To Spawn (Corrected in Validate if not divisible by 3.)")]
     [Tooltip("This is corrected on validate if the divident is not evenly divisible by 3.")]
     // Public because TierManager needs to know how many mobs are supposed to be in each tier
     public int amountToPool;

@@ -7,6 +7,8 @@ TagManager:
   - Ground
   - Castle
   - Tower
+  - BuildArea
+  - Enemy
   layers:
   - Default
   - TransparentFX

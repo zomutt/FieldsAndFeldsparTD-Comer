@@ -19,7 +19,6 @@ public class CastleDamageHandler : MonoBehaviour
     }
     private IEnumerator Iframe()
     {
-        Debug.Log("Castle iframe called");
         CastleStats.Instance.SetInvincible(true);
         yield return new WaitForSeconds(castleIframe);
         CastleStats.Instance.SetInvincible(false);

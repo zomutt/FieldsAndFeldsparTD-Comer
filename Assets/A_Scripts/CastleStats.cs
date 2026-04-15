@@ -106,7 +106,6 @@ public class CastleStats
         float incomingDamage = rawDamage * armorReduction;
 
         currentHealth -= incomingDamage;
-        Debug.Log($"Castle has been damaged! Damage taken: {incomingDamage}, New HP: {currentHealth}");
 
         CastleDamageHandler.Instance.BeginIframe();
         UIController.Instance.UpdateUI();

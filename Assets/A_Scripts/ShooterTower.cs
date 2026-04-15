@@ -6,24 +6,22 @@ public class ShooterTower : TowerBase
 {
     [Header("Shooter Tower Stats")]
     [SerializeField] private float damage;
-    [SerializeField] private float range;
     [SerializeField] private float cost;
-    [SerializeField] private float timeBetweenAttacks;
     private float cooldown;
 
     [Header("Attacks")]
-    [SerializeField] private GameObject shooterPrefab;
+    [SerializeField] private GameObject projectilePrefab;
 
     // Defaults to attacking the first enemy to enter radius
-    private void OnEnable()
-    {
-        cooldown = timeBetweenAttacks;   // Begin ready to attack
-    }
+    //private void OnEnable()
+    //{
+    //    cooldown = timeBetweenAttacks;   // Begin ready to attack
+    //}
 
-    private void Update()
-    {
-        cooldown -= Time.deltaTime;
-    }
+    //private override void Update()
+    //{
+    //    cooldown -= Time.deltaTime;
+    //}
     private void GetCurrentTarget()
     {
         if (targetsInRange.Count <= 0)

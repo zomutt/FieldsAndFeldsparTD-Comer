@@ -1,11 +1,17 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TowerBase : MonoBehaviour
 {
     protected List<EnemyBase> targetsInRange = new();
     protected EnemyBase currentTarget;
+    protected float timeBetweenAttacks;
 
+    protected virtual void OnEnable()
+    {
+
+    }
     protected virtual void Update()
     {
         GetCurrentTarget();
