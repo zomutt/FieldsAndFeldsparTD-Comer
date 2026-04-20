@@ -10,8 +10,8 @@ public class EnemyMovement : MonoBehaviour
     // The castle, aka the enemies objective
     private Transform castleTransform;
     NavMeshAgent agent;
-
     [SerializeField] private float speed;
+    internal float Speed => speed;          // Needed so that enemy can never out run projectiles
 
 
     private void Awake()
@@ -27,10 +27,5 @@ public class EnemyMovement : MonoBehaviour
 
         // This makes it less likely for enemies to stack on top of each other
         agent.avoidancePriority = Random.Range(30, 70);
-    }
-    public void SetSpeed(float newSpeed)
-    {
-        // This is here for when I wish to add mechanics that increase movement speed
-        agent.speed = newSpeed;
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TierManager : MonoBehaviour
@@ -10,60 +11,78 @@ public class TierManager : MonoBehaviour
     /// </summary>
     public static TierManager Instance;
 
-    // Tier 1, 2, and 3
-    [SerializeField] private GameObject[] waveSpawners;
     // Starts on tier 1
-    private int waveIndex = 0;
-    private int expectedMobs;
+    private int currentTier;
+
+    // Grabbed from WaveSpawnPool.cs
+    private int expectedSpawns;
+    private int currentSpawns;
+
     // Increased each time a mob is killed from mob script
     private int mobsKilled;
-    [SerializeField] private float waveSpawnDelay;
 
+    [SerializeField] private Transform[] waveSpawners;      // The red portals the enemies come from
+    [SerializeField] private float waveSpawnDelay;
+    [SerializeField] private float timeBetweenSpawns = .2f;
+    private float spawnCD;
+    private bool canSpawn;
     private void Awake()
     {
         Instance = this;
+
+        spawnCD = timeBetweenSpawns;
     }
-    internal void StartWave()
+    public void StartLevel()
     {
-        GameObject spawnerGO = waveSpawners[waveIndex];
-        WaveSpawnPool activePool = spawnerGO.GetComponent<WaveSpawnPool>();
-
-        // Gets the amount pooled from the GO the script is on
-        // This is because it's assigned in inspector because it's 1 script for 3 waves
-        expectedMobs = activePool.amountToPool;
-        mobsKilled = 0;
-        spawnerGO.SetActive(true);
-
-        Debug.Log($"Wave: {waveIndex + 1}, Expected mobs: {expectedMobs}");
+        currentTier = 1;
+        Debug.Log("TM: StartLevel called");
+        StartCoroutine(WaveSpawnDelay());
     }
-    internal void RecordKill()
+    public void RecordKill()
     {
         // Called by enemy base script anytime a mob is destroyed
         mobsKilled++;
-
-        if (mobsKilled >=  expectedMobs)
+        if (mobsKilled >= expectedSpawns)
         {
-            NextWave();
+            Debug.Log($"Wave {currentTier} cleared!");
+            currentTier++;
+            if (currentTier < 3)
+            {
+                StartCoroutine(WaveSpawnDelay());
+            }
+            else Debug.Log("TM: All waves complete. Boss logic next.");
         }
     }
-    private void NextWave()
+    private IEnumerator WaveSpawnDelay()
     {
-        waveIndex++;
-
-        if (waveIndex < waveSpawners.Length)
-        {
-            StartCoroutine(WaveCooldown());
-        }
-        else
-        {
-            // Spawn boss logic goes here. Boss is it's own prefab with it's own logic, plus it's instantiated since that is lightweight.
-            Debug.Log("All waves finished.");
-        }
-    }
-    private IEnumerator WaveCooldown()
-    {
-        // Timer display logic will go here.
         yield return new WaitForSeconds(waveSpawnDelay);
-        StartWave();
+        Debug.Log("TM: WaveSpawnDelay called.");
+        StartNewWave();
+    }
+    private void StartNewWave()
+    {
+        // Gets the amount pooled
+        expectedSpawns = WaveSpawnPool.Instance.GetAmountToSpawn(currentTier);
+        currentSpawns = 0;
+        StartCoroutine(SpawnEnemyWithDelay());
+    }
+
+    // Calls 1 enemy per 3 spawners, tracks how many enemies were spawned, and gives a small buffer window before spawning the next
+    private IEnumerator SpawnEnemyWithDelay()
+    {
+        while (currentSpawns < expectedSpawns)
+        {
+            foreach (Transform t in waveSpawners)
+            {
+                if (currentSpawns >= expectedSpawns)
+                { 
+                    break; 
+                }
+                GameObject enemy = WaveSpawnPool.Instance.GetEnemy((WaveSpawnPool.TierLevel)currentTier);
+                enemy.transform.position = t.position;
+                currentSpawns++;
+            }
+            yield return new WaitForSeconds(timeBetweenSpawns);
+        }
     }
 }

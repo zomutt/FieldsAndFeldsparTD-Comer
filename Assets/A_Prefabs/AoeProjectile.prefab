@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3383815479542342750}
   - component: {fileID: 7736217568091006953}
   m_Layer: 0
-  m_Name: AoePrefab
+  m_Name: AoeProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

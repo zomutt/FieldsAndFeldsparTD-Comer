@@ -23,6 +23,7 @@ public class ShooterTower : TowerBase
         }
         // Calls to get the projectile from spawner script
         GameObject projectile = DamagePool.SharedInstance.GetProjectile(DamagePool.DamageType.Shooter);
+
         projectile.transform.position = transform.position;
         projectile.SetActive(true);
 

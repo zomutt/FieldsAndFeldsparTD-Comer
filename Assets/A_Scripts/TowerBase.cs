@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-
+/// <summary>
+/// This holds all the behaviour that any tower should need for targeting.
+/// Since attacks differ by tower, the individual towers inherit targeting and attack speed, but change actual attack logic as needed.
+/// </summary>
 public class TowerBase : MonoBehaviour
 {
     protected List<EnemyBase> targetsInRange = new();
@@ -16,7 +19,7 @@ public class TowerBase : MonoBehaviour
     protected virtual void Start()
     {
         towerLocation = transform.position;
-        timeBetweenAttacks = TowerStats.Instance.ShooterCD;
+        timeBetweenAttacks = TowerStats.Instance.ShooterCD;      // Functions as attack speed
     }
     protected virtual void Update()
     {
@@ -61,8 +64,15 @@ public class TowerBase : MonoBehaviour
     }
     private void GetCurrentTarget()
     {
-        // All enemies also have the same movement speed, so there won't be any racing ahead of others that could cause this to break (this will get refactored later as various enemies are added)
-        // This is meant to target the first enemy that enters the radius, that being the enemy closest to the tower (FIFO)
+        // Null-check is edgecase-safe, checking for activeinHierarchy ensures we can find another target if the first target dies
+        bool IsInvalidEnemy(EnemyBase enemy) 
+        {
+            return enemy == null || !enemy.gameObject.activeInHierarchy;
+        }
+        targetsInRange.RemoveAll(IsInvalidEnemy);
+
+        // FIFO targeting: first enemy that entered the radius = first enemy that gets attacked
+        // This will be replaced with more advanced targeting logic once enemy variety increases.
         if (targetsInRange.Count <= 0)
         {
             currentTarget = null;

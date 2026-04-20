@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7736217568091006953}
   - component: {fileID: 5393065622724155082}
   m_Layer: 0
-  m_Name: ShooterPrefab
+  m_Name: ShooterProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -153,6 +153,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3f6e63bfef190b49a04266315e2b551, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShooterProjectile
-  speed: 5
+  speed: 10
   towerStats: {fileID: 11400000, guid: 23c40ff1245ae1b43b15d734709edefa, type: 2}
-  lifeTime: 1
+  hitRadius: 0.2

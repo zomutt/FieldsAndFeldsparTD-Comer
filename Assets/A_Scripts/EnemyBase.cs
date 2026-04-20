@@ -14,24 +14,19 @@ public abstract class EnemyBase : MonoBehaviour
     protected float cooldown;
     [SerializeField] protected float armor;    // Reduces damage by flat amount
 
-    [Header("Visuals")]
-    // Particle effects will spawn for visual feedback
-    [SerializeField] protected GameObject deathFeedback;
     protected virtual void OnEnable()
     {
         currentHealth = maxHealth;
-        cooldown = attackSpeed;    // Ready to attack
+        cooldown = attackSpeed;
         gameObject.tag = "Enemy";
     }
     protected virtual void Update()
     {
-        // Continuously updates cooldown
         cooldown -= Time.deltaTime;
     }
     internal virtual void TakeDamage(float rawDamage)
     {
         float incomingDamage = rawDamage - armor;
-
         currentHealth -= incomingDamage;
         if (currentHealth <= 0)
         {
@@ -41,8 +36,8 @@ public abstract class EnemyBase : MonoBehaviour
     internal virtual void DisableEnemy()
     {
         //TierManager.Instance.RecordKill();     // Tracks how many kills have occurred vs. how many mobs spawn in the tier
-        StopAllCoroutines();
-        gameObject.SetActive(false);
+        ParticlePool.Instance.SpawnDeathEffect(transform.position);
+        gameObject.SetActive(false);  
     }
     protected virtual void OnTriggerStay(Collider other)
     {

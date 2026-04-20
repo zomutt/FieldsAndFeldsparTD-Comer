@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -13,6 +14,7 @@ public class TowerSpawners : MonoBehaviour
         AOE = 2,
         Gold = 3
     }
+    [Header("Towers -- Double check index until I refactor this")]
     [SerializeField] private GameObject[] towerPrefabs;
     private bool isOccupied;
 
