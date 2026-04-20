@@ -13,24 +13,20 @@ public class TierManager : MonoBehaviour
 
     // Starts on tier 1
     private int currentTier;
+    //public int CurrentTier => currentTier;
 
     // Grabbed from WaveSpawnPool.cs
     private int expectedSpawns;
+    //public int ExpectedSpawns => expectedSpawns;
     private int currentSpawns;
-
     // Increased each time a mob is killed from mob script
     private int mobsKilled;
-
-    [SerializeField] private Transform[] waveSpawners;      // The red portals the enemies come from
     [SerializeField] private float waveSpawnDelay;
     [SerializeField] private float timeBetweenSpawns = .2f;
-    private float spawnCD;
-    private bool canSpawn;
+    [SerializeField] private EnemySpawner[] spawners;
     private void Awake()
     {
         Instance = this;
-
-        spawnCD = timeBetweenSpawns;
     }
     public void StartLevel()
     {
@@ -46,7 +42,7 @@ public class TierManager : MonoBehaviour
         {
             Debug.Log($"Wave {currentTier} cleared!");
             currentTier++;
-            if (currentTier < 3)
+            if (currentTier < 4)
             {
                 StartCoroutine(WaveSpawnDelay());
             }
@@ -57,32 +53,28 @@ public class TierManager : MonoBehaviour
     {
         yield return new WaitForSeconds(waveSpawnDelay);
         Debug.Log("TM: WaveSpawnDelay called.");
-        StartNewWave();
+        StartCoroutine(SpawnEnemies());
     }
-    private void StartNewWave()
+    private IEnumerator SpawnEnemies()
     {
-        // Gets the amount pooled
         expectedSpawns = WaveSpawnPool.Instance.GetAmountToSpawn(currentTier);
-        currentSpawns = 0;
-        StartCoroutine(SpawnEnemyWithDelay());
-    }
+        Debug.Log($"Expected spawns: {expectedSpawns}");
+        Debug.Log("TM SpawnEnemies called");
 
-    // Calls 1 enemy per 3 spawners, tracks how many enemies were spawned, and gives a small buffer window before spawning the next
-    private IEnumerator SpawnEnemyWithDelay()
-    {
+        // Get all three spawners from the scene
+        // Tracks how many spawns have occured vs. what the spawn pool actually is
         while (currentSpawns < expectedSpawns)
         {
-            foreach (Transform t in waveSpawners)
+            foreach (EnemySpawner spawner in spawners)
             {
                 if (currentSpawns >= expectedSpawns)
-                { 
-                    break; 
-                }
-                GameObject enemy = WaveSpawnPool.Instance.GetEnemy((WaveSpawnPool.TierLevel)currentTier);
-                enemy.transform.position = t.position;
+                    break;
+
+                spawner.SpawnEnemy(currentTier);
                 currentSpawns++;
+                yield return new WaitForSeconds(timeBetweenSpawns);
             }
-            yield return new WaitForSeconds(timeBetweenSpawns);
         }
+        yield return null;
     }
 }

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -952963203736381197}
   - component: {fileID: 5649781864716384254}
   - component: {fileID: -6156505249673683725}
+  - component: {fileID: -3434621883020153433}
   m_Layer: 0
   m_Name: Tier2Test
   m_TagString: Untagged
@@ -199,3 +200,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-3434621883020153433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8722931411032596606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a96b11993652ce419e28cda9cc8b657, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BasicEnemy
+  maxHealth: 150
+  damage: 10
+  attackDelay: 0.2
+  armor: 3

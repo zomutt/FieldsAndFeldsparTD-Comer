@@ -221,7 +221,6 @@ MonoBehaviour:
   damage: 5
   attackSpeed: 0.2
   armor: 1
-  deathParticles: {fileID: 7328261004249746251, guid: b9a8815e9017e1645b46d6397982aed3, type: 3}
 --- !u!1001 &5791368787907456279
 PrefabInstance:
   m_ObjectHideFlags: 0

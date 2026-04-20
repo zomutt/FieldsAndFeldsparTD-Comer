@@ -5,10 +5,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     private int currentLevel;
-    public int CurrentLevel => currentLevel;
 
     private int currentTier;
-    public int CurrentTier => currentTier;
     private void Awake()
     {
         if (Instance == null)

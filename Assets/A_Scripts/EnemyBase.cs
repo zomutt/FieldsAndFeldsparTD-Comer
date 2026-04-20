@@ -10,15 +10,17 @@ public abstract class EnemyBase : MonoBehaviour
     protected float currentHealth;
 
     [SerializeField] protected float damage;
-    [SerializeField] protected float attackSpeed;   // Seconds between each shot
+    [SerializeField] protected float attackDelay;   // Seconds between each shot
     protected float cooldown;
     [SerializeField] protected float armor;    // Reduces damage by flat amount
+    protected bool hasCounted;     // If the kill has been logged or not
 
     protected virtual void OnEnable()
     {
         currentHealth = maxHealth;
-        cooldown = attackSpeed;
+        cooldown = attackDelay;
         gameObject.tag = "Enemy";
+        hasCounted = false;
     }
     protected virtual void Update()
     {
@@ -35,8 +37,12 @@ public abstract class EnemyBase : MonoBehaviour
     }
     internal virtual void DisableEnemy()
     {
-        //TierManager.Instance.RecordKill();     // Tracks how many kills have occurred vs. how many mobs spawn in the tier
-        ParticlePool.Instance.SpawnDeathEffect(transform.position);
+        if (!hasCounted)
+        {
+            TierManager.Instance.RecordKill();     // Tracks how many kills have occurred vs. how many mobs spawn in the tier
+            ParticlePool.Instance.SpawnDeathEffect(transform.position);
+            hasCounted = true;
+        }
         gameObject.SetActive(false);  
     }
     protected virtual void OnTriggerStay(Collider other)
@@ -51,6 +57,6 @@ public abstract class EnemyBase : MonoBehaviour
     {
         if (cooldown > 0f) return;
         CastleStats.Instance.TakeDamage(damage);
-        cooldown = attackSpeed;      // CD reset
+        cooldown = attackDelay;      // CD reset
     }
 }

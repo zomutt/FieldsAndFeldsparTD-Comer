@@ -45,8 +45,6 @@ public class WaveSpawnPool : MonoBehaviour
         Tier3 = 3,
     }
     private Dictionary<TierLevel, ObjectPool<GameObject>> pools;
-
-
     private void OnValidate()
     {
         // This basically autocorrects if the int given in inspector is not evenly divisible by three.
@@ -71,10 +69,10 @@ public class WaveSpawnPool : MonoBehaviour
         Instance = this;
 
         tier1Pool = new ObjectPool<GameObject>(
-            createFunc: () => Instantiate(tier1Prefabs[Random.Range(0, tier1Prefabs.Length)]),
+            createFunc: () => Instantiate(tier1Prefabs[Random.Range(0, tier1Prefabs.Length)]),      // Random enemy from the prefab array -- this is to add more variety to the level
             actionOnGet: (enemy) => enemy.SetActive(true),
             actionOnRelease: (enemy) => enemy.SetActive(false),
-            defaultCapacity: tier1ToPool, maxSize: tier1ToPool
+            defaultCapacity: tier1ToPool, maxSize: tier1ToPool            // These are the same because there should only be an exact number of spawns -- no more, no less.
         );
 
         tier2Pool = new ObjectPool<GameObject>(
@@ -98,13 +96,12 @@ public class WaveSpawnPool : MonoBehaviour
             { TierLevel.Tier2, tier2Pool },
             { TierLevel.Tier3, tier3Pool }
         };
-
     }
     public GameObject GetEnemy(TierLevel tier)
     {
+        // Called by EnemySpawner.cs to determine what to spawn
         return pools[tier].Get();
     }
-
     // Called by TierManager.cs to determine how many enemies should be spawning
     public int GetAmountToSpawn(int tier)          
     {

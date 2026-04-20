@@ -7,6 +7,7 @@ public class CastleStats
     /// <summary>
     /// The Castle in this game acts as the stationary player, and thus, takes on a lot of the same attributes as a PlayerStats.cs script would.
     /// This includes health, upgrades, and currency.
+    /// Of course, our player is also the builder (invulerable, does not fight), but that serves more as a simple tool to construct towers rather than the the thing to protect.
     /// </summary>
     public static CastleStats Instance { get; private set; } = new CastleStats();
 
@@ -115,6 +116,7 @@ public class CastleStats
             CastleDamageHandler.Instance.ClearAllDamageCoroutines();
             Debug.Log("CastleStats: Castle destroyed! Game over.");
             GameManager.Instance.CastleDestroyed();
+            WaveSpawnPool.Instance.StopAllCoroutines();
         }
     }
 }
