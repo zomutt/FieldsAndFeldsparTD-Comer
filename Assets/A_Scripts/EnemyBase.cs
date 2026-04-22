@@ -14,6 +14,7 @@ public abstract class EnemyBase : MonoBehaviour
     protected float cooldown;
     [SerializeField] protected float armor;    // Reduces damage by flat amount
     protected bool hasCounted;     // If the kill has been logged or not
+    protected float incomingDamage;
 
     protected virtual void OnEnable()
     {
@@ -28,8 +29,18 @@ public abstract class EnemyBase : MonoBehaviour
     }
     internal virtual void TakeDamage(float rawDamage)
     {
-        float incomingDamage = rawDamage - armor;
+        if (armor > rawDamage)
+        {
+            // Makes sure nothing can accidentally heal the enemy
+            incomingDamage = 1;
+        }
+        else
+        {
+            incomingDamage = rawDamage - armor;
+        }
+
         currentHealth -= incomingDamage;
+
         if (currentHealth <= 0)
         {
             DisableEnemy();
@@ -41,7 +52,7 @@ public abstract class EnemyBase : MonoBehaviour
         {
             TierManager.Instance.RecordKill();     // Tracks how many kills have occurred vs. how many mobs spawn in the tier
             ParticlePool.Instance.SpawnDeathEffect(transform.position);
-            hasCounted = true;
+            hasCounted = true;    // Ensures no double-counting edge case
         }
         gameObject.SetActive(false);  
     }

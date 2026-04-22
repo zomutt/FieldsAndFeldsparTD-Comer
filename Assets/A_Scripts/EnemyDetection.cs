@@ -20,14 +20,14 @@ public class EnemyDetection : MonoBehaviour
         {
             // Adds enemy to in range target list
             // Choosing EnemyBase specifically instead of other scripts gaurantees this method will work on all enemies
-            tower.AddTargetToInRangeList(other.GetComponent<EnemyBase>());
+            tower.AddToRangeList(other.GetComponent<EnemyBase>());
         }
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
-            tower.RemoveTargetFromInRangeList(other.GetComponent<EnemyBase>());
+            tower.RemoveFromRangeList(other.GetComponent<EnemyBase>());
         }
     }
 }

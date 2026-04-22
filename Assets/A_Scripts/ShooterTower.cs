@@ -14,7 +14,7 @@ public class ShooterTower : TowerBase
             Shoot();
         }
     }
-    void Shoot()
+    private void Shoot()
     {
         if (currentTarget == null || !currentTarget.gameObject.activeSelf)
         {
@@ -33,12 +33,12 @@ public class ShooterTower : TowerBase
 
         ResetCooldown();
     }
-    bool IsReadyToAttack()
+    private bool IsReadyToAttack()
     {
         // As in, not on CD
         return cooldown <= 0f;
     }
-    void ResetCooldown()
+    private void ResetCooldown()
     {
         cooldown = timeBetweenAttacks;
     }

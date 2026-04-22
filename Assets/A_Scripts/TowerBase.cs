@@ -36,24 +36,24 @@ public class TowerBase : MonoBehaviour
         if (other.CompareTag("Enemy"))
         {
             // Adds enemy to in range target list
-            AddTargetToInRangeList(other.GetComponent<EnemyBase>());
+            AddToRangeList(other.GetComponent<EnemyBase>());
         }
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
-            RemoveTargetFromInRangeList(other.GetComponent<EnemyBase>());
+            RemoveFromRangeList(other.GetComponent<EnemyBase>());
         }
     }
-    public void AddTargetToInRangeList(EnemyBase target)
+    public void AddToRangeList(EnemyBase target)
     {
         if (!targetsInRange.Contains(target))
         {
             targetsInRange.Add(target);
         }
     }
-    public void RemoveTargetFromInRangeList(EnemyBase target)
+    public void RemoveFromRangeList(EnemyBase target)
     {
         targetsInRange.Remove(target);
 
@@ -65,7 +65,7 @@ public class TowerBase : MonoBehaviour
     private void GetCurrentTarget()
     {
         // Null-check is edgecase-safe, checking for activeinHierarchy ensures we can find another target if the first target dies
-        bool IsInvalidEnemy(EnemyBase enemy) 
+        static bool IsInvalidEnemy(EnemyBase enemy)
         {
             return enemy == null || !enemy.gameObject.activeInHierarchy;
         }

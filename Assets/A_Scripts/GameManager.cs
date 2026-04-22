@@ -5,8 +5,6 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     private int currentLevel;
-
-    private int currentTier;
     private void Awake()
     {
         if (Instance == null)
@@ -23,6 +21,7 @@ public class GameManager : MonoBehaviour
     {
         // Only here for testing purposes
         StartGame();
+        currentLevel = 1;
     }
     private void StartGame()
     {
@@ -33,27 +32,13 @@ public class GameManager : MonoBehaviour
     {
         UIController.Instance.LoseGame();
     }
-    public void RestartLevel()
-    {
-        currentTier = 0; 
-    }
-    public void AdvanceTier()
-    {
-        if (currentTier < 5)
-        {
-            currentTier++;
-        }
-        else
-        {
-            AdvanceLevel();
-        }
-    }
     private void AdvanceLevel()
     {
         if (currentLevel < 4)
         {
             currentLevel++;
         }
+        
         else
         {
             WinGame();

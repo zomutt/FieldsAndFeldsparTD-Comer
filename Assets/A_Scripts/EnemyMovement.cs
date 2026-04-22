@@ -3,8 +3,8 @@ using UnityEngine.AI;
 
 /// <summary>
 /// This is a simple script that controls the AI movement of the enemies. 
-/// Enemies spawn -> Enemies follow nav mesh -> Enemies hit castle (handled separately) -> Castle loses hp -> GG.
-/// Three waypoints were added in (one per lane) to allow for better flow and to prevent the enemies from favoring the middle lane.
+/// Enemies spawn -> Enemies follow nav mesh to waypoint -> Enemies move to tower -> Enemies hit castle (handled separately) -> Castle loses hp -> GG.
+/// Three waypoints were added in (one per lane) to allow for better flow and to prevent the enemies from favoring the middle lane. Otherwise, they just go to mid.
 /// </summary>
 public class EnemyMovement : MonoBehaviour
 {
@@ -31,7 +31,8 @@ public class EnemyMovement : MonoBehaviour
         // This makes it less likely for enemies to stack on top of each other
         agent.avoidancePriority = Random.Range(30, 70);
 
-        // This can go in start opposed to OnEnable because an enemy is only used once -- pooling was done for optimization, not reuse
+        // This can go in start opposed to OnEnable because an enemy is only used once
+        // Pooling was done for optimization and placing the load at the beginning of the game opposed to throughout the game, not for reuse
         headingToCastle = false;
     }
     private void Update()

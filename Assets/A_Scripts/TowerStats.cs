@@ -26,6 +26,9 @@ public class TowerStats : ScriptableObject
     [SerializeField] private float aoeDamage;
     public float AoeDamage => aoeDamage;
 
+    [SerializeField] private float aoeDuration;
+    public float AoeDuration => aoeDuration;
+
     [SerializeField] private float aoeCD;
     public float AoeCD => aoeCD;
 
