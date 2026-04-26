@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4816139668518690268}
   - component: {fileID: 3383815479542342750}
   - component: {fileID: 7736217568091006953}
+  - component: {fileID: 4361251237346785656}
   m_Layer: 0
   m_Name: AoeProjectile
   m_TagString: Untagged
@@ -142,6 +143,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4361251237346785656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3716411241688149754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c487cfbad1203d47af0169e69f88d18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AoeProjectile
+  speed: 3
+  towerStats: {fileID: 11400000, guid: 23c40ff1245ae1b43b15d734709edefa, type: 2}
+  hitRadius: 0.2
+  orbRenderer: {fileID: 4816139668518690268}
 --- !u!1001 &720862918762772624
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -4,39 +4,60 @@ using UnityEngine;
 /// <summary>
 /// The AoE projectile is meant to be a DoT fireball. 
 /// When it lands, the mr is disabled, the fire remains, and it continuously deals damage to units inside the radius. 
+/// Damage can be adjusted in the TowerStats scriptable object.
 /// </summary>
 public class AoeProjectile : ProjectileBase
 {
-    private MeshRenderer mr;
     private bool canDamage;
     private bool isBurning;
     private bool burnRoutineStarted;
-
-
+    [SerializeField] private MeshRenderer orbRenderer;
     private void OnEnable()
     {
-        mr = GetComponent<MeshRenderer>();
-
-        mr.enabled = true;
+        orbRenderer.enabled = true;
         canDamage = true;
         isBurning = false;
         burnRoutineStarted = false;
+    }
+    protected override void Update()
+    {
+        if (isBurning)
+        {
+            return; // Stop base movement and auto-despawn while burning
+        }
+        base.Update();      // Handles targeting and deactivation if target null, also handles movement
+
+        // Tracks distance between projectile and target, and if it's close enough, applies damage and deactivates.
+        // This is needed because the projectile can move fast enough to skip over the target's collider.
+        float distance = Vector3.Distance(transform.position, enemyTarget.transform.position);
+        if (distance <= hitRadius)
+        {
+            enemyTarget.TakeDamage(towerStats.AoeDamage);
+            gameObject.SetActive(false);
+        }
     }
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        mr.enabled = true;     // Fail-safe
+        // Reset state so the next pooled activation starts clean
         canDamage = true;
         isBurning = false;
         burnRoutineStarted = false;
+
+        // Re-enable the orb mesh for next time
+        if (orbRenderer != null)
+        {
+            orbRenderer.enabled = true;
+        }
     }
+
     protected override void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy") && !isBurning)
         {
             // Stop moving, instead of being a projectile now it's a stationary fire
-            mr.enabled = false;
+            orbRenderer.enabled = false;     // Hides orb and makes it look like it's just a fire on the ground, but the collider is still active and can damage
             enemyTarget = null;       // Now it can't chase anything
             isBurning = true;
 
@@ -74,6 +95,13 @@ public class AoeProjectile : ProjectileBase
             // Wait until next tick
             yield return new WaitForSeconds(1f / 3f);
         }
+        EndBurn();
+    }
+    private void EndBurn()
+    {
+        canDamage = false;
+        isBurning = false;
+        burnRoutineStarted = false;
         gameObject.SetActive(false);
     }
 }

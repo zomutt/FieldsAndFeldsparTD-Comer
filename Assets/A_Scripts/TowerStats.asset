@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: TowerStats
   m_EditorClassIdentifier: Assembly-CSharp::TowerStats
   shooterDamage: 10
-  shooterCD: 0.2
+  shooterCD: 0.7
   shooterCost: 100
   aoeDamage: 3
-  aoeCD: 0.3
+  aoeDuration: 0
+  aoeCD: 1.5
   aoeCost: 120
   goldPerSec: 2
   goldCost: 200

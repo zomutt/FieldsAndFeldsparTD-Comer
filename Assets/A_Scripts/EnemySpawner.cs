@@ -12,7 +12,6 @@ public class EnemySpawner : MonoBehaviour
     }
     public void SpawnEnemy(int tier)
     {
-        Debug.Log($"{gameObject.name} spawning enemy.");
         GameObject enemy = WaveSpawnPool.Instance.GetEnemy((WaveSpawnPool.TierLevel)tier);
         NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
 

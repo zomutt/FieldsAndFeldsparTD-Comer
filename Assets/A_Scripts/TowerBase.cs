@@ -30,6 +30,15 @@ public class TowerBase : MonoBehaviour
             cooldown -= Time.deltaTime;
         }
     }
+    protected bool IsReadyToAttack()
+    {
+        return cooldown <= 0f;
+    }
+
+    protected void ResetCooldown()
+    {
+        cooldown = timeBetweenAttacks;
+    }
     private void OnTriggerEnter(Collider other)
     {
         // Each tower has a large spherical collider that serves to detect when a tagged Enemy is in range
@@ -80,4 +89,6 @@ public class TowerBase : MonoBehaviour
         }
         currentTarget = targetsInRange[0];
     }
+
+
 }

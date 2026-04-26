@@ -26,10 +26,18 @@ public class TierManager : MonoBehaviour
     [SerializeField] private EnemySpawner[] spawners;
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
     }
     public void StartLevel()
     {
+        mobsKilled = 0;
         currentTier = 1;
         Debug.Log("TM: StartLevel called");
         StartCoroutine(WaveSpawnDelay());

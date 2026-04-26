@@ -7,18 +7,19 @@ public class UIController : MonoBehaviour
     public static UIController Instance { get; private set; }
 
     [Header("Timer")]
-    [SerializeField] private GameObject timerPanel;
     [SerializeField] private TextMeshProUGUI timerText;
 
     [Header("Castle Stats")]
-    [SerializeField] private GameObject castleStatsPanel;
     [SerializeField] private TextMeshProUGUI castleHealthText;
     [SerializeField] private TextMeshProUGUI castleArmorText;
     [SerializeField] private TextMeshProUGUI totalGoldText;
+    [SerializeField] private TextMeshProUGUI goldPerSecText;
 
     [Header("Panels")]
+    [SerializeField] private GameObject timerPanel;
     [SerializeField] private GameObject losePanel;
-    
+    [SerializeField] private GameObject castleStatsPanel;
+
 
     private void Awake()
     {
@@ -32,7 +33,6 @@ public class UIController : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
     private void Start()
     {
         timerPanel.SetActive(true);
@@ -54,7 +54,8 @@ public class UIController : MonoBehaviour
 
         castleHealthText.text = $"Castle HP: {displayHP}/{CastleStats.Instance.MaxHealth}";
         castleArmorText.text = $"Castle Armor: {CastleStats.Instance.Armor}";
-        totalGoldText.text = $"Gold: {CastleStats.Instance.CurrentGold}";
+        totalGoldText.text = $"Gold: {GoldManager.Instance.CurrentGold}";
+        goldPerSecText.text = $"Gold/Sec: {GoldManager.Instance.GoldPerSec()}";
     }
     internal void LoseGame()
     {
@@ -69,6 +70,6 @@ public class UIController : MonoBehaviour
         timerPanel.SetActive(true);
 
         // Resets stats to what was saved.
-        CastleStats.Instance.StartLevelOver();
+        CastleStats.Instance.LoadStats();
     }
 }

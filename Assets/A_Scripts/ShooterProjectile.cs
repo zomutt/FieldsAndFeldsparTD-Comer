@@ -3,6 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Small script that goes on our basic projectiles. These are single target and do not apply any status effects (a planned future feature).
 /// This inherits heavily from ProjectileBase.cs with changes being made for it to specifically grab shooter stats.
+/// Damage can be adjusted in the TowerStats scriptable object.
 /// </summary>
 public class ShooterProjectile : ProjectileBase
 {
@@ -18,6 +19,10 @@ public class ShooterProjectile : ProjectileBase
             enemyTarget.TakeDamage(towerStats.ShooterDamage);
             gameObject.SetActive(false);
         }
+    }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
     }
     protected override void OnTriggerEnter(Collider other)
     {

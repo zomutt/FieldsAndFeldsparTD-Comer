@@ -33,6 +33,7 @@ public class TowerSpawners : MonoBehaviour
     public void SpawnTower(int type)
     {
         if (isOccupied) return;
+
         TowerType selectedTower = (TowerType)type;
         int index = (int)selectedTower;
         Instantiate(towerPrefabs[index], transform.position + new Vector3 (0f, 2f, 0f), transform.rotation);

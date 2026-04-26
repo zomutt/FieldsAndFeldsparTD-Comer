@@ -8,8 +8,6 @@ using System.Collections.Generic;
 /// </summary>
 public class DamagePool : MonoBehaviour
 {
-    public static DamagePool SharedInstance;
-
     public static DamagePool Instance;
 
     [Header("Prefabs")]
@@ -31,7 +29,7 @@ public class DamagePool : MonoBehaviour
 
     private void Awake()
     {
-        SharedInstance = this;
+        Instance = this;
 
         // Links the prefabs to its type
         prefabPairs = new Dictionary<DamageType, GameObject>
@@ -57,7 +55,7 @@ public class DamagePool : MonoBehaviour
             actionOnGet: (obj) => obj.SetActive(true),
             actionOnRelease: (obj) => obj.SetActive(false),
             defaultCapacity: initialSize,
-            maxSize: initialSize * 3
+            maxSize: initialSize * 4          // Ensures that the pool can grow if necessary, but also has a reasonable upper limit to prevent memory issues
         );
     }
 

@@ -1,23 +1,12 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
-/// This script serves the purpose of handling player movement and feeding input into the TowerSpawner.cs scripts to tell the squares what to instantiate.
+/// This script lives on the Player and handles the creation of towers.
+/// When adding towers, double check the TowerSpawners.cs index that corresponds to tower.
+/// This will be refactored.
 /// </summary>
-public class PlayerController : MonoBehaviour
+public class TowerBuilding : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed;
-
-    void Update()
-    {
-        // These are backwards because of how the level was set up vs. how the camera was set up
-        float x = -Input.GetAxisRaw("Vertical");
-        float z = Input.GetAxisRaw("Horizontal");
-
-        Vector3 dir = new Vector3(x, 0f, z).normalized;
-
-        transform.Translate(dir * moveSpeed * Time.deltaTime, Space.World);
-    }
     private void OnTriggerStay(Collider other)
     {
         // The player itself has a TINY collider to prevent overlap between tiles; it can only target what is directly below the center of the players GO

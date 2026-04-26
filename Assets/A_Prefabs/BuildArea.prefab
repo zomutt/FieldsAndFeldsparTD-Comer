@@ -126,6 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerSpawners
   towerPrefabs:
+  - {fileID: 0}
   - {fileID: 8348273855749368682, guid: 638dd2eb0822e61478ae372a20081f67, type: 3}
-  - {fileID: 8348273855749368682, guid: 638dd2eb0822e61478ae372a20081f67, type: 3}
-  - {fileID: 8348273855749368682, guid: 638dd2eb0822e61478ae372a20081f67, type: 3}
+  - {fileID: 9058770150661347140, guid: c8d7883154070ed4982468660f33ea30, type: 3}
+  - {fileID: 0}

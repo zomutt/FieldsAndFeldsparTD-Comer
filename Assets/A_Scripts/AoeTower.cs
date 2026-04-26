@@ -1,13 +1,10 @@
 using UnityEngine;
-/// <summary>
-/// This script calls heavily on it's base class, but has it's own unique damage patterns.
-/// It also serves to pass in the target and the lifetime of projectiles.
-/// </summary>
-public class ShooterTower : TowerBase
+
+public class AoeTower : TowerBase
 {
     protected override void Update()
     {
-        base.Update();
+        base.Update();  
         if (IsReadyToAttack())      // Not on cooldown and has a target
         {
             Shoot();
@@ -21,13 +18,12 @@ public class ShooterTower : TowerBase
             return;
         }
         // Calls to get the projectile from spawner script
-        GameObject projectile = DamagePool.Instance.GetProjectile(DamagePool.DamageType.Shooter);
+        GameObject projectile = DamagePool.Instance.GetProjectile(DamagePool.DamageType.AOE);
 
         projectile.transform.position = transform.position;
-        //projectile.SetActive(true);
 
-        // Gives the projectile its target
-        ShooterProjectile proj = projectile.GetComponent<ShooterProjectile>();
+        // Gives the projectile its target and gets the actual projectile script
+        AoeProjectile proj = projectile.GetComponent<AoeProjectile>();
         proj.SetTarget(currentTarget);
 
         ResetCooldown();

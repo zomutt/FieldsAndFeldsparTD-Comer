@@ -8,6 +8,7 @@ public class CastleStats
     /// The Castle in this game acts as the stationary player, and thus, takes on a lot of the same attributes as a PlayerStats.cs script would.
     /// This includes health, upgrades, and currency.
     /// Of course, our player is also the builder (invulerable, does not fight), but that serves more as a simple tool to construct towers rather than the the thing to protect.
+    /// Think of the castle as the main hub/econ center. I like to think of it as the main area where commerce and such happens. May be refactored later.
     /// </summary>
     public static CastleStats Instance { get; private set; } = new CastleStats();
 
@@ -30,11 +31,6 @@ public class CastleStats
     private float damage;
     public float Damage => damage;
 
-    // Gold is used as the currency for towers and upgrades. It is obtained by killing enemies.
-    // Gold lives on Castle because it is more or less the equivalent of "points"
-    private int currentGold;
-    public int CurrentGold => currentGold;
-
     // The player may purchase a shield in an emergency to grant temporary invulnerability.
     private bool hasShield;
     public bool HasShield => hasShield;
@@ -47,52 +43,43 @@ public class CastleStats
     {
         isInvincible = value;
     }
+
     // If the player loses during a level, they do not restart from the beginning of the game.
     // They start at the beginning of the level and get to keep whatever upgrades they had initially.
     // Ex: If during level one they get +5 maxHP, they go into level two with that +5 maxHP
     // If they die during level 2, they do not keep whatever upgrades they got during that level, but they still have the +5 maxHP
     private float savedMaxHealth;
-    public float SavedMaxHealth => savedMaxHealth;
     private float savedArmor;
-    public float SavedArmor => savedArmor;
-
-    private int savedGold;
-    public int SavedGold => savedGold;
 
     private CastleStats()
     {
         // ONLY called at the beginning of the game
         SetStatsInitial();
-        SetSavedStats();
+        SaveStats();
     }
-    public void StartLevelOver()
+    public void SaveStats()
+    {
+        savedMaxHealth = maxHealth;
+        savedArmor = armor;
+    }
+    public void LoadStats()
     {
         // This is called when the player loses the round; the player respawns in the same level essentially from right where they left off.
         maxHealth = savedMaxHealth;
-        armor = SavedArmor;
-        currentGold = SavedGold;
+        armor = savedArmor;
         isInvincible = false;
     }
-    public void SetStatsInitial()
+    public void SetStatsInitial()      // Only called at the beginning of the game, not on level restarts
     {
         maxHealth = 100;
         currentHealth = maxHealth;
-
-        currentGold = 100;
 
         hasShield = false;
         isInvincible = false;
 
         savedArmor = .1f;
+    }
 
-        SetSavedStats();
-    }
-    public void SetSavedStats()
-    {
-        savedMaxHealth = maxHealth;
-        savedArmor = armor;
-        savedGold = CurrentGold;
-    }
     public void Repair()
     {
         currentHealth += repairAmount;

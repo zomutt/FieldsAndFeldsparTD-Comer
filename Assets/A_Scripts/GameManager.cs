@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,11 +22,14 @@ public class GameManager : MonoBehaviour
     {
         // Only here for testing purposes
         StartGame();
-        currentLevel = 1;
     }
     private void StartGame()
     {
-        TierManager.Instance.StartLevel();
+        // This method is only called for level one -- not on level restarts, not on new levels
+        LoadAllStats();
+        GoldManager.Instance.StartGame();
+        UIController.Instance.UpdateUI();
+        currentLevel = 1;
         Debug.Log("Game starting from GM.");
     }
     public void CastleDestroyed()
@@ -47,6 +51,18 @@ public class GameManager : MonoBehaviour
     private void WinGame()
     {
 
+    }
+    private void ResetLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        LoadAllStats();
+        TierManager.Instance.StartLevel();
+    }
+    private void LoadAllStats()
+    {
+        GoldManager.Instance.LoadStats();
+        CastleStats.Instance.LoadStats();
+        UIController.Instance.UpdateUI();
     }
 }
 

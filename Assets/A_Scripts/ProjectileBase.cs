@@ -12,6 +12,7 @@ public abstract class ProjectileBase : MonoBehaviour
     [SerializeField] protected float hitRadius = 0.2f;     // How close counts as a hit; protects against edge cases.
     protected virtual void Update()
     {
+
         if (enemyTarget == null)
         {
             // For example, if enemy dies from something else, we just need the projectile to go away.
@@ -22,7 +23,6 @@ public abstract class ProjectileBase : MonoBehaviour
         // Move towards target
         dir = (enemyTarget.transform.position - transform.position).normalized;
         transform.position += dir * speed * Time.deltaTime;
-
 
         // EXAMPLE OF WHAT IS NEEDED:
 
@@ -37,6 +37,7 @@ public abstract class ProjectileBase : MonoBehaviour
     protected virtual void OnDisable()
     {
         enemyTarget = null;
+        StopAllCoroutines();
     }
     internal virtual void SetTarget(EnemyBase target)
     {
