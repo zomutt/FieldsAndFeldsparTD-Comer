@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class UIController : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class UIController : MonoBehaviour
 
     [Header("Timer")]
     [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private TextMeshProUGUI roundText;
 
     [Header("Castle Stats")]
     [SerializeField] private TextMeshProUGUI castleHealthText;
@@ -20,7 +22,15 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject losePanel;
     [SerializeField] private GameObject castleStatsPanel;
 
+    [Header("Towers")]
+    [SerializeField] private TextMeshProUGUI shooterDMG;
+    [SerializeField] private TextMeshProUGUI shooterCost;
 
+    [SerializeField] private TextMeshProUGUI aoeDMG;
+    [SerializeField] private TextMeshProUGUI aoeCost;
+
+    [SerializeField] private TextMeshProUGUI goldYield;
+    [SerializeField] private TextMeshProUGUI goldCost;
     private void Awake()
     {
         if (Instance == null)
@@ -38,6 +48,7 @@ public class UIController : MonoBehaviour
         timerPanel.SetActive(true);
         castleStatsPanel.SetActive(true);
         losePanel.SetActive(false);
+        roundText.text = null;
     }
     private void Update()
     {
@@ -56,6 +67,25 @@ public class UIController : MonoBehaviour
         castleArmorText.text = $"Castle Armor: {CastleStats.Instance.Armor}";
         totalGoldText.text = $"Gold: {GoldManager.Instance.CurrentGold}";
         goldPerSecText.text = $"Gold/Sec: {GoldManager.Instance.GoldPerSec()}";
+
+        shooterDMG.text = $"Damage: {TowerStats.Instance.ShooterDamage}";
+        shooterCost.text = $"Cost: {TowerStats.Instance.ShooterCost}";
+
+        aoeDMG.text = $"Damage/Sec: {TowerStats.Instance.AoeDamage}";
+        aoeCost.text = $"Cost: {TowerStats.Instance.AoeCost}";
+
+        goldYield.text = $"Gold Yield: {TowerStats.Instance.GoldPerSec}";
+        goldCost.text = $"Cost: {TowerStats.Instance.GoldCost}";
+    }
+    internal IEnumerator WaveCountdown(float time)
+    {
+        while (time > 0)
+        {
+            roundText.text = $"Round {TierManager.Instance.CurrentTier} starting in: {time:0}";
+            yield return new WaitForSeconds(1f);
+            time--;
+        }
+        roundText.text = null;
     }
     internal void LoseGame()
     {

@@ -64,7 +64,11 @@ public class AoeProjectile : ProjectileBase
             if (!burnRoutineStarted)
             {
                 burnRoutineStarted = true;
-                StartCoroutine(BurnDoT());
+                if (gameObject.activeInHierarchy)
+                {
+                    StartCoroutine(BurnDoT());
+                }
+
             }
         }
     }

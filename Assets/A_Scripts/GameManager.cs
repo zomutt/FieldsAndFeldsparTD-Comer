@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
         LoadAllStats();
         GoldManager.Instance.StartGame();
         UIController.Instance.UpdateUI();
+        TierManager.Instance.StartLevel();
         currentLevel = 1;
         Debug.Log("Game starting from GM.");
     }

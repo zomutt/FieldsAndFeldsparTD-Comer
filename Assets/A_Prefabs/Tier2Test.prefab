@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5216c365f9cd91047a85fa9b61eb0fa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  speed: 5
+  speed: 2.5
 --- !u!195 &-7598614809433379688
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -216,3 +216,4 @@ MonoBehaviour:
   damage: 10
   attackDelay: 0.2
   armor: 3
+  goldYield: 2

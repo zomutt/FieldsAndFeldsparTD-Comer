@@ -13,9 +13,10 @@ public abstract class EnemyBase : MonoBehaviour
     [SerializeField] protected float attackDelay;   // Seconds between each shot
     protected float cooldown;
     [SerializeField] protected float armor;    // Reduces damage by flat amount
+    [SerializeField] protected int goldYield;   // How much gold the player gets for killing this enemy
     protected bool hasCounted;     // If the kill has been logged or not
     protected float incomingDamage;
-
+    
     protected virtual void OnEnable()
     {
         currentHealth = maxHealth;
@@ -53,6 +54,7 @@ public abstract class EnemyBase : MonoBehaviour
             TierManager.Instance.RecordKill();     // Tracks how many kills have occurred vs. how many mobs spawn in the tier
             ParticlePool.Instance.SpawnDeathEffect(transform.position);
             hasCounted = true;    // Ensures no double-counting edge case
+            GoldManager.Instance.GiveGold(goldYield);
         }
         gameObject.SetActive(false);  
     }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -10,8 +11,8 @@ public class GoldManager : MonoBehaviour
 
     private float goldTimer;
     private float goldInterval = 1f; // Time in seconds between gold generation
-   
-    private int goldFarmYield;
+
+    [SerializeField] private int goldFarmYield;
     public int GoldFarmYield => goldFarmYield;
 
     private int totalGoldFarms;       // GoldFarms are separate from this script in order to avoid situations where like 50 mines are all running update.
@@ -21,6 +22,8 @@ public class GoldManager : MonoBehaviour
 
     private int savedGold;    // If player loses, they start with whatever gold they had at the beginning of the level
     private int savedGoldFarmYield;
+
+    [SerializeField] private int passiveIncome;      // Base income that is independent from the mines
 
     private void Awake()
     {
@@ -36,14 +39,15 @@ public class GoldManager : MonoBehaviour
     private void Start()
     {
         goldTimer = 0f;
+        goldFarmYield = 5;
+        savedGoldFarmYield = 5;
     }
     public void StartGame()
     {
         // Called at the very beginning of the game so that the player has something to start with.
-        currentGold = 100;
+        currentGold = 500;
         savedGold = currentGold;
 
-        goldFarmYield = 2;
         savedGoldFarmYield = goldFarmYield;
     }
     private void Update()
@@ -71,8 +75,10 @@ public class GoldManager : MonoBehaviour
     }
     private void GenerateGold()
     {
-        int goldToAdd = goldFarmYield * totalGoldFarms;
+        int goldToAdd = (goldFarmYield * totalGoldFarms) + passiveIncome;
+        Debug.Log($"Generating gold: {goldToAdd} (Yield: {goldFarmYield} x Farms: {totalGoldFarms}) + Passive income: {passiveIncome}");
         currentGold += goldToAdd;
+        UIController.Instance.UpdateUI();
     }
     public void IncreaseFarmCount()
     {
@@ -99,11 +105,14 @@ public class GoldManager : MonoBehaviour
     {
         // Called when an enemy is killed since enemies drop gold as reward
         currentGold += amount;
+        UIController.Instance.UpdateUI();
         Debug.Log($"Enemy killed! Gold increased by {amount}. Current gold: {currentGold}");
     }
     public void DecreaseGold(int amount)
     {
+        // Called when purchasing towers or upgrades
         currentGold -= amount;
+        UIController.Instance.UpdateUI();
         Debug.Log($"Gold taken: {amount}, New Gold {currentGold}");
     }
 }

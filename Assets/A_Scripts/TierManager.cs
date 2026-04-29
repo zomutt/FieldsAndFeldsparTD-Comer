@@ -13,7 +13,7 @@ public class TierManager : MonoBehaviour
 
     // Starts on tier 1
     private int currentTier;
-    //public int CurrentTier => currentTier;
+    public int CurrentTier => currentTier;
 
     // Grabbed from WaveSpawnPool.cs
     private int expectedSpawns;
@@ -39,7 +39,6 @@ public class TierManager : MonoBehaviour
     {
         mobsKilled = 0;
         currentTier = 1;
-        Debug.Log("TM: StartLevel called");
         StartCoroutine(WaveSpawnDelay());
     }
     public void RecordKill()
@@ -59,15 +58,14 @@ public class TierManager : MonoBehaviour
     }
     private IEnumerator WaveSpawnDelay()
     {
+        // Displays to the player how long it will be until the next round starts, and then starts the next round after the delay
+        UIController.Instance.StartCoroutine(UIController.Instance.WaveCountdown(waveSpawnDelay));
         yield return new WaitForSeconds(waveSpawnDelay);
-        Debug.Log("TM: WaveSpawnDelay called.");
         StartCoroutine(SpawnEnemies());
     }
     private IEnumerator SpawnEnemies()
     {
         expectedSpawns = WaveSpawnPool.Instance.GetAmountToSpawn(currentTier);
-        Debug.Log($"Expected spawns: {expectedSpawns}");
-        Debug.Log("TM SpawnEnemies called");
 
         // Get all three spawners from the scene
         // Tracks how many spawns have occured vs. what the spawn pool actually is
@@ -76,7 +74,9 @@ public class TierManager : MonoBehaviour
             foreach (EnemySpawner spawner in spawners)
             {
                 if (currentSpawns >= expectedSpawns)
+                {
                     break;
+                }
 
                 spawner.SpawnEnemy(currentTier);
                 currentSpawns++;

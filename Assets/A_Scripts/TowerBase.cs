@@ -89,6 +89,4 @@ public class TowerBase : MonoBehaviour
         }
         currentTarget = targetsInRange[0];
     }
-
-
 }

@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5216c365f9cd91047a85fa9b61eb0fa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  speed: 5
+  speed: 2.5
 --- !u!54 &3094259024425508465
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -218,5 +218,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BasicEnemy
   maxHealth: 100
   damage: 5
-  attackSpeed: 0.2
+  attackDelay: 0
   armor: 1
+  goldYield: 1

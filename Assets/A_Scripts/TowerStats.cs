@@ -103,6 +103,7 @@ public class TowerStats : ScriptableObject
     }
     internal void IncreaseAoeCost(int cost)
     {
+        // Called when advancing levels
         aoeCost += cost;
     }
     internal void IncreaseGoldPerSec(float rate)
@@ -112,6 +113,7 @@ public class TowerStats : ScriptableObject
     }
     internal void IncreaseGoldCost(int cost)
     {
+        // Called when advancing levels
         goldCost += cost;
     }
 }
