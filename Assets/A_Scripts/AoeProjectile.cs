@@ -33,6 +33,7 @@ public class AoeProjectile : ProjectileBase
         if (distance <= hitRadius)
         {
             enemyTarget.TakeDamage(towerStats.AoeDamage);
+            Debug.Log($"AOE Hit for {towerStats.AoeDamage}");
             gameObject.SetActive(false);
         }
     }

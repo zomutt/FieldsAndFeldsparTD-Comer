@@ -8,6 +8,7 @@ public class TierManager : MonoBehaviour
     /// This initiates new waves and keeps track of how many mobs have been killed.
     /// Killed mobs are compared against expected mobs to track when a wave should end.
     /// After the wave ends, the player has a grace period to prepare for the next wave.
+    /// This also spawns the final boss of the level. Since there is only one per level, I don't see much reason to include it in the pool.
     /// </summary>
     public static TierManager Instance;
 
@@ -24,6 +25,10 @@ public class TierManager : MonoBehaviour
     [SerializeField] private float waveSpawnDelay;
     [SerializeField] private float timeBetweenSpawns = .2f;
     [SerializeField] private EnemySpawner[] spawners;
+
+    [Header("Boss")]
+    [SerializeField] private Transform midSpawner;   // Where the boss spawns from
+    [SerializeField] private GameObject levelBoss;
     private void Awake()
     {
         if (Instance == null)
@@ -41,21 +46,6 @@ public class TierManager : MonoBehaviour
         currentTier = 1;
         StartCoroutine(WaveSpawnDelay());
     }
-    public void RecordKill()
-    {
-        // Called by enemy base script anytime a mob is destroyed
-        mobsKilled++;
-        if (mobsKilled >= expectedSpawns)
-        {
-            Debug.Log($"Wave {currentTier} cleared!");
-            currentTier++;
-            if (currentTier < 4)
-            {
-                StartCoroutine(WaveSpawnDelay());
-            }
-            else Debug.Log("TM: All waves complete. Boss logic next.");
-        }
-    }
     private IEnumerator WaveSpawnDelay()
     {
         // Displays to the player how long it will be until the next round starts, and then starts the next round after the delay
@@ -67,22 +57,46 @@ public class TierManager : MonoBehaviour
     {
         expectedSpawns = WaveSpawnPool.Instance.GetAmountToSpawn(currentTier);
 
-        // Get all three spawners from the scene
-        // Tracks how many spawns have occured vs. what the spawn pool actually is
-        while (currentSpawns < expectedSpawns)
+        if (currentTier < 4)
         {
-            foreach (EnemySpawner spawner in spawners)
+            // Get all three spawners from the scene
+            // Tracks how many spawns have occured vs. what the spawn pool actually is
+            while (currentSpawns < expectedSpawns)
             {
-                if (currentSpawns >= expectedSpawns)
+                foreach (EnemySpawner spawner in spawners)
                 {
-                    break;
-                }
+                    if (currentSpawns >= expectedSpawns)
+                    {
+                        break;
+                    }
 
-                spawner.SpawnEnemy(currentTier);
-                currentSpawns++;
-                yield return new WaitForSeconds(timeBetweenSpawns);
+                    spawner.SpawnEnemy(currentTier);
+                    currentSpawns++;
+                    yield return new WaitForSeconds(timeBetweenSpawns);
+                }
             }
+            yield return null;
         }
-        yield return null;
+        else if (currentTier == 4)
+        {
+            Instantiate(levelBoss, midSpawner.position, midSpawner.rotation);
+            expectedSpawns = 1;
+        }
+    }
+    public void RecordKill()
+    {
+        // Called by enemy base script anytime a mob is destroyed
+        mobsKilled++;
+        if (mobsKilled >= expectedSpawns)
+        {
+            Debug.Log($"Wave {currentTier} cleared!");
+            currentTier++;
+            if (currentTier <= 4)
+            {
+                StartCoroutine(WaveSpawnDelay());
+                GoldManager.Instance.GiveGold(currentTier * 100);     // Rewards the player with scaling gold once they complete a round
+            }
+            else Debug.Log("TM: All waves complete. Boss logic next.");
+        }
     }
 }

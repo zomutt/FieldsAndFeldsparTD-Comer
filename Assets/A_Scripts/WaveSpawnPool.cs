@@ -42,7 +42,7 @@ public class WaveSpawnPool : MonoBehaviour
     {
         Tier1 = 1,
         Tier2 = 2,
-        Tier3 = 3,
+        Tier3 = 3
     }
     private Dictionary<TierLevel, ObjectPool<GameObject>> pools;
     private void OnValidate()

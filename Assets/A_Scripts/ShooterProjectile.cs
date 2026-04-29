@@ -9,6 +9,13 @@ public class ShooterProjectile : ProjectileBase
 {
     protected override void Update()
     {
+        if (enemyTarget == null)
+        {
+            // For example, if enemy dies from something else, we just need the projectile to go away.
+            gameObject.SetActive(false);
+            return;
+        }
+
         // Handles targeting, finding direction, and position
         base.Update();
 

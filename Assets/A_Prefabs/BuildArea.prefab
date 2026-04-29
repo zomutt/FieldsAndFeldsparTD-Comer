@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5073925437176584749}
   - component: {fileID: 9113493808176661715}
   - component: {fileID: 6649593026602900470}
-  - component: {fileID: 3919489510993445442}
+  - component: {fileID: 6867510485938650786}
   m_Layer: 0
   m_Name: BuildArea
   m_TagString: BuildArea
@@ -113,7 +113,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3919489510993445442
+--- !u!114 &6867510485938650786
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,9 +122,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2064702670885532526}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 622effee29eb98f48aa4553dbb9ff4d2, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c5ddcc6efc35ef4cb009a93ee3f5a48, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TowerSpawners
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingSquare
   towerPrefabs:
   - type: 0
     prefab: {fileID: 0}

@@ -45,7 +45,7 @@ public class GoldManager : MonoBehaviour
     public void StartGame()
     {
         // Called at the very beginning of the game so that the player has something to start with.
-        currentGold = 500;
+        currentGold = 5000;
         savedGold = currentGold;
 
         savedGoldFarmYield = goldFarmYield;
@@ -76,7 +76,7 @@ public class GoldManager : MonoBehaviour
     private void GenerateGold()
     {
         int goldToAdd = (goldFarmYield * totalGoldFarms) + passiveIncome;
-        Debug.Log($"Generating gold: {goldToAdd} (Yield: {goldFarmYield} x Farms: {totalGoldFarms}) + Passive income: {passiveIncome}");
+        //Debug.Log($"Generating gold: {goldToAdd} (Yield: {goldFarmYield} x Farms: {totalGoldFarms}) + Passive income: {passiveIncome}");
         currentGold += goldToAdd;
         UIController.Instance.UpdateUI();
     }

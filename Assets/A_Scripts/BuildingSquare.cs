@@ -5,6 +5,8 @@ using UnityEngine;
 /// Tower Spawners are tiled in such a way so as to keep the player from double building, messing up their geometry, miscounting tiles they can build, etc.
 /// Instantiation was chosen over deactivated towers or object pooling because the player will realistically only build a small percentage of what they can per level.
 /// This was considered the most efficient way over other options for this reason since player income throttles tower spam.
+/// 
+/// Consider Raycast that checks collision with player to avoid constant checks on all squares.
 /// </summary>
 public class BuildingSquare : MonoBehaviour
 {
@@ -35,6 +37,7 @@ public class BuildingSquare : MonoBehaviour
     // The player should be able to clearly see which tile they are considered to be on
     private Renderer towerSR;
     private Color startColor;
+    private bool playerPresent;
 
     private void Start()
     {
@@ -53,7 +56,6 @@ public class BuildingSquare : MonoBehaviour
 
             prefabLookup[tower.type] = tower;
         }
-
     }
 
     // Called when the player chooses to build a tower on this tile
@@ -79,6 +81,7 @@ public class BuildingSquare : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             towerSR.material.color = Color.green;
+            playerPresent = true;
         }
     }
     private void OnTriggerExit(Collider other)
@@ -86,24 +89,26 @@ public class BuildingSquare : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             towerSR.material.color = startColor;
+            playerPresent = false;
         }
     }
-    private void OnTriggerStay(Collider other)
+    private void Update()
     {
         // The player has a tiny collider so it only targets the tile directly below the center
-        if (!other.gameObject.CompareTag("Player")) return;
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (playerPresent)
         {
-            SpawnTower(TowerType.Shooter);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            SpawnTower(TowerType.AOE);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            SpawnTower(TowerType.Gold);
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                SpawnTower(TowerType.Shooter);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                SpawnTower(TowerType.AOE);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                SpawnTower(TowerType.Gold);
+            }
         }
         // More keybinds will be added as the scope and tower amount grows, but this is enough for this level of scope
     }
