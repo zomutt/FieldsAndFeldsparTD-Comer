@@ -15,8 +15,8 @@ MonoBehaviour:
   shooterDamage: 500
   shooterCD: 0.7
   shooterCost: 100
-  aoeDamage: 5
-  aoeDuration: 2
+  aoeDamage: 10
+  aoeDuration: 3
   aoeCD: 1.5
   aoeCost: 120
   goldPerSec: 2
