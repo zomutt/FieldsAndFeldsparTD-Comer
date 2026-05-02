@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 330ed837711c1454c912aa8c3c073370, type: 3}
   m_Name: TowerStats
   m_EditorClassIdentifier: Assembly-CSharp::TowerStats
-  shooterDamage: 500
-  shooterCD: 0.7
+  baseShooterDamage: 100
+  shooterDamage: 100
+  shooterCD: 0.1
+  baseShooterCost: 100
   shooterCost: 100
+  baseAoeDamage: 10
   aoeDamage: 10
   aoeDuration: 3
   aoeCD: 1.5
-  aoeCost: 120
-  goldPerSec: 2
-  goldCost: 200
+  baseAoeCost: 150
+  aoeCost: 150

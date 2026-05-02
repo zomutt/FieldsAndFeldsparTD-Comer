@@ -13,8 +13,8 @@ public class GoldFarms : MonoBehaviour
         // Tells the GoldGeneration script that a new gold farm has been added, so that it can update the gold generation accordingly.
         GoldManager.Instance.IncreaseFarmCount();
     }
-    private void OnDisable()
-    {
-        GoldManager.Instance.DecreaseFarmCount();
-    }
+    //private void OnDisable()
+    //{
+    //    GoldManager.Instance.DecreaseFarmCount();
+    //}
 }

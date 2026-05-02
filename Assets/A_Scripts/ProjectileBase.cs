@@ -20,7 +20,7 @@ public abstract class ProjectileBase : MonoBehaviour
         //}
 
         // Move towards target
-        dir = (enemyTarget.transform.position - transform.position).normalized;
+        dir = (enemyTarget.transform.position - transform.position).normalized; 
         transform.position += dir * speed * Time.deltaTime;
 
         // EXAMPLE OF WHAT IS NEEDED:

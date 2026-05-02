@@ -1,4 +1,3 @@
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 
@@ -17,14 +16,19 @@ public class TowerStats : ScriptableObject
     public static TowerStats Instance { get; private set; }
 
     [Header("Shooter Towers")]
+    [SerializeField] private int baseShooterDamage;      // This stays the same, it is the value needed at the beginning of the game. No upgrades. 
     [SerializeField] private float shooterDamage;
     public float ShooterDamage => shooterDamage;
-    [SerializeField] private float shooterCD;
+
+    [SerializeField] private float shooterCD;      // Attack speed never changes, so no need to initialize it
     public float ShooterCD => shooterCD;
+
+    [SerializeField] private int baseShooterCost;        // This stays the same
     [SerializeField] private int shooterCost;
     public float ShooterCost => shooterCost;
 
     [Header("AOE Towers")]
+    [SerializeField] private int baseAoeDamage;      // This stays the same
     [SerializeField] private float aoeDamage;
     public float AoeDamage => aoeDamage;
 
@@ -34,86 +38,60 @@ public class TowerStats : ScriptableObject
     [SerializeField] private float aoeCD;
     public float AoeCD => aoeCD;
 
-    [SerializeField] private int aoeCost;
+    [SerializeField] private int baseAoeCost;        
+    [SerializeField] private int aoeCost;       
     public int AoeCost => aoeCost;
 
-    [Header("Gold Farm")]
-    [SerializeField] private float goldPerSec;
-    public float GoldPerSec => goldPerSec;
-
-    [SerializeField] private int goldCost;
-    public int GoldCost => goldCost;
-
+    /// SAVED STATS ///
     private float savedShooterDamage;
-    private float savedShooterCD;
     private float savedAoeDamage;
-    private float savedAoeCD;
-    private float savedGoldPerSec;
 
     private void OnEnable()
     {
         Instance = this;
     }
-    internal void SetSavedStats()
+    public void InitializeStats()
+    {
+        // Called at the beginning of the game to set what the base is meant to be. This is important for if the player starts from scratch after playing a game i.e. winning, losing, quitting
+        shooterDamage = baseShooterDamage;
+        shooterCost = baseShooterCost;
+
+        aoeDamage = baseAoeDamage;
+        aoeCost = baseAoeCost;
+    }
+    public void SaveStats()
     {
         // Called when level is won
         savedShooterDamage = shooterDamage;
-        savedShooterCD = shooterCD;
 
         savedAoeDamage = aoeDamage;
-        savedAoeCD = aoeCD;
-
-        savedGoldPerSec = goldPerSec;
     }
-    internal void StartLevelOver()
+    public void LoadStats()
     {
         // Called when level is lost
         shooterDamage = savedShooterDamage;
-        shooterCD = savedShooterCD;
 
         aoeDamage = savedAoeDamage;
-        aoeCD = savedAoeCD;
-
-        goldPerSec = savedGoldPerSec;
     }
-    internal void UpgradeShooterDamage(float damage)
+    public void UpgradeShooterDamage(float damage)
     {
         shooterDamage += damage;
         Debug.Log($"New shooter tower damage: {shooterDamage}");
     }
-    internal void UpgradeShooterCD(float cd)
-    { 
-        shooterCD -= cd;
-        Debug.Log($"New shooter range: {shooterCD}");
-    }
-    internal void IncreaseShooterCost(int cost)
+    public void IncreaseShooterCost(int cost)
     {
         // The cost of each tower increases per level. This is ONLY called when advancing to the next level.
         shooterCost += cost;
     }
-    internal void UpgradeAoeDamage(float damage)
+    public void UpgradeAoeDamage(float damage)
     {
         aoeDamage += damage;
         Debug.Log($"New aoe damage: {aoeDamage}");
     }
-    internal void UpgradeAoeCD(float range)
-    {
-        aoeCD += range;
-        Debug.Log($"New aoe range: {aoeCD}");
-    }
-    internal void IncreaseAoeCost(int cost)
-    {
-        // Called when advancing levels
-        aoeCost += cost;
-    }
-    internal void IncreaseGoldPerSec(float rate)
-    {
-        goldPerSec += rate;
-        Debug.Log($"New GPS: {goldPerSec}/s");
-    }
-    internal void IncreaseGoldCost(int cost)
-    {
-        // Called when advancing levels
-        goldCost += cost;
+    public void IncreaseAllCosts(int costIncreasePerLevel)
+    { 
+        // Called from GameManager when advancing to next level
+        aoeCost += costIncreasePerLevel;
+        shooterCost += costIncreasePerLevel;
     }
 }

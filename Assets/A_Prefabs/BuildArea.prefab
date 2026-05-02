@@ -127,7 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BuildingSquare
   towerPrefabs:
   - type: 0
-    prefab: {fileID: 0}
+    prefab: {fileID: 5267861018364839273, guid: 7ad20453d4313724e8e0661a364782e3, type: 3}
     cost: 0
   - type: 1
     prefab: {fileID: 8348273855749368682, guid: 638dd2eb0822e61478ae372a20081f67, type: 3}

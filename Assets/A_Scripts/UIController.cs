@@ -1,15 +1,28 @@
-using UnityEngine;
-using TMPro;
-using UnityEngine.SceneManagement;
 using System.Collections;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
+/// <summary>
+/// The UIController has been set to ONLY handle UI. It does not make any game decisions, it only displays information and has buttons that call methods in the GameManager.
+/// Furthermore, with it being a Singleton, I ensured that all references are ONLY to UI objects. This is so that references never get lost.
+/// The actual UI itself lives as a child of the Singleton UIController.cs GameObject.
+/// </summary>
 public class UIController : MonoBehaviour
 {
     public static UIController Instance { get; private set; }
 
+    [Header("Menus")]
+    [SerializeField] private GameObject mainMenuPanel;
+    [SerializeField] private GameObject helpMenu;
+    [SerializeField] private GameObject confirmQuitPanel;
+
     [Header("Timer")]
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI roundText;
+    private int minutes;
+    private int seconds;
 
     [Header("Castle Stats")]
     [SerializeField] private TextMeshProUGUI castleHealthText;
@@ -17,10 +30,16 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI totalGoldText;
     [SerializeField] private TextMeshProUGUI goldPerSecText;
 
-    [Header("Panels")]
+    [Header("In-Game Panels")]
     [SerializeField] private GameObject timerPanel;
     [SerializeField] private GameObject losePanel;
     [SerializeField] private GameObject castleStatsPanel;
+
+    [Header("Win/Lose")]
+    [SerializeField] private GameObject levelWinPanel;
+    [SerializeField] private GameObject winGamePanel;
+    [SerializeField] private GameObject loseGamePanel;
+    [SerializeField] private TextMeshProUGUI totalTime;       // Displayed at the end of the game
 
     [Header("Towers")]
     [SerializeField] private TextMeshProUGUI shooterDMG;
@@ -31,6 +50,11 @@ public class UIController : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI goldYield;
     [SerializeField] private TextMeshProUGUI goldCost;
+
+
+    // This is needed so that UI controller ONLY resets everything when the player begins a fresh game.
+    private bool pendingGameReset = false;   
+
     private void Awake()
     {
         if (Instance == null)
@@ -42,19 +66,58 @@ public class UIController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        levelWinPanel.SetActive(false);
+        winGamePanel.SetActive(false);
+        loseGamePanel.SetActive(false);
+
+        if (pendingGameReset)
+        {
+            StartGame();
+            pendingGameReset = false;
+        }
     }
     private void Start()
     {
+        StartGame();
+    }
+    private void StartGame()
+    {
+        // Called both in Start() and when the game is supposed to start over from scratch. This ensures that player may start again without having to close the game.
+        mainMenuPanel.SetActive(true);
         timerPanel.SetActive(true);
         castleStatsPanel.SetActive(true);
         losePanel.SetActive(false);
+        confirmQuitPanel.SetActive(false);
+        winGamePanel.SetActive(false);
+        levelWinPanel.SetActive(false);
+        helpMenu.SetActive(false);
+
         roundText.text = null;
+
+        minutes = 0;
+        seconds = 0;
+    }
+    public void ResetTimer()
+    {
+        // Called by GameManager.cs when the game is completely reset.
+        minutes = 0;
+        seconds = 0;
     }
     private void Update()
     {
+        // If time is frozen, don't update the timer.
+        if (Time.timeScale == 0f) return;
+
+
+        // Timer is used to give player feedback on how long or short they took to complete the game. This gives the player incentive to try again if they don't like their time.
+
         // Convert elapsed time into MM:SS format
-        int minutes = Mathf.FloorToInt(Time.time/60f);
-        int seconds = Mathf.FloorToInt(Time.time % 60f); // Seconds = remainder after dividing by 60
+        minutes = Mathf.FloorToInt(Time.time/60f);
+        seconds = Mathf.FloorToInt(Time.time % 60f); // Seconds = remainder after dividing by 60
 
         timerText.text = $"Time Elapsed: {minutes:00}:{seconds:00}"; // The 00 ensures that 2 digits will always be shown
     }
@@ -74,8 +137,8 @@ public class UIController : MonoBehaviour
         aoeDMG.text = $"Damage/Sec: {TowerStats.Instance.AoeDamage}";
         aoeCost.text = $"Cost: {TowerStats.Instance.AoeCost}";
 
-        goldYield.text = $"Gold Yield: {TowerStats.Instance.GoldPerSec}";
-        goldCost.text = $"Cost: {TowerStats.Instance.GoldCost}";
+        goldYield.text = $"Gold Yield: {GoldManager.Instance.GoldFarmYield}";
+        goldCost.text = $"Cost: {GoldManager.Instance.GoldFarmCost}";
     }
     internal IEnumerator WaveCountdown(float time)
     {
@@ -93,13 +156,44 @@ public class UIController : MonoBehaviour
         castleStatsPanel.SetActive(false);
         losePanel.SetActive(true);
     }
-    internal void OnClickReloadScene()
+    public void WinLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        castleStatsPanel.SetActive(true);
-        timerPanel.SetActive(true);
+        levelWinPanel.SetActive(true);
+    }
+    public void WinGame()
+    { 
+        winGamePanel.SetActive(true);
 
-        // Resets stats to what was saved.
-        CastleStats.Instance.LoadStats();
+        // Displays to the player how long it took for them to finish the game
+        totalTime.text = timerText.text;    
+    }
+    public void OnClickStartGame()
+    {
+        GameManager.Instance.StartGame();
+        mainMenuPanel.SetActive(false);
+    }
+    public void OnClickTryAgain()
+    {
+        GameManager.Instance.ResetLevel();
+    }
+    public void OnClickOnward()
+    {         
+        GameManager.Instance.AdvanceLevel();
+    }
+    public void OnClickQuit()
+    {
+        confirmQuitPanel.SetActive(true);
+    }
+    public void OnClickConfirmQuit()
+    {
+        Application.Quit();
+    }
+    public void OnClickCancelQuit()
+    {
+        confirmQuitPanel.SetActive(false);
+    }
+    public void OnClickMainMenu()
+    {
+        GameManager.Instance.ResetEntireGame();
     }
 }

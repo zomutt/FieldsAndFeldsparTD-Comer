@@ -27,10 +27,6 @@ public class CastleStats
     private float armor;
     public float Armor => armor;
 
-    // The castle is intended to be able to defend itself.
-    private float damage;
-    public float Damage => damage;
-
     // The player may purchase a shield in an emergency to grant temporary invulnerability.
     private bool hasShield;
     public bool HasShield => hasShield;

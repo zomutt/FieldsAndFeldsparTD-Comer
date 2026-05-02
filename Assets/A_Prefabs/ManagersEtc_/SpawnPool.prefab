@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1913125307620798331
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6174876083049244801}
+  - component: {fileID: 1913497103432878247}
+  m_Layer: 0
+  m_Name: SpawnPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6174876083049244801
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913125307620798331}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -35.056046, y: 4, z: -33.75}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1913497103432878247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913125307620798331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 023674e6f2498184b98cee513ce0753a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaveSpawnPool
+  tier1Prefabs:
+  - {fileID: 5356351331684017042, guid: da562b300bcb8c94dbd4b5426f866c63, type: 3}
+  - {fileID: 7895692130092903566, guid: 2418e3f13461e7348a0a390624bd2429, type: 3}
+  - {fileID: 8230338601749407634, guid: 17abaea277f4f4f46887accc399c290f, type: 3}
+  tier2Prefabs:
+  - {fileID: 8722931411032596606, guid: f17d6fbd36910054cb9fdf0b7d0c2115, type: 3}
+  tier3Prefabs:
+  - {fileID: 4960038879021250351, guid: 39f422e0ce79eea41ae268980d959b0a, type: 3}
+  tier4Prefabs:
+  - {fileID: 8363046272788395321, guid: c7699484419eaf1468804979c78a032d, type: 3}
+  tier1ToPool: 30
+  tier2ToPool: 60
+  tier3ToPool: 90
+  tier4ToPool: 3

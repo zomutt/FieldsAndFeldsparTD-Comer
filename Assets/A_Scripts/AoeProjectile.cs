@@ -12,6 +12,7 @@ public class AoeProjectile : ProjectileBase
     private bool isBurning;
     private bool burnRoutineStarted;
     [SerializeField] private MeshRenderer orbRenderer;
+
     private void OnEnable()
     {
         orbRenderer.enabled = true;
@@ -52,7 +53,6 @@ public class AoeProjectile : ProjectileBase
             orbRenderer.enabled = true;
         }
     }
-
     protected override void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy") && !isBurning)
@@ -69,7 +69,6 @@ public class AoeProjectile : ProjectileBase
                 {
                     StartCoroutine(BurnDoT());
                 }
-
             }
         }
     }

@@ -12,7 +12,7 @@ public class BuildingSquare : MonoBehaviour
 {
     public enum TowerType
     {
-        None = 0,   // Intentionally blank in order to keep towers consistent with keybinds
+        None = 0,   // Intentionally blank in order to keep towers consistent with keybinds. This is where remove tower will live when that is implemented.
         Shooter = 1,
         AOE = 2,
         Gold = 3
@@ -97,6 +97,12 @@ public class BuildingSquare : MonoBehaviour
         // The player has a tiny collider so it only targets the tile directly below the center
         if (playerPresent)
         {
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                // This removes the tower from this tile. You DO NOT get a refund. This is intentional to prevent tower spamming and encourage strategic building.
+                SpawnTower(TowerType.None);
+                isOccupied = false;
+            }
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 SpawnTower(TowerType.Shooter);
@@ -110,6 +116,6 @@ public class BuildingSquare : MonoBehaviour
                 SpawnTower(TowerType.Gold);
             }
         }
-        // More keybinds will be added as the scope and tower amount grows, but this is enough for this level of scope
+        // More keybinds will be added as the scope and tower amount grows, but this is enough for this level of scope.
     }
 }
