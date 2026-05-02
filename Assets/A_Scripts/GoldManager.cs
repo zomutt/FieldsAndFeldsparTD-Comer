@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class GoldManager : MonoBehaviour
 {
-    public static GoldManager Instance;
+    public static GoldManager Instance { get; private set; }
 
     private float goldTimer;
     private readonly float goldInterval = 1f; // Time in seconds between gold generation
@@ -40,6 +40,7 @@ public class GoldManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {

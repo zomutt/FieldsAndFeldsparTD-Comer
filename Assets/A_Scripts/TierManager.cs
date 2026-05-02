@@ -1,5 +1,5 @@
-using System.Collections;
-using UnityEngine;
+    using System.Collections;
+    using UnityEngine;
 
 public class TierManager : MonoBehaviour
 {
@@ -11,7 +11,7 @@ public class TierManager : MonoBehaviour
     /// This also handles initiating the spawns, but this will be refactored. 
     /// I could not figure out another way that wasn't bugged, but I will reconsider my approach when I have more time to think on it. 
     /// </summary>
-    public static TierManager Instance;
+    public static TierManager Instance { get; private set; }
 
     // Starts on tier 1
     private int currentTier;
@@ -38,77 +38,99 @@ public class TierManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else if (Instance != this)
         {
             Destroy(gameObject);
         }
     }
+        
     public void StartLevel()
     {
+        spawners = null;     // Makes sure we're getting the proper references on each scene
+        FindSpawners();
         isFirstRound = true;
         mobsKilled = 0;
         currentTier = 1;
         StartCoroutine(WaveSpawnDelay());
+        Debug.Log($"Tier {currentTier} starting from TM");
+    }
+    private void FindSpawners()
+    {
+        GameObject[] spawnerObjects = GameObject.FindGameObjectsWithTag("Spawner");
+        spawners = new EnemySpawner[spawnerObjects.Length];
+        for (int i = 0; i < spawnerObjects.Length; i++)
+        {
+            spawners[i] = spawnerObjects[i].GetComponent<EnemySpawner>();
+        }
+        Debug.Log($"Found {spawnerObjects.Length} spawners.");
     }
     private IEnumerator WaveSpawnDelay()
-    {
-        // Displays to the player how long it will be until the next round starts, and then starts the next round after the delay
-        if (isFirstRound)
         {
-            // The player should have a longer chance to prepare for the first wave since they won't already have towers. After the first wave, they don't get as long.
-            UIController.Instance.StartCoroutine(UIController.Instance.WaveCountdown(gracePeriod));
-            isFirstRound = false;  // Resets the wave spawn delay back to normal for the next round
-            yield return new WaitForSeconds(gracePeriod);
-        }
-        else
-        {
-            UIController.Instance.StartCoroutine(UIController.Instance.WaveCountdown(waveSpawnDelay));
-            yield return new WaitForSeconds(waveSpawnDelay);
-        }
-        currentSpawns = 0;    // Resets the spawn count for the new wave
-        mobsKilled = 0;     // Resets the kill count for the new wave
-        StartCoroutine(SpawnEnemies());
-    }
-    private IEnumerator SpawnEnemies()
-    {
-        expectedSpawns = WaveSpawnPool.Instance.GetAmountToSpawn(currentTier);
-        // Get all three spawners from the scene
-        // Tracks how many spawns have occured vs. what the spawn pool actually is
-        while (currentSpawns < expectedSpawns)
-        {
-            foreach (EnemySpawner spawner in spawners)
+            // Displays to the player how long it will be until the next round starts, and then starts the next round after the delay
+            if (isFirstRound)
             {
-                if (currentSpawns >= expectedSpawns)
+                // The player should have a longer chance to prepare for the first wave since they won't already have towers. After the first wave, they don't get as long.
+                UIController.Instance.StartCoroutine(UIController.Instance.WaveCountdown(gracePeriod, currentTier));
+                isFirstRound = false;  // Resets the wave spawn delay back to normal for the next round
+                yield return new WaitForSeconds(gracePeriod);
+            }
+            else
+            {
+                UIController.Instance.StartCoroutine(UIController.Instance.WaveCountdown(waveSpawnDelay, currentTier));
+                yield return new WaitForSeconds(waveSpawnDelay);
+            }
+            currentSpawns = 0;    // Resets the spawn count for the new wave
+            mobsKilled = 0;     // Resets the kill count for the new wave
+            StartCoroutine(SpawnEnemies());
+        }
+        private IEnumerator SpawnEnemies()
+        {
+            Debug.Log($"TM Spawning enemies");
+            expectedSpawns = WaveSpawnPool.Instance.GetAmountToSpawn(currentTier);
+            // Get all three spawners from the scene
+            // Tracks how many spawns have occured vs. what the spawn pool actually is
+            while (currentSpawns < expectedSpawns)
+            {
+                foreach (EnemySpawner spawner in spawners)
                 {
-                    break;
+                    if (spawner == null)
+                    {
+                        Debug.LogError("TM: One of the spawners is null.");
+                        continue;
+                    }
+                    if (currentSpawns >= expectedSpawns)
+                    {
+                        Debug.Log("TM: Reached expected spawns, breaking out of spawn loop.");
+                        break;
+                    }
+                    spawner.SpawnEnemy(currentTier);
+                    currentSpawns++;
+                    yield return new WaitForSeconds(timeBetweenSpawns);
                 }
-                spawner.SpawnEnemy(currentTier);
-                currentSpawns++;
-                yield return new WaitForSeconds(timeBetweenSpawns);
             }
+            yield return null;
         }
-        yield return null;
-    }
 
-    public void RecordKill()
-    {
-        // Called by enemy base script anytime a mob is destroyed
-        mobsKilled++;
-        if (mobsKilled >= expectedSpawns)
+        public void RecordKill()
         {
-            Debug.Log($"Wave {currentTier} cleared!");
-            if (currentTier < 4)
+            // Called by enemy base script anytime a mob is destroyed
+            mobsKilled++;
+            if (mobsKilled >= expectedSpawns)
             {
-                currentTier++;
-                StartCoroutine(WaveSpawnDelay());
-                GoldManager.Instance.GiveGold(currentTier * 100);     // Rewards the player with scaling gold once they complete a round
-            }
-            else if (currentTier == 4)
-            {
-                Debug.Log("Boss defeated! You win!");
-                GameManager.Instance.WinLevel();
+                Debug.Log($"Wave {currentTier} cleared!");
+                if (currentTier < 4)
+                {
+                    currentTier++;
+                    StartCoroutine(WaveSpawnDelay());
+                    GoldManager.Instance.GiveGold(currentTier * 100);     // Rewards the player with scaling gold once they complete a round
+                }
+                else if (currentTier == 4)
+                {
+                    Debug.Log("Boss defeated! You win!");
+                    GameManager.Instance.WinLevel();
+                }
             }
         }
     }
-}

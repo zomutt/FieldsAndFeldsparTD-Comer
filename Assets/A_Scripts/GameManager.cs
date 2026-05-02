@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;        
         UIManagerObj.SetActive(true);    // Set active because I often turn it off while dev'ing
     }
-    public void StartGame()
+    public void StartNewGame()
     {
         // This method is only called for level one -- not on level restarts, not on new levels
         InitializeAllStats();   // Initializes all stats to their starting values at the beginning of the game
@@ -46,21 +46,30 @@ public class GameManager : MonoBehaviour
         TierManager.Instance.StartLevel();  // Gets the first wave of enemies going after a short delay
         currentLevel = 1;
         Debug.Log("Game starting from GM.");
+        Debug.Log("Current level: " + currentLevel);
     }
-    public void ResetEntireGame()
+    public void StartNewLevel()
     {
-        Time.timeScale = 1f;
+        LoadAllStats();    // Loads stats so that the player can keep their upgrades from previous levels
+        TowerStats.Instance.IncreaseAllCosts(costIncreasePerLevel);
+        UIController.Instance.UpdateUI();
 
-        // Destroy persistent singletons so they reinitialize
-        Destroy(UIController.Instance.gameObject);
-        Destroy(GoldManager.Instance.gameObject);
-        Destroy(TierManager.Instance.gameObject);
-
-        // Load the first level scene
-        SceneManager.LoadScene("LevelOne");
-        currentLevel = 1;
-        Time.timeScale = 0f;    // Paused until the player hits the start button in the main menu, this keeps the timer intact
+        TierManager.Instance.StartLevel();  // Gets the first wave of enemies going after a short delay
     }
+    //public void ResetEntireGame()
+    //{
+    //    Time.timeScale = 1f;
+
+    //    // Destroy persistent singletons so they reinitialize
+    //    Destroy(UIController.Instance.gameObject);
+    //    Destroy(GoldManager.Instance.gameObject);
+    //    Destroy(TierManager.Instance.gameObject);
+
+    //    // Load the first level scene
+    //    SceneManager.LoadScene("LevelOne");
+    //    currentLevel = 1;
+    //    Time.timeScale = 0f;    // Paused until the player hits the start button in the main menu, this keeps the timer intact
+    //}
 
     public void CastleDestroyed()
     {
@@ -74,30 +83,28 @@ public class GameManager : MonoBehaviour
             AdvanceLevel();
         }
     }
-    public void AdvanceLevel()       
+    public void AdvanceLevel()
     {
-        // Called by UIController when player hits next level button.
-        // Game state win determined by TierManager, which signals the UIController when the player has won the level and can advance.
+    // Called by UIController when player hits next level button.
+    // Game state win determined by TierManager, which signals the UIController when the player has won the level and can advance.
         if (currentLevel < 4)
         {
-            int currentIndex = SceneManager.GetActiveScene().buildIndex;
             SaveAllStats();
-            SceneManager.LoadScene(currentIndex + 1);
             currentLevel++;
-            TowerStats.Instance.IncreaseAllCosts(costIncreasePerLevel);
-            LoadAllStats();
-            UIController.Instance.UpdateUI();
-            StartGame();
-            Time.timeScale = 1f;        // Unfreezes time after the player hits next level button
+            SceneManager.sceneLoaded += OnSceneLoaded;  // subscribe first
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
-        
         else
         {
             Time.timeScale = 0f;
-
-            // Displays the UI win screen
             UIController.Instance.WinGame();
         }
+    }
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;  // unsubscribe so it only fires once
+        StartNewLevel();
+        Time.timeScale = 1f;
     }
     public void WinLevel()        
     {

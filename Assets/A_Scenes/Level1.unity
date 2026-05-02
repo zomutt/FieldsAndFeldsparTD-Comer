@@ -3169,7 +3169,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00048828125, y: 0.00036621094}
+  m_AnchoredPosition: {x: -0.00048828125, y: 0.00048828125}
   m_SizeDelta: {x: 1919.9985, y: 1080.0015}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &319026976
@@ -4261,6 +4261,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2120032001540912071, guid: b22671dec865f56489b8abca40feb57e, type: 3}
+      propertyPath: m_Radius
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 2120032001540912071, guid: b22671dec865f56489b8abca40feb57e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4753047836288752625, guid: b22671dec865f56489b8abca40feb57e, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -4785,7 +4793,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00048828125, y: 0.00036621094}
+  m_AnchoredPosition: {x: -0.00048828125, y: 0.00048828125}
   m_SizeDelta: {x: 1919.9985, y: 1080.0015}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &453537380
@@ -6170,7 +6178,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 48.468628, y: -27.543701}
+  m_AnchoredPosition: {x: 48.46875, y: -27.543701}
   m_SizeDelta: {x: 2133.085, y: 1190.7004}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &636573174
@@ -6791,7 +6799,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00048828125, y: 0.00036621094}
+  m_AnchoredPosition: {x: -0.00048828125, y: 0.00048828125}
   m_SizeDelta: {x: 1919.9985, y: 1080.0015}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &675500532
@@ -6832,37 +6840,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 675500530}
   m_CullTransparentMesh: 1
---- !u!1 &675673274
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 675673275}
-  m_Layer: 0
-  m_Name: Shops
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &675673275
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 675673274}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 45.231857, y: 0.46106815, z: 4.176198}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &676145989 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6037571065881471547, guid: 6dcb18d875213054b828cf41cf397b85, type: 3}
@@ -7867,24 +7844,26 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: 'Evil has come to Feldspar Fields, but geological forces have teamed up
-    to defend the lands.
+    to defend the lands. Build towers and defeat all four waves of enemies to secure
+    the land. Do not let the enemies destroy the castle or else you must start the
+    level over. Collect gold to purchase towers and upgrades.
 
 
-    You start with three buildable objects.
+    You start with
+    three buildable objects.
 
-    1. Amethyst
-    Shooter -- single target, high damage
+    1. Amethyst Shooter -- single target, high damage
 
-    2. Magma Tower -- medium damage, burns
-    over time
+    2.
+    Magma Tower -- medium damage, burns over time
 
-    3. Deep Mine -- grants income every second
+    3. Deep Mine -- grants income
+    every second
 
 
-    Use the num keys
-    to select a tower to plant over the square you are standing on. Upgrades may
-    be purchased using F1, F2, and F3 -- these upgrades go with you through levels.
-    Defeat three waves of enemies to unlock the boss of the area. '
+    Use the num keys to select a tower to plant over the square
+    you are standing on. Upgrades may be purchased using F1, F2, and F3 -- these
+    upgrades go with you through levels. '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -14482,7 +14461,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -606.3946}
+  m_AnchoredPosition: {x: 0, y: -885.94507}
   m_SizeDelta: {x: 673.5122, y: 235.9462}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1324384237
@@ -17806,7 +17785,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00048828125, y: 0.00036621094}
+  m_AnchoredPosition: {x: -0.00048828125, y: 0.00048828125}
   m_SizeDelta: {x: 1919.9985, y: 1080.0015}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1689868065
@@ -22085,6 +22064,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpawnPool
       objectReference: {fileID: 0}
+    - target: {fileID: 1913497103432878247, guid: aded6ab4d6fa23a4e978a80d98306ef3, type: 3}
+      propertyPath: tier1ToPool
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1913497103432878247, guid: aded6ab4d6fa23a4e978a80d98306ef3, type: 3}
+      propertyPath: tier2ToPool
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1913497103432878247, guid: aded6ab4d6fa23a4e978a80d98306ef3, type: 3}
+      propertyPath: tier3ToPool
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6174876083049244801, guid: aded6ab4d6fa23a4e978a80d98306ef3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -35.056046
@@ -22569,6 +22560,14 @@ PrefabInstance:
       value: TierManager
       objectReference: {fileID: 0}
     - target: {fileID: 7182576862611050603, guid: 4de263c7e003ff04d8c55d846ad8029c, type: 3}
+      propertyPath: gracePeriod
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7182576862611050603, guid: 4de263c7e003ff04d8c55d846ad8029c, type: 3}
+      propertyPath: waveSpawnDelay
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7182576862611050603, guid: 4de263c7e003ff04d8c55d846ad8029c, type: 3}
       propertyPath: 'spawners.Array.data[0]'
       value: 
       objectReference: {fileID: 1254352552}
@@ -22601,7 +22600,6 @@ SceneRoots:
   - {fileID: 952241648}
   - {fileID: 832575519}
   - {fileID: 958033396}
-  - {fileID: 675673275}
   - {fileID: 7167753380932565785}
   - {fileID: 297711692}
   - {fileID: 424392565}

@@ -140,11 +140,11 @@ public class UIController : MonoBehaviour
         goldYield.text = $"Gold Yield: {GoldManager.Instance.GoldFarmYield}";
         goldCost.text = $"Cost: {GoldManager.Instance.GoldFarmCost}";
     }
-    internal IEnumerator WaveCountdown(float time)
+    internal IEnumerator WaveCountdown(float time, int currentTier)
     {
         while (time > 0)
         {
-            roundText.text = $"Round {TierManager.Instance.CurrentTier} starting in: {time:0}";
+            roundText.text = $"Round {currentTier} starting in: {time:0}";
             yield return new WaitForSeconds(1f);
             time--;
         }
@@ -169,7 +169,7 @@ public class UIController : MonoBehaviour
     }
     public void OnClickStartGame()
     {
-        GameManager.Instance.StartGame();
+        GameManager.Instance.StartNewGame();
         mainMenuPanel.SetActive(false);
     }
     public void OnClickTryAgain()
@@ -192,8 +192,8 @@ public class UIController : MonoBehaviour
     {
         confirmQuitPanel.SetActive(false);
     }
-    public void OnClickMainMenu()
-    {
-        GameManager.Instance.ResetEntireGame();
-    }
+    //public void OnClickMainMenu()
+    //{
+    //    GameManager.Instance.ResetEntireGame();
+    //}
 }

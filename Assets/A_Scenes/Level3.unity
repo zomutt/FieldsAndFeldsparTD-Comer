@@ -7794,10 +7794,11 @@ MonoBehaviour:
   - {fileID: 8722931411032596606, guid: f17d6fbd36910054cb9fdf0b7d0c2115, type: 3}
   tier3Prefabs:
   - {fileID: 4960038879021250351, guid: 39f422e0ce79eea41ae268980d959b0a, type: 3}
-  spawnDelay: 10
+  tier4Prefabs: []
   tier1ToPool: 30
   tier2ToPool: 60
   tier3ToPool: 90
+  tier4ToPool: 0
 --- !u!1 &429380839
 GameObject:
   m_ObjectHideFlags: 0
@@ -8386,8 +8387,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e240df6b202ea5147abe9e45367bab83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GoldManager
+  baseGoldFarmYield: 0
+  baseGold: 0
+  basePassiveIncome: 0
+  baseFarmCost: 0
   goldFarmYield: 5
-  passiveIncome: 5
+  goldFarmCost: 0
 --- !u!4 &464705767
 Transform:
   m_ObjectHideFlags: 0
@@ -10197,6 +10202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TierManager
   waveSpawnDelay: 5
+  gracePeriod: 0
   timeBetweenSpawns: 0.2
   spawners:
   - {fileID: 1254352552}
@@ -13554,6 +13560,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0992fc8290e73b348814d982c1094290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIController
+  mainMenuPanel: {fileID: 0}
+  helpMenu: {fileID: 0}
+  confirmQuitPanel: {fileID: 0}
   timerText: {fileID: 65795340}
   roundText: {fileID: 1323917735}
   castleHealthText: {fileID: 815904550}
@@ -13563,12 +13572,10 @@ MonoBehaviour:
   timerPanel: {fileID: 690412423}
   losePanel: {fileID: 1293280583}
   castleStatsPanel: {fileID: 997562056}
-  level1WinPanel: {fileID: 0}
-  level2WinPanel: {fileID: 0}
-  level3WinPanel: {fileID: 0}
+  levelWinPanel: {fileID: 0}
+  winGamePanel: {fileID: 0}
   loseGamePanel: {fileID: 0}
-  quitPanel: {fileID: 0}
-  confirmQuitPanel: {fileID: 0}
+  totalTime: {fileID: 0}
   shooterDMG: {fileID: 80698051}
   shooterCost: {fileID: 822276675}
   aoeDMG: {fileID: 1486857433}
@@ -13602,6 +13609,7 @@ GameObject:
   - component: {fileID: 952328403}
   - component: {fileID: 952328402}
   - component: {fileID: 952328401}
+  - component: {fileID: 952328404}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -13651,6 +13659,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &952328404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 952328400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.StandaloneInputModule
+  m_SendPointerHoverToParent: 1
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
 --- !u!1001 &957217164
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24391,6 +24419,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54c1b36aa8c7a52488023fd6c71c50ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  costIncreasePerLevel: 50
+  UIManagerObj: {fileID: 0}
 --- !u!4 &1860694494
 Transform:
   m_ObjectHideFlags: 0

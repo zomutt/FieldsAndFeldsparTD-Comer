@@ -9,6 +9,8 @@ TagManager:
   - Tower
   - BuildArea
   - Enemy
+  - Spawner
+  - DestinationCube
   layers:
   - Default
   - TransparentFX

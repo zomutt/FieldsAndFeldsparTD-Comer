@@ -11,10 +11,7 @@ using UnityEngine.Pool;
 
 public class WaveSpawnPool : MonoBehaviour
 {
-    public static WaveSpawnPool Instance;
-
-    [Header("Spawners")]
-    [SerializeField] private GameObject[] spawners;
+    public static WaveSpawnPool Instance { get; private set; }
 
     [Header("Prefabs")]
     [SerializeField] private GameObject[] tier1Prefabs;
@@ -72,7 +69,15 @@ public class WaveSpawnPool : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
 
         tier1Pool = new ObjectPool<GameObject>(
             createFunc: () => Instantiate(tier1Prefabs[Random.Range(0, tier1Prefabs.Length)]),      // Random enemy from the prefab array -- this is to add more variety to the level
