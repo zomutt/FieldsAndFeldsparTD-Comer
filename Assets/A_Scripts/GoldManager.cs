@@ -87,6 +87,7 @@ public class GoldManager : MonoBehaviour
         // Called by GameManager.cs when a level is lost
         currentGold = savedGold;
         goldFarmYield = savedGoldFarmYield;
+        UIController.Instance.UpdateUI();
     }
     public int GoldPerSec()
     {
