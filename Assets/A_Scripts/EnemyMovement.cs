@@ -13,7 +13,7 @@ public class EnemyMovement : MonoBehaviour
     private Transform currentTarget;
     private bool headingToCastle;
     [SerializeField] private float speed;
-    internal float Speed => speed;          // Needed so that enemy can never out-run projectiles
+    public float Speed => speed;          // Needed so that enemy can never out-run projectiles
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -41,12 +41,10 @@ public class EnemyMovement : MonoBehaviour
             return;
         }
         float distance = Vector3.Distance(transform.position, currentTarget.position);
-        Debug.Log($"Distance to target: {distance}, headingToCastle: {headingToCastle}, castleTransform null: {castleTransform == null}");
         // If the enemy is close enough to its waypoint, then it can start moving towards the castle
         // Waypoints were needed due to the lanes being uneven in length and causing routing issues
         if (distance < 8)
         {
-            Debug.Log("Entering castle redirect!");
             headingToCastle = true;
             currentTarget = castleTransform;
             agent.SetDestination(castleTransform.position);

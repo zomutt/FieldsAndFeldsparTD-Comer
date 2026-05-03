@@ -70,6 +70,7 @@ public class CastleStats : MonoBehaviour
     }
     private IEnumerator PassiveHeal()
     {
+        // Passively heals the castle so that the player has a chance of recovery after a bad moment
         while (true)
         {
             yield return new WaitForSeconds(1f);
@@ -78,7 +79,6 @@ public class CastleStats : MonoBehaviour
                 currentHealth += passiveHealAmount;
                 currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
                 UIController.Instance.UpdateUI();
-                Debug.Log($"Castle passively healed! New castle HP: {currentHealth}");
             }
         }
     }

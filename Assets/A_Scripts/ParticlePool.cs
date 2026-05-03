@@ -18,7 +18,7 @@ public class ParticlePool : MonoBehaviour
             createFunc: () => Instantiate(enemyDeathParticles),
             actionOnGet: (ps) => ps.gameObject.SetActive(true),
             actionOnRelease: (ps) => ps.gameObject.SetActive(false),
-            defaultCapacity: 20, maxSize: 50
+            defaultCapacity: 20, maxSize: 90
             );
     }
     public void SpawnDeathEffect(Vector3 position)

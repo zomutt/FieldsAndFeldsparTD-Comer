@@ -138,17 +138,27 @@ public class UIController : MonoBehaviour
 
         timerText.text = $"Time Elapsed: {minutes:00}:{seconds:00}"; // The 00 ensures that 2 digits will always be shown
     }
-    internal void UpdateUI()
+    public void UpdateUI()
     {
-        if (CastleStats.Instance.CurrentHealth < 34)      // Makes sure the color of the castle HP stands out if the player is in immediate danger of losing.
-        { 
-            castleHealthText.color = Color.red;
+        if (CastleStats.Instance == null)
+        {
+            castleHealthText.text = "--/--";    // Displays this while the rest of the game loads. Without, the text briefly flashes red and says 0.
+            castleHealthText.color = Color.black;
         }
         else
         {
-            castleHealthText.color = Color.black;
+            if (CastleStats.Instance.CurrentHealth <= (CastleStats.Instance.MaxHealth / 3))      // Alerts the player that they are running very low on health.
+            {
+                castleHealthText.color = Color.red;
+            }
+            else
+            {
+                castleHealthText.color = Color.black;
+            }
+            castleHealthText.text = $"Castle HP: {CastleStats.Instance.CurrentHealth}/{CastleStats.Instance.MaxHealth}";
         }
         castleHealthText.text = $"Castle HP: {CastleStats.Instance.CurrentHealth}/{CastleStats.Instance.MaxHealth}";
+
         totalGoldText.text = $"Gold: {GoldManager.Instance.CurrentGold}";
         goldPerSecText.text = $"Gold/Sec: {GoldManager.Instance.GoldPerSec()}";
 
@@ -169,7 +179,7 @@ public class UIController : MonoBehaviour
 
         totalKillsText.text = $"Total Kills: {GameManager.Instance.TotalKills}";
     }
-    internal IEnumerator WaveCountdown(float time, int currentTier)
+    public IEnumerator WaveCountdown(float time, int currentTier)
     {
         while (time > 0)
         {
@@ -183,7 +193,7 @@ public class UIController : MonoBehaviour
     {
         totalKillsText.text = ($"Total Kills: {totalKills}");
     }
-    internal void LoseGame()
+    public void LoseGame()
     {
         losePanel.SetActive(true);
         controlPanel.SetActive(false);
@@ -282,8 +292,8 @@ public class UIController : MonoBehaviour
     {
         UpgradeManager.Instance.UpgradeMine();
     }
-    //public void OnClickMainMenu()
-    //{
-    //    GameManager.Instance.ResetEntireGame();
-    //}
+    public void OnClickMainMenu()
+    {
+        GameManager.Instance.ResetEntireGame();
+    }
 }

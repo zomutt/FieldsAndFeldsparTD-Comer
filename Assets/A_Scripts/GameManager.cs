@@ -91,6 +91,21 @@ public class GameManager : MonoBehaviour
             AdvanceLevel();
         }
     }
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        if (isResetting)
+        {
+            isResetting = false;
+            GoldManager.Instance.ZeroFarmCount();
+            TierManager.Instance.StartLevel();
+        }
+        else
+        {
+            StartNewLevel();
+        }
+        ResumeGame();
+    }
     public void AdvanceLevel()
     {
     // Called by UIController when player hits next level button.
@@ -108,21 +123,6 @@ public class GameManager : MonoBehaviour
             UIController.Instance.WinGame();
         }
     }
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-        if (isResetting)
-        {
-            isResetting = false;
-            GoldManager.Instance.ZeroFarmCount();
-            TierManager.Instance.StartLevel();
-        }
-        else
-        {
-            StartNewLevel();
-        }
-        ResumeGame();
-    }
     public void WinLevel()        
     {
         // Called by TierManager to signal when the player has eliminated all enemies and won the level
@@ -130,7 +130,15 @@ public class GameManager : MonoBehaviour
         // Freezes time so that at the end of the game, the player can accurately see how long it takes for them to finish the game *minus* time spent in menus
         PauseGame();
         SaveAllStats();    // Saves any upgrades the player may have obtained
-        UIController.Instance.WinLevel();
+
+        if (currentLevel < 4)
+        {
+            UIController.Instance.WinLevel();
+        }
+        else
+        {
+            UIController.Instance.WinGame();
+        }
     }
     public void ResetLevel()
     {
@@ -150,7 +158,6 @@ public class GameManager : MonoBehaviour
         GoldManager.Instance.LoadStats();
         UpgradeManager.Instance.LoadData();
         UIController.Instance.UpdateUI();
-        
     }
     private void SaveAllStats()
     {

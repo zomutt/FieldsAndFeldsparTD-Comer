@@ -38,7 +38,7 @@ public abstract class ProjectileBase : MonoBehaviour
         enemyTarget = null;
         StopAllCoroutines();
     }
-    internal virtual void SetTarget(EnemyBase target)
+    public virtual void SetTarget(EnemyBase target)
     {
         // Called and set by ShooterTower.cs or AoeTower.cs, so on and so forth.
         enemyTarget = target;

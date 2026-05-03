@@ -2,13 +2,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Tower Spawners are tiled in such a way so as to keep the player from double building, messing up their geometry, miscounting tiles they can build, etc.
-/// Instantiation was chosen over deactivated towers or object pooling because the player will realistically only build a small percentage of what they can per level.
-/// This was considered the most efficient way over other options for this reason since player income throttles tower spam.
-/// 
-/// ***Also, there WILL be a way to remove towers. I set up a blank GO for this reason, but that will be implemented for portfolio, not for the assignment.***
-/// 
-/// Consider Raycast that checks collision with player to avoid constant checks on all squares.
+/// Input and decisions are made by PlayerController.cs and this executes them out. The player is operating off a raycast that detects what tile they are on and then tells the tile what to build.
+/// This was done to reduce overhead cost and increase game performance, especially given ~200 or so exist per scene.
 /// </summary>
 public class BuildingSquare : MonoBehaviour
 {
@@ -29,7 +24,7 @@ public class BuildingSquare : MonoBehaviour
         public int cost;
     }
 
-    [Header("Towers (Type -> Prefab pairs)")]
+    [Header("Towers (Type to Prefab pairs)")]
     [SerializeField] private TowerPrefabEntry[] towerPrefabs;
 
     private Dictionary<TowerType, TowerPrefabEntry> prefabLookup;
@@ -39,8 +34,6 @@ public class BuildingSquare : MonoBehaviour
     // The player should be able to clearly see which tile they are considered to be on
     private Renderer towerSR;
     private Color startColor;
-    private bool playerPresent;
-
     private void Start()
     {
         isOccupied = false;
@@ -54,8 +47,9 @@ public class BuildingSquare : MonoBehaviour
         foreach (var tower in towerPrefabs)
         {
             if (tower.type == TowerType.None)
+            {
                 continue;
-
+            }
             prefabLookup[tower.type] = tower;
         }
     }
@@ -77,48 +71,12 @@ public class BuildingSquare : MonoBehaviour
 
         isOccupied = true;  // Prevents more than one tower being built on this tile
     }
-    private void OnTriggerEnter(Collider other)
+    public void OnPlayerEnter()
     {
-        // Allows player to see what square they are on
-        if (other.gameObject.CompareTag("Player"))
-        {
-            towerSR.material.color = Color.green;
-            playerPresent = true;
-        }
+        towerSR.material.color = Color.green;
     }
-    private void OnTriggerExit(Collider other)
+    public void OnPlayerExit()
     {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            towerSR.material.color = startColor;
-            playerPresent = false;
-        }
-    }
-    private void Update()
-    {
-        // The player has a tiny collider so it only targets the tile directly below the center
-        if (playerPresent)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha0))
-            {
-                // This removes the tower from this tile. You DO NOT get a refund. This is intentional to prevent tower spamming and encourage strategic building.
-                // This is also a WIP that is not intended to work just yet. That is portfolio priority.
-                SpawnTower(TowerType.None);
-                isOccupied = false;
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                SpawnTower(TowerType.Shooter);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                SpawnTower(TowerType.AOE);
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                SpawnTower(TowerType.Gold);
-            }
-        }
-        // More keybinds will be added as the scope and tower amount grows, but this is enough for this level of scope.
+        towerSR.material.color = startColor;
     }
 }
