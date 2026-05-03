@@ -2,104 +2,90 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 using System.Collections.Generic;
-public class CastleStats
+public class CastleStats : MonoBehaviour
 {
     /// <summary>
     /// The Castle in this game acts as the stationary player, and thus, takes on a lot of the same attributes as a PlayerStats.cs script would.
     /// This includes health, upgrades, and currency.
     /// Of course, our player is also the builder (invulerable, does not fight), but that serves more as a simple tool to construct towers rather than the the thing to protect.
-    /// Think of the castle as the main hub/econ center. I like to think of it as the main area where commerce and such happens. May be refactored later.
+    /// Systems such as shielding and repair will be implemented for portfolio, but passive heal is meant to make up for removing this mechanic.
     /// </summary>
-    public static CastleStats Instance { get; private set; } = new CastleStats();
+    public static CastleStats Instance;
 
-    private float currentHealth;
-    public float CurrentHealth => currentHealth;
+    private int currentHealth;
+    public int CurrentHealth => currentHealth;
 
-    private float maxHealth;
-    public float MaxHealth => maxHealth;
+    [SerializeField] private int maxHealth;
+    public int MaxHealth => maxHealth;
 
     // The player may repair their castle and purchase upgrades that increase amount repaired.
-    private int repairAmount;
-    public int RepairAmount => repairAmount;
+    // TEMP DISABLED. MAY COME BACK FOR PORTFOLIO.
+    // Passive heal is replacing shield/repair mechanics for fairness.
 
-    // Armor reduces incoming damage based off percentage. There is only damage type in game, so only one armor type is needed.
-    // Done as decimals to correspond with percentage i.e. 1 - .5 = 95% incoming damage.
-    private float armor;
-    public float Armor => armor;
+    //[SerializeField] private int repairAmount;
+    //public int RepairAmount => repairAmount;
 
-    // The player may purchase a shield in an emergency to grant temporary invulnerability.
-    private bool hasShield;
-    public bool HasShield => hasShield;
+
+    // The player may purchase a shield in an emergency to grant temporary invulnerability. TEMP DISABLED. MAY COME BACK FOR PORTFOLIO.
+    //private bool hasShield;
+    //public bool HasShield => hasShield;
+
+    [SerializeField] private int passiveHealAmount;
 
     // This works for both the shields and the iframe coroutine.
 
     private bool isInvincible;
-    public bool IsInvincible => isInvincible;
-    public void SetInvincible(bool value)
-    {
-        isInvincible = value;
-    }
 
-    // If the player loses during a level, they do not restart from the beginning of the game.
-    // They start at the beginning of the level and get to keep whatever upgrades they had initially.
-    // Ex: If during level one they get +5 maxHP, they go into level two with that +5 maxHP
-    // If they die during level 2, they do not keep whatever upgrades they got during that level, but they still have the +5 maxHP
-    private float savedMaxHealth;
-    private float savedArmor;
-
-    private CastleStats()
+    private void Awake()
     {
-        // ONLY called at the beginning of the game
-        SetStatsInitial();
-        SaveStats();
+        Instance = this;
     }
-    public void SaveStats()
+    private void Start()
     {
-        savedMaxHealth = maxHealth;
-        savedArmor = armor;
-    }
-    public void LoadStats()
-    {
-        // This is called when the player loses the round; the player respawns in the same level essentially from right where they left off.
-        maxHealth = savedMaxHealth;
-        armor = savedArmor;
-        isInvincible = false;
-    }
-    public void SetStatsInitial()      // Only called at the beginning of the game, not on level restarts
-    {
-        maxHealth = 100;
         currentHealth = maxHealth;
-
-        hasShield = false;
         isInvincible = false;
-
-        savedArmor = .1f;
+        StartCoroutine(PassiveHeal());
     }
 
-    public void Repair()
-    {
-        currentHealth += repairAmount;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        Debug.Log($"Castle repaired! New castle HP: {currentHealth}");
-    }
-    public void TakeDamage(float rawDamage)
+    //public void Repair()
+    //{
+    //    currentHealth += repairAmount;
+    //    currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+    //    Debug.Log($"Castle repaired! New castle HP: {currentHealth}");
+    //}
+    public void TakeDamage(int damage)
     {
         if (isInvincible) return;
+        currentHealth -= damage;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
-        float armorReduction = (1 - armor);      // Ex: 1.00 - .1 = 90% damage taken
-        float incomingDamage = rawDamage * armorReduction;
-
-        currentHealth -= incomingDamage;
-
-        CastleDamageHandler.Instance.BeginIframe();
+        StartCoroutine(Iframe());
         UIController.Instance.UpdateUI();
 
         if (currentHealth <= 0)
         {
-            CastleDamageHandler.Instance.ClearAllDamageCoroutines();
             Debug.Log("CastleStats: Castle destroyed! Game over.");
             GameManager.Instance.CastleDestroyed();
-            WaveSpawnPool.Instance.StopAllCoroutines();
         }
+    }
+    private IEnumerator PassiveHeal()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+            if (currentHealth < maxHealth)
+            {
+                currentHealth += passiveHealAmount;
+                currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+                UIController.Instance.UpdateUI();
+                Debug.Log($"Castle passively healed! New castle HP: {currentHealth}");
+            }
+        }
+    }
+    private IEnumerator Iframe()
+    {
+        isInvincible = true;
+        yield return new WaitForSeconds(.2f);
+        isInvincible = false;
     }
 }

@@ -26,14 +26,21 @@ public class UIController : MonoBehaviour
 
     [Header("Castle Stats")]
     [SerializeField] private TextMeshProUGUI castleHealthText;
-    [SerializeField] private TextMeshProUGUI castleArmorText;
     [SerializeField] private TextMeshProUGUI totalGoldText;
     [SerializeField] private TextMeshProUGUI goldPerSecText;
+    [SerializeField] private TextMeshProUGUI totalKillsText;
 
     [Header("In-Game Panels")]
-    [SerializeField] private GameObject timerPanel;
     [SerializeField] private GameObject losePanel;
-    [SerializeField] private GameObject castleStatsPanel;
+    [SerializeField] private GameObject controlPanel;
+
+    [Header("Pause/Help")]   // Honestly these two really just go hand in hand
+    [SerializeField] private GameObject pausePanel;     // Black overlay that displays when game is paused
+    [SerializeField] private TextMeshProUGUI pauseText;
+    private bool isPaused;
+    [SerializeField] private GameObject helpPanel;
+    private bool isHelpOpen;
+    private bool pausedByHelp;         // This is to try to help the bug that is occuring where closing from help keeps the game paused when it should not.
 
     [Header("Win/Lose")]
     [SerializeField] private GameObject levelWinPanel;
@@ -44,16 +51,22 @@ public class UIController : MonoBehaviour
     [Header("Towers")]
     [SerializeField] private TextMeshProUGUI shooterDMG;
     [SerializeField] private TextMeshProUGUI shooterCost;
+    [SerializeField] private TextMeshProUGUI shooterUpgradeCost;
+    [SerializeField] private TextMeshProUGUI shooterUpgradeAmt;
 
     [SerializeField] private TextMeshProUGUI aoeDMG;
     [SerializeField] private TextMeshProUGUI aoeCost;
+    [SerializeField] private TextMeshProUGUI aoeUpgradeCost;
+    [SerializeField] private TextMeshProUGUI aoeUpgradeAmt;
 
-    [SerializeField] private TextMeshProUGUI goldYield;
-    [SerializeField] private TextMeshProUGUI goldCost;
+    [SerializeField] private TextMeshProUGUI mineYield;
+    [SerializeField] private TextMeshProUGUI mineCost;
+    [SerializeField] private TextMeshProUGUI mineUpgradeCost;
+    [SerializeField] private TextMeshProUGUI mineUpgradeAmt;
 
 
     // This is needed so that UI controller ONLY resets everything when the player begins a fresh game.
-    private bool pendingGameReset = false;   
+    private bool pendingGameReset = false;
 
     private void Awake()
     {
@@ -61,18 +74,18 @@ public class UIController : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
-        else
+        else if (Instance != this)
         {
             Destroy(gameObject);
         }
-        SceneManager.sceneLoaded += OnSceneLoaded;
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        levelWinPanel.SetActive(false);
-        winGamePanel.SetActive(false);
-        loseGamePanel.SetActive(false);
+        if (levelWinPanel != null) levelWinPanel.SetActive(false);
+        if (winGamePanel != null) winGamePanel.SetActive(false);
+        if (loseGamePanel != null) loseGamePanel.SetActive(false);
 
         if (pendingGameReset)
         {
@@ -87,14 +100,18 @@ public class UIController : MonoBehaviour
     private void StartGame()
     {
         // Called both in Start() and when the game is supposed to start over from scratch. This ensures that player may start again without having to close the game.
+        controlPanel.SetActive(true);
         mainMenuPanel.SetActive(true);
-        timerPanel.SetActive(true);
-        castleStatsPanel.SetActive(true);
         losePanel.SetActive(false);
         confirmQuitPanel.SetActive(false);
         winGamePanel.SetActive(false);
         levelWinPanel.SetActive(false);
         helpMenu.SetActive(false);
+
+        pausePanel.SetActive(false);
+        pauseText.text = "Pause";
+        isPaused = false;
+        isHelpOpen = false;
 
         roundText.text = null;
 
@@ -123,22 +140,34 @@ public class UIController : MonoBehaviour
     }
     internal void UpdateUI()
     {
-        // This rounds up or down because while there's percentage based damage reduction that gives messy numbers, the players do not need to see this on the front end.
-        int displayHP = Mathf.RoundToInt(CastleStats.Instance.CurrentHealth);
-
-        castleHealthText.text = $"Castle HP: {displayHP}/{CastleStats.Instance.MaxHealth}";
-        castleArmorText.text = $"Castle Armor: {CastleStats.Instance.Armor}";
+        if (CastleStats.Instance.CurrentHealth < 34)      // Makes sure the color of the castle HP stands out if the player is in immediate danger of losing.
+        { 
+            castleHealthText.color = Color.red;
+        }
+        else
+        {
+            castleHealthText.color = Color.black;
+        }
+        castleHealthText.text = $"Castle HP: {CastleStats.Instance.CurrentHealth}/{CastleStats.Instance.MaxHealth}";
         totalGoldText.text = $"Gold: {GoldManager.Instance.CurrentGold}";
         goldPerSecText.text = $"Gold/Sec: {GoldManager.Instance.GoldPerSec()}";
 
         shooterDMG.text = $"Damage: {TowerStats.Instance.ShooterDamage}";
         shooterCost.text = $"Cost: {TowerStats.Instance.ShooterCost}";
+        shooterUpgradeCost.text = $"Upgrade Cost: {UpgradeManager.Instance.ShooterUpgradeCost}";
+        shooterUpgradeAmt.text = $"Dmg Upgrade: +{UpgradeManager.Instance.ShooterDMGUpgrade}";
 
         aoeDMG.text = $"Damage/Sec: {TowerStats.Instance.AoeDamage}";
         aoeCost.text = $"Cost: {TowerStats.Instance.AoeCost}";
+        aoeUpgradeCost.text = $"Upgrade Cost: {UpgradeManager.Instance.AoeUpgradeCost}";
+        aoeUpgradeAmt.text = $"Dmg Upgrade: +{UpgradeManager.Instance.AoeDMGUpgrade}";
 
-        goldYield.text = $"Gold Yield: {GoldManager.Instance.GoldFarmYield}";
-        goldCost.text = $"Cost: {GoldManager.Instance.GoldFarmCost}";
+        mineYield.text = $"Gold Yield: {GoldManager.Instance.GoldFarmYield}";
+        mineCost.text = $"Cost: {GoldManager.Instance.GoldFarmCost}";
+        mineUpgradeCost.text = $"Upgrade Cost: {UpgradeManager.Instance.MineUpgradeCost}";
+        mineUpgradeAmt.text = $"Yield Upgrade: +{UpgradeManager.Instance.MineYieldUpgrade}";
+
+        totalKillsText.text = $"Total Kills: {GameManager.Instance.TotalKills}";
     }
     internal IEnumerator WaveCountdown(float time, int currentTier)
     {
@@ -150,22 +179,71 @@ public class UIController : MonoBehaviour
         }
         roundText.text = null;
     }
+    public void TrackTotalKills(int totalKills)
+    {
+        totalKillsText.text = ($"Total Kills: {totalKills}");
+    }
     internal void LoseGame()
     {
-        timerPanel.SetActive(false);
-        castleStatsPanel.SetActive(false);
         losePanel.SetActive(true);
+        controlPanel.SetActive(false);
     }
     public void WinLevel()
     {
         levelWinPanel.SetActive(true);
+        controlPanel.SetActive(false);
     }
     public void WinGame()
     { 
         winGamePanel.SetActive(true);
+        controlPanel.SetActive(false);
 
         // Displays to the player how long it took for them to finish the game
         totalTime.text = timerText.text;    
+    }
+    public void OnClickPauseGame()
+    {
+        if (!isPaused)
+        {
+            GameManager.Instance.PauseGame();
+            isPaused = true;
+            pausePanel.SetActive(true);
+            pauseText.text = "Play";       // Switches the text to actually make sense
+        }
+        else
+        {
+            GameManager.Instance.ResumeGame();
+            isPaused = false;
+            pausePanel.SetActive(false);
+            pauseText.text = "Pause";
+        }
+    }
+    public void OnClickToggleHelp()
+    {
+        if (!isHelpOpen)
+        {
+            if (!mainMenuPanel.activeSelf && !isPaused)
+            {
+                GameManager.Instance.PauseGame();
+                isPaused = true;
+                pausePanel.SetActive(true);
+                pausedByHelp = true;  
+            }
+            helpMenu.SetActive(true);
+            isHelpOpen = true;
+        }
+        else
+        {
+            helpMenu.SetActive(false);
+            isHelpOpen = false;
+            if (pausedByHelp)
+            {
+                GameManager.Instance.ResumeGame();
+                isPaused = false;
+                pausePanel.SetActive(false);
+                pausedByHelp = false;
+            }
+        }
     }
     public void OnClickStartGame()
     {
@@ -191,6 +269,18 @@ public class UIController : MonoBehaviour
     public void OnClickCancelQuit()
     {
         confirmQuitPanel.SetActive(false);
+    }
+    public void OnClickShooterUpgrade()
+    {
+        UpgradeManager.Instance.UpgradeShooter();
+    }
+    public void OnClickAoeUpgrade()
+    {
+        UpgradeManager.Instance.UpgradeAoe();
+    }
+    public void OnClickMineUpgrade()
+    {
+        UpgradeManager.Instance.UpgradeMine();
     }
     //public void OnClickMainMenu()
     //{

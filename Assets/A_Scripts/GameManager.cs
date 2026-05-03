@@ -12,10 +12,14 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     private int currentLevel;
+    public int CurrentLevel => currentLevel;    // Used by EnemyBase.cs because maxHealth is calculated as (baseHealth * currentLevel)
+    private int totalKills;
+    private bool isPaused;     // Here in case I need a flag. I have a feeling I will, have a feeling I won't. We shall see.
 
     // This is used to increase the cost of towers and gold farm each level, making the game more difficult as the player progresses. It is set in the inspector for easy tuning.
-    [SerializeField] private int costIncreasePerLevel = 50;
+    [SerializeField] private int costIncreasePerLevel = 100;
     [SerializeField] private GameObject UIManagerObj;
+    private bool isResetting;
     private void Awake()
     {
         if (Instance == null)
@@ -31,14 +35,16 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // Freezes time at the beginning of the game until the player hits the start button
-        Time.timeScale = 0f;        
+        PauseGame();        
         UIManagerObj.SetActive(true);    // Set active because I often turn it off while dev'ing
+        isPaused = false;
     }
     public void StartNewGame()
     {
         // This method is only called for level one -- not on level restarts, not on new levels
         InitializeAllStats();   // Initializes all stats to their starting values at the beginning of the game
-        Time.timeScale = 1f;        // Unfreezes time in case the player is starting a new game after losing or winning
+        ResumeGame();       // Unfreezes time in case the player is starting a new game after losing or winning
+        totalKills = 0;
 
         GoldManager.Instance.StartGame();   // Gives player their starting gold and income
         UIController.Instance.UpdateUI();
@@ -52,27 +58,37 @@ public class GameManager : MonoBehaviour
     {
         LoadAllStats();    // Loads stats so that the player can keep their upgrades from previous levels
         TowerStats.Instance.IncreaseAllCosts(costIncreasePerLevel);
+        GoldManager.Instance.IncreaseGoldCost(costIncreasePerLevel);
         UIController.Instance.UpdateUI();
 
         TierManager.Instance.StartLevel();  // Gets the first wave of enemies going after a short delay
     }
-    //public void ResetEntireGame()
-    //{
-    //    Time.timeScale = 1f;
+    public void ResetEntireGame()
+    {
+        ResumeGame();   // Resume so that coroutines and scene loading will work ... then we pause again right after.
 
-    //    // Destroy persistent singletons so they reinitialize
-    //    Destroy(UIController.Instance.gameObject);
-    //    Destroy(GoldManager.Instance.gameObject);
-    //    Destroy(TierManager.Instance.gameObject);
+        // Destroy persistent singletons so they reinitialize
+        Destroy(UIController.Instance.gameObject);
+        Destroy(GoldManager.Instance.gameObject);
+        Destroy(TierManager.Instance.gameObject);
 
-    //    // Load the first level scene
-    //    SceneManager.LoadScene("LevelOne");
-    //    currentLevel = 1;
-    //    Time.timeScale = 0f;    // Paused until the player hits the start button in the main menu, this keeps the timer intact
-    //}
-
+        // Load the first level scene
+        SceneManager.LoadScene("LevelOne");
+        currentLevel = 1;
+        PauseGame();    // Paused until the player hits the start button in the main menu, this keeps the timer intact
+    }
+    public void TrackTotalKills()
+    {
+        // Total kills accumulate across the entire playthrough intentionally. The kill tracking does nothing gameplay-wise but it can be cool to see.
+        // This is because honestly, it can feel nice for the player to see big number go big if they're getting demoralized from losing.
+        totalKills++;
+        UIController.Instance.UpdateUI();
+    }
+    public int TotalKills { get { return totalKills; } }
     public void CastleDestroyed()
     {
+        PauseGame();
+        WaveSpawnPool.Instance.StopAllCoroutines();
         UIController.Instance.LoseGame();
     }
     private void Update()
@@ -87,7 +103,7 @@ public class GameManager : MonoBehaviour
     {
     // Called by UIController when player hits next level button.
     // Game state win determined by TierManager, which signals the UIController when the player has won the level and can advance.
-        if (currentLevel < 4)
+        if (currentLevel < 3)
         {
             SaveAllStats();
             currentLevel++;
@@ -96,41 +112,48 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 0f;
+            PauseGame();
             UIController.Instance.WinGame();
         }
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;  // unsubscribe so it only fires once
-        StartNewLevel();
-        Time.timeScale = 1f;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        if (isResetting)
+        {
+            isResetting = false;
+            TierManager.Instance.StartLevel();
+        }
+        else
+        {
+            StartNewLevel();
+        }
+        ResumeGame();
     }
     public void WinLevel()        
     {
         // Called by TierManager to signal when the player has eliminated all enemies and won the level
 
         // Freezes time so that at the end of the game, the player can accurately see how long it takes for them to finish the game *minus* time spent in menus
-        Time.timeScale = 0f;
+        PauseGame();
         SaveAllStats();    // Saves any upgrades the player may have obtained
         UIController.Instance.WinLevel();
     }
     public void ResetLevel()
     {
-        // Called by UI controller when player loses the level but decides to try again
+        ResumeGame();
+        LoadAllStats();  
+        WaveSpawnPool.Instance.ResetPools();
+        isResetting = true;
+        SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
-        LoadAllStats();
-
-        TierManager.Instance.StartLevel();
-        Time.timeScale = 1f;       
     }
     private void LoadAllStats()
     {
         // This method is called when the player loses a level and decides to try again. It resets any upgrades they may have obtained during the level they lost, but keeps the ones from previous levels if applicable.
         TowerStats.Instance.LoadStats();
         GoldManager.Instance.LoadStats();
-        CastleStats.Instance.LoadStats();
+        UpgradeManager.Instance.LoadData();
         UIController.Instance.UpdateUI();
     }
     private void SaveAllStats()
@@ -138,14 +161,24 @@ public class GameManager : MonoBehaviour
         // Stats are saved at the end of each level so that the player may carry their upgrades with them through the game
         TowerStats.Instance.SaveStats();
         GoldManager.Instance.SaveStats();
-        CastleStats.Instance.SaveStats();
+        UpgradeManager.Instance.SaveData();
     }
     private void InitializeAllStats()
     {
         // This method exists so the player can cleanly start a new game from scratch after winning, losing, or quitting a game
-        CastleStats.Instance.SetStatsInitial();
         GoldManager.Instance.InitializeStats();
         TowerStats.Instance.InitializeStats();
+        UpgradeManager.Instance.InitializeData();
         UIController.Instance.UpdateUI();
+    }
+    public void PauseGame()
+    {
+        isPaused = true;
+        Time.timeScale = 0f;
+    }
+    public void ResumeGame()
+    {
+        isPaused = false;
+        Time.timeScale = 1f;    
     }
 }

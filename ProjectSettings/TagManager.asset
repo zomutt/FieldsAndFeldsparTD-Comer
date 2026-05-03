@@ -8,9 +8,9 @@ TagManager:
   - Castle
   - Tower
   - BuildArea
-  - Enemy
   - Spawner
   - DestinationCube
+  - Enemy
   layers:
   - Default
   - TransparentFX

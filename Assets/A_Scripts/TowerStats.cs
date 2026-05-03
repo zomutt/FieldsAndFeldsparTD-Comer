@@ -17,20 +17,20 @@ public class TowerStats : ScriptableObject
 
     [Header("Shooter Towers")]
     [SerializeField] private int baseShooterDamage;      // This stays the same, it is the value needed at the beginning of the game. No upgrades. 
-    [SerializeField] private float shooterDamage;
-    public float ShooterDamage => shooterDamage;
+    private int shooterDamage;
+    public int ShooterDamage => shooterDamage;
 
     [SerializeField] private float shooterCD;      // Attack speed never changes, so no need to initialize it
     public float ShooterCD => shooterCD;
 
     [SerializeField] private int baseShooterCost;        // This stays the same
-    [SerializeField] private int shooterCost;
+    private int shooterCost;
     public float ShooterCost => shooterCost;
 
     [Header("AOE Towers")]
     [SerializeField] private int baseAoeDamage;      // This stays the same
-    [SerializeField] private float aoeDamage;
-    public float AoeDamage => aoeDamage;
+    private int aoeDamage;
+    public int AoeDamage => aoeDamage;
 
     [SerializeField] private float aoeDuration;
     public float AoeDuration => aoeDuration;
@@ -39,12 +39,12 @@ public class TowerStats : ScriptableObject
     public float AoeCD => aoeCD;
 
     [SerializeField] private int baseAoeCost;        
-    [SerializeField] private int aoeCost;       
+    private int aoeCost;       
     public int AoeCost => aoeCost;
 
     /// SAVED STATS ///
-    private float savedShooterDamage;
-    private float savedAoeDamage;
+    private int savedShooterDamage;
+    private int savedAoeDamage;
 
     private void OnEnable()
     {
@@ -58,6 +58,9 @@ public class TowerStats : ScriptableObject
 
         aoeDamage = baseAoeDamage;
         aoeCost = baseAoeCost;
+
+        savedShooterDamage = baseShooterDamage;
+        savedAoeDamage = baseAoeDamage;
     }
     public void SaveStats()
     {
@@ -73,17 +76,12 @@ public class TowerStats : ScriptableObject
 
         aoeDamage = savedAoeDamage;
     }
-    public void UpgradeShooterDamage(float damage)
+    public void UpgradeShooterDamage(int damage)
     {
         shooterDamage += damage;
         Debug.Log($"New shooter tower damage: {shooterDamage}");
     }
-    public void IncreaseShooterCost(int cost)
-    {
-        // The cost of each tower increases per level. This is ONLY called when advancing to the next level.
-        shooterCost += cost;
-    }
-    public void UpgradeAoeDamage(float damage)
+    public void UpgradeAoeDamage(int damage)
     {
         aoeDamage += damage;
         Debug.Log($"New aoe damage: {aoeDamage}");

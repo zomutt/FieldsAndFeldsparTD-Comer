@@ -116,6 +116,14 @@ public class WaveSpawnPool : MonoBehaviour
             { TierLevel.Tier4, tier4Pool }
         };
     }
+    public void ResetPools()
+    {
+        // Called by GameManager.cs when a game/level is started to remove stale references and errors
+        tier1Pool.Clear();
+        tier2Pool.Clear();
+        tier3Pool.Clear();
+        tier4Pool.Clear();
+    }
     public GameObject GetEnemy(TierLevel tier)
     {
         // Called by EnemySpawner.cs to determine what to spawn

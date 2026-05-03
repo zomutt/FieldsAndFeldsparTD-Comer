@@ -77,8 +77,7 @@ public class AoeProjectile : ProjectileBase
         if (!isBurning) return;
         if (other.CompareTag("Enemy") && canDamage)
         {
-            var enemy = other.GetComponent<EnemyBase>();
-            if (enemy != null)
+            if (other.TryGetComponent<EnemyBase>(out EnemyBase enemy))
             {
                 enemy.TakeDamage(towerStats.AoeDamage);
             }

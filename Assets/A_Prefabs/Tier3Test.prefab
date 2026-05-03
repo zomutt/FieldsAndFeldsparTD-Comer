@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 8051498448000055847}
   m_Layer: 0
   m_Name: Tier3Test
-  m_TagString: Enemy
+  m_TagString: Tier2Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5216c365f9cd91047a85fa9b61eb0fa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  speed: 2.5
+  speed: 3
 --- !u!195 &73886388315816623
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -118,8 +118,8 @@ NavMeshAgent:
   m_GameObject: {fileID: 4960038879021250351}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5000001
-  m_Speed: 3.5
+  m_Radius: 0.1
+  m_Speed: 5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -130,7 +130,7 @@ NavMeshAgent:
   m_Height: 2
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 0
 --- !u!136 &4749451899532753174
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -216,8 +216,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a96b11993652ce419e28cda9cc8b657, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasicEnemy
-  maxHealth: 200
+  baseHealth: 200
+  currentHealth: 0
   damage: 15
   attackDelay: 0.1
-  armor: 5
   goldYield: 3

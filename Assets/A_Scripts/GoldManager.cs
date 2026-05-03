@@ -26,7 +26,7 @@ public class GoldManager : MonoBehaviour
     public int GoldFarmCost => goldFarmCost;
     
 
-    private int currentGold;
+    [SerializeField] private int currentGold;     // Serialized so I can be a cheater
     public int CurrentGold => currentGold;
 
     private int savedGold;    // If player loses, they start with whatever gold they had at the beginning of the level
@@ -135,6 +135,7 @@ public class GoldManager : MonoBehaviour
     }
     public void IncreaseGoldCost(int goldIncreasePerLevel)
     {
+        // Called by GameManager.cs when starting a brand new level
         goldFarmCost += goldIncreasePerLevel;
         UIController.Instance.UpdateUI();
         Debug.Log($"Gold farm cost increased. New cost: {goldFarmCost}");

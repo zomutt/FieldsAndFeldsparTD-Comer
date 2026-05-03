@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 1465687155363165925}
   m_Layer: 0
   m_Name: TierBossTest
-  m_TagString: Untagged
+  m_TagString: Tier2Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -33.75, y: 2, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 2, y: 3.5, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5216c365f9cd91047a85fa9b61eb0fa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  speed: 2.5
+  speed: 3
 --- !u!195 &4719282109613360869
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -117,8 +117,8 @@ NavMeshAgent:
   m_GameObject: {fileID: 8363046272788395321}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
+  m_Radius: 0.1
+  m_Speed: 5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -129,7 +129,7 @@ NavMeshAgent:
   m_Height: 1
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 0
 --- !u!54 &-1458915974359743333
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -176,7 +176,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.5, y: 0.5, z: 0.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1465687155363165925
 MonoBehaviour:
@@ -190,8 +190,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a96b11993652ce419e28cda9cc8b657, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasicEnemy
-  maxHealth: 1000
+  baseHealth: 1000
+  currentHealth: 0
   damage: 20
   attackDelay: 0.2
-  armor: 3
   goldYield: 50

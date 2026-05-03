@@ -1,25 +1,21 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public abstract class EnemyBase : MonoBehaviour
 {
     [Header("Base Enemy Stats")]
     // These are all floats because of how CastleStats.cs handles damage reduction, this reduces issues with conversions.
-    [SerializeField] protected float maxHealth;
-    protected float currentHealth;
+    [SerializeField] protected int baseHealth;
+    [SerializeField] protected int currentHealth;   // Serialized for testing purposes
 
-    [SerializeField] protected float damage;
+    [SerializeField] protected int damage;
     [SerializeField] protected float attackDelay;   // Seconds between each shot
     protected float cooldown;
-    [SerializeField] protected float armor;    // Reduces damage by flat amount
     [SerializeField] protected int goldYield;   // How much gold the player gets for killing this enemy
     protected bool hasCounted;     // If the kill has been logged or not
-    protected float incomingDamage;
     
     protected virtual void OnEnable()
     {
-        currentHealth = maxHealth;
+        currentHealth = (baseHealth * GameManager.Instance.CurrentLevel);
         cooldown = attackDelay;
         gameObject.tag = "Enemy";
         hasCounted = false;
@@ -28,35 +24,25 @@ public abstract class EnemyBase : MonoBehaviour
     {
         cooldown -= Time.deltaTime;
     }
-    internal virtual void TakeDamage(float rawDamage)
+    public virtual void TakeDamage(int damage)
     {
-        if (armor > rawDamage)
-        {
-            // Makes sure nothing can accidentally heal the enemy
-            incomingDamage = 1;
-        }
-        else
-        {
-            incomingDamage = rawDamage - armor;
-        }
-
-        currentHealth -= incomingDamage;
-
+        currentHealth -= damage;
         if (currentHealth <= 0)
         {
             DisableEnemy();
         }
     }
-    internal virtual void DisableEnemy()
+    public virtual void DisableEnemy()
     {
         if (!hasCounted)
         {
             TierManager.Instance.RecordKill();     // Tracks how many kills have occurred vs. how many mobs spawn in the tier
+            GameManager.Instance.TrackTotalKills();
             ParticlePool.Instance.SpawnDeathEffect(transform.position);
             hasCounted = true;    // Ensures no double-counting edge case
             GoldManager.Instance.GiveGold(goldYield);
         }
-        gameObject.SetActive(false);  
+        gameObject.SetActive(false);
     }
     protected virtual void OnTriggerStay(Collider other)
     {
@@ -66,7 +52,7 @@ public abstract class EnemyBase : MonoBehaviour
             DealDamage();
         }
     }
-    internal virtual void DealDamage()
+    protected virtual void DealDamage()
     {
         if (cooldown > 0f) return;
         CastleStats.Instance.TakeDamage(damage);
