@@ -1,14 +1,11 @@
     using System.Collections;
     using UnityEngine;
-
 public class TierManager : MonoBehaviour
 {
     /// <summary>
     /// This initiates new waves and keeps track of how many mobs have been killed.
     /// Killed mobs are compared against expected mobs to track when a wave should end.
     /// After the wave ends, the player has a grace period to prepare for the next wave.
-    /// 
-    /// This also handles initiating the spawns, but this will be refactored.
     /// </summary>
     public static TierManager Instance { get; private set; }
 
@@ -54,7 +51,6 @@ public class TierManager : MonoBehaviour
         mobsKilled = 0;
         currentTier = 1;
         StartCoroutine(WaveSpawnDelay());
-        Debug.Log($"Tier {currentTier} starting from TM");
     }
     private void FindSpawners()
     {
@@ -63,11 +59,6 @@ public class TierManager : MonoBehaviour
         for (int i = 0; i < spawnerObjects.Length; i++)
         {
             spawners[i] = spawnerObjects[i].GetComponent<EnemySpawner>();
-        }
-        Debug.Log($"Found {spawnerObjects.Length} spawners.");
-        if (spawners.Length != 3)
-        {
-            Debug.LogError("Spawner count is wrong! Expected 3.");
         }
     }
     private IEnumerator WaveSpawnDelay()
@@ -85,8 +76,8 @@ public class TierManager : MonoBehaviour
             UIController.Instance.StartCoroutine(UIController.Instance.WaveCountdown(waveSpawnDelay, currentTier));
             yield return new WaitForSeconds(waveSpawnDelay);
         }
-        currentSpawns = 0;    // Resets the spawn count for the new wave
-        mobsKilled = 0;     // Resets the kill count for the new wave
+        currentSpawns = 0;  
+        mobsKilled = 0;     
         StartCoroutine(SpawnEnemies());
     }
     private IEnumerator SpawnEnemies()
@@ -96,10 +87,7 @@ public class TierManager : MonoBehaviour
             Debug.LogError("No spawners found, aborting spawn.");
             yield break;  // All my homies hate infinite loop crashes
         }
-
-        Debug.Log($"TM Spawning enemies");
         expectedSpawns = WaveSpawnPool.Instance.GetAmountToSpawn(currentTier);
-        Debug.Log($"Expected spawns: {expectedSpawns}, Spawners found: {spawners.Length}");
         // Get all three spawners from the scene
         // Tracks how many spawns have occured vs. what the spawn pool actually is
         while (currentSpawns < expectedSpawns)
@@ -108,12 +96,10 @@ public class TierManager : MonoBehaviour
             {
                 if (spawner == null)
                 {
-                    Debug.LogError("TM: One of the spawners is null.");
                     continue;
                 }
                 if (currentSpawns >= expectedSpawns)
                 {
-                    Debug.Log("TM: Reached expected spawns, breaking out of spawn loop.");
                     break;
                 }
                 spawner.SpawnEnemy(currentTier, castleTransform);
@@ -125,22 +111,25 @@ public class TierManager : MonoBehaviour
     }
     public void RecordKill()
     {
-        // Called by enemy base script anytime a mob is destroyed
+        // Called by EnemyBase.cs anytime a mob is destroyed
+        // This tracks how many kills there are and compares them against the number in the pool. This works because I only pool the exact number that I need.
         mobsKilled++;
-        if (mobsKilled >= expectedSpawns)
+        if (mobsKilled < expectedSpawns)
         {
-            Debug.Log($"Wave {currentTier} cleared!");
-            if (currentTier < 4)
-            {
-                currentTier++;
-                StartCoroutine(WaveSpawnDelay());
-                GoldManager.Instance.GiveGold(currentTier * 100);     // Rewards the player with scaling gold once they complete a round
-            }
-            else if (currentTier == 4)
-            {
-                Debug.Log("Boss defeated! You win!");
-                GameManager.Instance.WinLevel();
-            }
+            return;  // Wave not over yet, so don't do anything else.
+        }
+        Debug.Log($"Wave {currentTier} cleared!");
+
+        GoldManager.Instance.GiveGold(currentTier * 100);  // Reward scales with tier
+
+        if (currentTier < 4)
+        {
+            currentTier++;
+            StartCoroutine(WaveSpawnDelay());
+        }
+        else
+        {
+            GameManager.Instance.WinLevel();
         }
     }
 }

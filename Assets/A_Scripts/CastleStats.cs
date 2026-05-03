@@ -12,7 +12,7 @@ public class CastleStats : MonoBehaviour
     /// </summary>
     public static CastleStats Instance;
 
-    private int currentHealth;
+    [SerializeField] private int currentHealth;         // Serialized for testing purposes
     public int CurrentHealth => currentHealth;
 
     [SerializeField] private int maxHealth;
@@ -85,7 +85,7 @@ public class CastleStats : MonoBehaviour
     private IEnumerator Iframe()
     {
         isInvincible = true;
-        yield return new WaitForSeconds(.2f);
+        yield return new WaitForSeconds(.4f);
         isInvincible = false;
     }
 }

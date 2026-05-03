@@ -25,7 +25,8 @@ public class TowerStats : ScriptableObject
 
     [SerializeField] private int baseShooterCost;        // This stays the same
     private int shooterCost;
-    public float ShooterCost => shooterCost;
+    public int ShooterCost => shooterCost;
+    private int savedShooterCost; 
 
     [Header("AOE Towers")]
     [SerializeField] private int baseAoeDamage;      // This stays the same
@@ -41,6 +42,7 @@ public class TowerStats : ScriptableObject
     [SerializeField] private int baseAoeCost;        
     private int aoeCost;       
     public int AoeCost => aoeCost;
+    private int savedAoeCost;
 
     /// SAVED STATS ///
     private int savedShooterDamage;
@@ -66,22 +68,26 @@ public class TowerStats : ScriptableObject
     {
         // Called when level is won
         savedShooterDamage = shooterDamage;
+        savedShooterCost = shooterCost;
 
         savedAoeDamage = aoeDamage;
+        savedAoeCost = aoeCost;
     }
     public void LoadStats()
     {
         // Called when level is lost
         shooterDamage = savedShooterDamage;
+        shooterCost = savedShooterCost;
 
         aoeDamage = savedAoeDamage;
+        aoeCost = savedAoeCost;
     }
-    public void UpgradeShooterDamage(int damage)
+    public void ChangeShooterDamage(int damage)
     {
         shooterDamage += damage;
         Debug.Log($"New shooter tower damage: {shooterDamage}");
     }
-    public void UpgradeAoeDamage(int damage)
+    public void ChangeAoeDamage(int damage)
     {
         aoeDamage += damage;
         Debug.Log($"New aoe damage: {aoeDamage}");

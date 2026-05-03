@@ -55,7 +55,7 @@ public abstract class EnemyBase : MonoBehaviour
     protected virtual void DealDamage()
     {
         if (cooldown > 0f) return;
-        CastleStats.Instance.TakeDamage(damage);
+        CastleStats.Instance.TakeDamage(damage);      // Castle is the only thing enemy can attack, so I'm not going to over-engineer this one.
         cooldown = attackDelay;      // CD reset
     }
 }

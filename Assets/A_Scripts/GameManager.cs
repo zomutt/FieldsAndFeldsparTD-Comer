@@ -2,11 +2,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// <summary>
-/// This handles all game state functions, yet allocates behaviour to other scripts as needed.
-/// Things such as removing Singletons to restart the game, advancing levels, and keeping track of what level the player is on are all handled here.
-/// This also handles calling the save and load functions for stats at the appropriate times, such as when the player wins or loses a level, or starts a new game.
-/// </summary>
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -65,17 +60,14 @@ public class GameManager : MonoBehaviour
     }
     public void ResetEntireGame()
     {
-        ResumeGame();   // Resume so that coroutines and scene loading will work ... then we pause again right after.
-
-        // Destroy persistent singletons so they reinitialize
-        Destroy(UIController.Instance.gameObject);
-        Destroy(GoldManager.Instance.gameObject);
-        Destroy(TierManager.Instance.gameObject);
-
-        // Load the first level scene
-        SceneManager.LoadScene("LevelOne");
+        // We're just gonna act like everything is brand new all over again
+        ResumeGame();
+        InitializeAllStats();
         currentLevel = 1;
-        PauseGame();    // Paused until the player hits the start button in the main menu, this keeps the timer intact
+        totalKills = 0;
+        WaveSpawnPool.Instance.ResetPools();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.LoadScene("LevelOne");
     }
     public void TrackTotalKills()
     {
@@ -122,6 +114,7 @@ public class GameManager : MonoBehaviour
         if (isResetting)
         {
             isResetting = false;
+            GoldManager.Instance.ZeroFarmCount();
             TierManager.Instance.StartLevel();
         }
         else
@@ -142,8 +135,10 @@ public class GameManager : MonoBehaviour
     public void ResetLevel()
     {
         ResumeGame();
-        LoadAllStats();  
+        LoadAllStats();
+        GoldManager.Instance.ZeroFarmCount();
         WaveSpawnPool.Instance.ResetPools();
+
         isResetting = true;
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -155,6 +150,7 @@ public class GameManager : MonoBehaviour
         GoldManager.Instance.LoadStats();
         UpgradeManager.Instance.LoadData();
         UIController.Instance.UpdateUI();
+        
     }
     private void SaveAllStats()
     {

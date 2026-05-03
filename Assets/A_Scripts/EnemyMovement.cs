@@ -33,9 +33,13 @@ public class EnemyMovement : MonoBehaviour
     private void Update()
     {
         if (headingToCastle)
+        {
             return;
+        }
         if (currentTarget == null)
+        {
             return;
+        }
         float distance = Vector3.Distance(transform.position, currentTarget.position);
         Debug.Log($"Distance to target: {distance}, headingToCastle: {headingToCastle}, castleTransform null: {castleTransform == null}");
         // If the enemy is close enough to its waypoint, then it can start moving towards the castle

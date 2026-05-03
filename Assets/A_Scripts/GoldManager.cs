@@ -42,7 +42,7 @@ public class GoldManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else
+        else if (Instance != this)
         {
             Destroy(gameObject);
         }
@@ -63,6 +63,9 @@ public class GoldManager : MonoBehaviour
         goldFarmYield = baseGoldFarmYield;
         goldFarmCost = baseFarmCost;
         currentGold = baseGold;
+        totalGoldFarms = 0;
+        savedGold = baseGold;
+        savedGoldFarmYield = baseGoldFarmYield;
     }
     private void Update()
     {
@@ -103,27 +106,23 @@ public class GoldManager : MonoBehaviour
         UIController.Instance.UpdateUI();
         Debug.Log($"Gold farm added. Total gold farms: {totalGoldFarms}");
     }
-
-    // v This feature MIGHT come back for portfolio. If we want to add a feature where the player can sell gold farms, then we would need this method to decrease the farm count and update the gold generation accordingly.
-    // For now, since we do not have a way to remove gold farms, this method is not necessary and can be added back in later if I decide to implement that feature. 
-
-    //public void DecreaseFarmCount()
-    //{
-    //    // Called by GoldFarms.cs when a gold farm is removed, so that the gold generation can be updated accordingly.
-    //    totalGoldFarms--;
-    //    UIController.Instance.UpdateUI();
-    //    Debug.Log($"Gold farm removed. Total gold farms: {totalGoldFarms}");
-    //}
-    public void IncreaseGoldYield(int yieldIncrease)
+    public void ZeroFarmCount()
     {
-        // Called by the upgrade system when the player purchases a gold farm yield upgrade, so that the gold generation can be updated accordingly.
-        goldFarmYield += yieldIncrease;
+        // Called by GameManager.cs when restarting level or advancing to next one.
+        totalGoldFarms = 0;
+        UIController.Instance.UpdateUI();
+    }
+    public void ChangeGoldYield(int amount)
+    {
+        // Called by the upgrade system when the player purchases a gold farm yield upgrade, so that the gold generation can be updated accordingly. Also called when losing level so upgrades are taken away.
+        goldFarmYield += amount;
         UIController.Instance.UpdateUI();
         Debug.Log($"Gold farm yield increased. New yield: {goldFarmYield}");
     }
     public void GiveGold(int amount)
     {
         // Called when an enemy is killed since enemies drop gold as reward
+        // TierManager.cs also calls this to give player a scaling reward for each round defeated
         currentGold += amount;
         UIController.Instance.UpdateUI();
     }

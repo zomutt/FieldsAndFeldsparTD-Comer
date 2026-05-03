@@ -14,10 +14,10 @@ public class WaveSpawnPool : MonoBehaviour
     public static WaveSpawnPool Instance { get; private set; }
 
     [Header("Prefabs")]
-    [SerializeField] private GameObject[] tier1Prefabs;
+    [SerializeField] private GameObject[] tier1Prefabs;   // The prefabs in the tier are identical save for different materials. When this 
     [SerializeField] private GameObject[] tier2Prefabs;
     [SerializeField] private GameObject[] tier3Prefabs;
-    [SerializeField] private GameObject[] tier4Prefabs;   // BOSS
+    [SerializeField] private GameObject[] tier4Prefabs;   // BOSS. Probably only one prefab, but I like the possibility of easily adding more.
 
     [Header("Amount To Spawn (Validate rounds down if value is not divisible by 3.)")]
     [Tooltip("This is corrected on validate if the divident is not evenly divisible by 3.")]
