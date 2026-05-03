@@ -5541,6 +5541,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 934104615907862734, guid: b22671dec865f56489b8abca40feb57e, type: 3}
+      propertyPath: moveSpeed
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 1381589180591419371, guid: b22671dec865f56489b8abca40feb57e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -16.01
@@ -11334,7 +11338,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &952241647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83250,11 +83254,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7182576862611050603, guid: 4de263c7e003ff04d8c55d846ad8029c, type: 3}
       propertyPath: gracePeriod
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7182576862611050603, guid: 4de263c7e003ff04d8c55d846ad8029c, type: 3}
       propertyPath: waveSpawnDelay
-      value: 1
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7182576862611050603, guid: 4de263c7e003ff04d8c55d846ad8029c, type: 3}
+      propertyPath: timeBetweenSpawns
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 7182576862611050603, guid: 4de263c7e003ff04d8c55d846ad8029c, type: 3}
       propertyPath: 'spawners.Array.data[0]'

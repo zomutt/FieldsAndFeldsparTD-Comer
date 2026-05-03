@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.AI;
-
 /// <summary>
 /// This is a simple script that controls the AI movement of the enemies. 
 /// Enemies spawn -> Enemies follow nav mesh to waypoint -> Enemies move to tower -> Enemies hit castle (handled separately) -> Castle loses hp -> GG.
@@ -15,8 +14,6 @@ public class EnemyMovement : MonoBehaviour
     private bool headingToCastle;
     [SerializeField] private float speed;
     internal float Speed => speed;          // Needed so that enemy can never out-run projectiles
-
-
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -25,13 +22,10 @@ public class EnemyMovement : MonoBehaviour
     {
         GameObject castleGO = GameObject.FindGameObjectWithTag("Castle");
         castleTransform = castleGO.transform;
-
         agent.speed = speed;
-
         // This makes it less likely for enemies to stack on top of each other
         agent.avoidancePriority = Random.Range(30, 70);
-
-        // This can go in start opposed to OnEnable because an enemy is only used once
+        // This can go in Start opposed to OnEnable because an enemy is only used once
         // Pooling was done for optimization and placing the load at the beginning of the game opposed to throughout the game, not for reuse
         headingToCastle = false;
     }
@@ -41,9 +35,7 @@ public class EnemyMovement : MonoBehaviour
             return;
         if (currentTarget == null)
             return;
-
         float distance = Vector3.Distance(transform.position, currentTarget.position);
-
         // If the enemy is close enough to its waypoint, then it can start moving towards the castle
         // Waypoints were needed due to the lanes being uneven in length and causing routing issues
         if (distance < 1)
