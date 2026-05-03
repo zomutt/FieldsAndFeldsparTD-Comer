@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 73886388315816623}
   - component: {fileID: 4749451899532753174}
   - component: {fileID: 1645531491730576313}
-  - component: {fileID: 1512325187202067818}
   - component: {fileID: 8051498448000055847}
+  - component: {fileID: -99832526778594197}
   m_Layer: 0
   m_Name: Tier3Test 2
   m_TagString: Tier2Enemy
@@ -148,7 +148,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5000001
   m_Height: 2
@@ -177,7 +177,24 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!54 &1512325187202067818
+--- !u!114 &8051498448000055847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4960038879021250351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a96b11993652ce419e28cda9cc8b657, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BasicEnemy
+  baseHealth: 200
+  currentHealth: 0
+  damage: 15
+  attackDelay: 0.1
+  goldYield: 3
+--- !u!54 &-99832526778594197
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -204,20 +221,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &8051498448000055847
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4960038879021250351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a96b11993652ce419e28cda9cc8b657, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BasicEnemy
-  baseHealth: 200
-  currentHealth: 0
-  damage: 15
-  attackDelay: 0.1
-  goldYield: 3

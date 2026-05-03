@@ -8,8 +8,7 @@ public class TierManager : MonoBehaviour
     /// Killed mobs are compared against expected mobs to track when a wave should end.
     /// After the wave ends, the player has a grace period to prepare for the next wave.
     /// 
-    /// This also handles initiating the spawns, but this will be refactored. 
-    /// I could not figure out another way that wasn't bugged, but I will reconsider my approach when I have more time to think on it. 
+    /// This also handles initiating the spawns, but this will be refactored.
     /// </summary>
     public static TierManager Instance { get; private set; }
 
@@ -19,10 +18,10 @@ public class TierManager : MonoBehaviour
 
     // Grabbed from WaveSpawnPool.cs
     private int expectedSpawns;
-    //public int ExpectedSpawns => expectedSpawns;
     private int currentSpawns;
     // Increased each time a mob is killed from mob script
     private int mobsKilled;
+    private Transform castleTransform;
 
     [SerializeField] private float waveSpawnDelay;
     // The player should have a longer chance to prepare for the first wave since they won't already have towers. After the first wave, they don't get as long.
@@ -50,6 +49,7 @@ public class TierManager : MonoBehaviour
     {
         spawners = null;     // Makes sure we're getting the proper references on each scene
         FindSpawners();
+        castleTransform = GameObject.FindGameObjectWithTag("Castle").transform;
         isFirstRound = true;
         mobsKilled = 0;
         currentTier = 1;
@@ -116,7 +116,7 @@ public class TierManager : MonoBehaviour
                     Debug.Log("TM: Reached expected spawns, breaking out of spawn loop.");
                     break;
                 }
-                spawner.SpawnEnemy(currentTier);
+                spawner.SpawnEnemy(currentTier, castleTransform);
                 currentSpawns++;
                 yield return new WaitForSeconds(timeBetweenSpawns);
             }

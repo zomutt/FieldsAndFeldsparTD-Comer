@@ -18,14 +18,15 @@ public class EnemyMovement : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
     }
-    private void Start()
+    private void OnEnable()
     {
         GameObject castleGO = GameObject.FindGameObjectWithTag("Castle");
         castleTransform = castleGO.transform;
         agent.speed = speed;
+
         // This makes it less likely for enemies to stack on top of each other
         agent.avoidancePriority = Random.Range(30, 70);
-        // This can go in Start opposed to OnEnable because an enemy is only used once
+
         // Pooling was done for optimization and placing the load at the beginning of the game opposed to throughout the game, not for reuse
         headingToCastle = false;
     }
@@ -36,14 +37,23 @@ public class EnemyMovement : MonoBehaviour
         if (currentTarget == null)
             return;
         float distance = Vector3.Distance(transform.position, currentTarget.position);
+        Debug.Log($"Distance to target: {distance}, headingToCastle: {headingToCastle}, castleTransform null: {castleTransform == null}");
         // If the enemy is close enough to its waypoint, then it can start moving towards the castle
         // Waypoints were needed due to the lanes being uneven in length and causing routing issues
-        if (distance < 1)
+        if (distance < 8)
         {
+            Debug.Log("Entering castle redirect!");
             headingToCastle = true;
             currentTarget = castleTransform;
             agent.SetDestination(castleTransform.position);
         }
+    }
+    private void OnDisable()
+    {
+        // Ensures that the enemies start with a clean slate for the next level. Fail-safe.
+        castleTransform = null;
+        currentTarget = null;
+        headingToCastle = false;
     }
     public void SetFirstDestination(Transform firstWaypoint)
     {
@@ -59,5 +69,13 @@ public class EnemyMovement : MonoBehaviour
             agent.SetDestination(castleTransform.position);
             headingToCastle = true;
         }
+    }
+    public void SetCastle(Transform castle)
+    {
+        // Called by EnemySpawner.cs to pass the current scene's castle reference.
+        // This is needed because EnemyMovement persists across scenes via the object pool,
+        // and Start() only fires once on instantiation, not on reuse.
+        castleTransform = castle;
+        headingToCastle = false;
     }
 }

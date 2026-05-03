@@ -6,7 +6,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private Transform firstWaypoint; // assign per lane
     //[SerializeField] private GameObject bossPrefab;
     
-    public void SpawnEnemy(int tier)
+    public void SpawnEnemy(int tier, Transform castle)
     {
         // Called by TierManager.cs to spawn an enemy of the given tier.
         // The spawner is randomly picked from the three lane-specific spawners, and the enemy is spawned at the position of that spawner.
@@ -21,6 +21,9 @@ public class EnemySpawner : MonoBehaviour
         agent.enabled = true;
 
         EnemyMovement movement = enemy.GetComponent<EnemyMovement>();
+
+        // Ensures that the enemy is always moving to the correct point regardless os what level it's on
+        movement.SetCastle(castle);
         movement.SetFirstDestination(firstWaypoint);
     }
 }

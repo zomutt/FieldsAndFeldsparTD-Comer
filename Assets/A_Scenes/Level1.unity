@@ -3910,7 +3910,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00012207031, y: 0.0059814453}
+  m_AnchoredPosition: {x: 0, y: 0.005859375}
   m_SizeDelta: {x: 0, y: 0.011963}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &303342360
@@ -72068,7 +72068,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   firstWaypoint: {fileID: 8973892780641162124}
-  bossPrefab: {fileID: 8363046272788395321, guid: c7699484419eaf1468804979c78a032d, type: 3}
 --- !u!1001 &3282508351592311470
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -72289,7 +72288,7 @@ PrefabInstance:
     - target: {fileID: 1913497103432878247, guid: aded6ab4d6fa23a4e978a80d98306ef3, type: 3}
       propertyPath: 'tier4Prefabs.Array.data[0]'
       value: 
-      objectReference: {fileID: 8363046272788395321, guid: c7699484419eaf1468804979c78a032d, type: 3}
+      objectReference: {fileID: 4960038879021250351, guid: 5948a4cf70921aa4bbd82dae1a50762a, type: 3}
     - target: {fileID: 6174876083049244801, guid: aded6ab4d6fa23a4e978a80d98306ef3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -35.056046
@@ -82104,7 +82103,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   firstWaypoint: {fileID: 7138386611295015685}
-  bossPrefab: {fileID: 8363046272788395321, guid: c7699484419eaf1468804979c78a032d, type: 3}
 --- !u!199 &5040169909820573965
 ParticleSystemRenderer:
   serializedVersion: 7
@@ -82951,7 +82949,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   firstWaypoint: {fileID: 6329419736261345145}
-  bossPrefab: {fileID: 8363046272788395321, guid: c7699484419eaf1468804979c78a032d, type: 3}
 --- !u!33 &8134151544128617153
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -83161,7 +83158,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3824464852092898307, guid: ba3b6f6ce8b71054dbd275cb91d596f4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.275
+      value: 3.525
       objectReference: {fileID: 0}
     - target: {fileID: 3824464852092898307, guid: ba3b6f6ce8b71054dbd275cb91d596f4, type: 3}
       propertyPath: m_LocalPosition.z
@@ -83198,8 +83195,43 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1696503899066454883, guid: ba3b6f6ce8b71054dbd275cb91d596f4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8741904004383052978}
   m_SourcePrefab: {fileID: 100100000, guid: ba3b6f6ce8b71054dbd275cb91d596f4, type: 3}
+--- !u!1 &8741904004383052977 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1696503899066454883, guid: ba3b6f6ce8b71054dbd275cb91d596f4, type: 3}
+  m_PrefabInstance: {fileID: 8741904004383052976}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &8741904004383052978
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8741904004383052977}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &8787467912900438297
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -83254,15 +83286,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7182576862611050603, guid: 4de263c7e003ff04d8c55d846ad8029c, type: 3}
       propertyPath: gracePeriod
-      value: 10
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7182576862611050603, guid: 4de263c7e003ff04d8c55d846ad8029c, type: 3}
       propertyPath: waveSpawnDelay
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7182576862611050603, guid: 4de263c7e003ff04d8c55d846ad8029c, type: 3}
       propertyPath: timeBetweenSpawns
-      value: 0.4
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 7182576862611050603, guid: 4de263c7e003ff04d8c55d846ad8029c, type: 3}
       propertyPath: 'spawners.Array.data[0]'
