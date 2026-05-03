@@ -63,6 +63,9 @@ public class TowerStats : ScriptableObject
 
         savedShooterDamage = baseShooterDamage;
         savedAoeDamage = baseAoeDamage;
+
+        savedShooterCost = baseShooterCost;
+        savedAoeCost = baseAoeCost;   
     }
     public void SaveStats()
     {

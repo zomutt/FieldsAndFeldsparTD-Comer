@@ -106,7 +106,6 @@ public class UpgradeManager : MonoBehaviour
         aoeUpgrades = savedAoeUpgrades;
 
         mineUpgradeCost = savedMineUpgradeCost;
-        GoldManager.Instance.ChangeGoldYield(-mineYieldUpgrade * (mineUpgrades - savedMineUpgrades));
         mineUpgrades = savedMineUpgrades;
 
         UIController.Instance.UpdateUI();
