@@ -4,7 +4,7 @@ using UnityEngine.AI;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private Transform firstWaypoint; // assign per lane
-    [SerializeField] private GameObject bossPrefab;
+    //[SerializeField] private GameObject bossPrefab;
     
     public void SpawnEnemy(int tier)
     {
