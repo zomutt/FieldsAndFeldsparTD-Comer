@@ -153,17 +153,17 @@ public class UIController : MonoBehaviour
         goldPerSecText.text = $"Gold/Sec: {GoldManager.Instance.GoldPerSec()}";
 
         shooterDMG.text = $"Damage: {TowerStats.Instance.ShooterDamage}";
-        shooterCost.text = $"Cost: {TowerStats.Instance.ShooterCost}";
+        shooterCost.text = $"Build Cost: {TowerStats.Instance.ShooterCost}";
         shooterUpgradeCost.text = $"Upgrade Cost: {UpgradeManager.Instance.ShooterUpgradeCost}";
         shooterUpgradeAmt.text = $"Dmg Upgrade: +{UpgradeManager.Instance.ShooterDMGUpgrade}";
 
         aoeDMG.text = $"Damage/Sec: {TowerStats.Instance.AoeDamage}";
-        aoeCost.text = $"Cost: {TowerStats.Instance.AoeCost}";
+        aoeCost.text = $"Build Cost: {TowerStats.Instance.AoeCost}";
         aoeUpgradeCost.text = $"Upgrade Cost: {UpgradeManager.Instance.AoeUpgradeCost}";
         aoeUpgradeAmt.text = $"Dmg Upgrade: +{UpgradeManager.Instance.AoeDMGUpgrade}";
 
         mineYield.text = $"Gold Yield: {GoldManager.Instance.GoldFarmYield}";
-        mineCost.text = $"Cost: {GoldManager.Instance.GoldFarmCost}";
+        mineCost.text = $"Build Cost: {GoldManager.Instance.GoldFarmCost}";
         mineUpgradeCost.text = $"Upgrade Cost: {UpgradeManager.Instance.MineUpgradeCost}";
         mineUpgradeAmt.text = $"Yield Upgrade: +{UpgradeManager.Instance.MineYieldUpgrade}";
 

@@ -6,6 +6,8 @@ using UnityEngine;
 /// Instantiation was chosen over deactivated towers or object pooling because the player will realistically only build a small percentage of what they can per level.
 /// This was considered the most efficient way over other options for this reason since player income throttles tower spam.
 /// 
+/// ***Also, there WILL be a way to remove towers. I set up a blank GO for this reason, but that will be implemented for portfolio, not for the assignment.***
+/// 
 /// Consider Raycast that checks collision with player to avoid constant checks on all squares.
 /// </summary>
 public class BuildingSquare : MonoBehaviour
@@ -100,6 +102,7 @@ public class BuildingSquare : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
                 // This removes the tower from this tile. You DO NOT get a refund. This is intentional to prevent tower spamming and encourage strategic building.
+                // This is also a WIP that is not intended to work just yet. That is portfolio priority.
                 SpawnTower(TowerType.None);
                 isOccupied = false;
             }
