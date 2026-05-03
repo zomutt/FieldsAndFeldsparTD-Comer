@@ -38,7 +38,9 @@ public abstract class EnemyBase : MonoBehaviour
         {
             TierManager.Instance.RecordKill();     // Tracks how many kills have occurred vs. how many mobs spawn in the tier
             GameManager.Instance.TrackTotalKills();
-            ParticlePool.Instance.SpawnDeathEffect(transform.position);
+
+            // WILL IMPLEMENT FOR PORTFOLIO.
+            // ParticlePool.Instance.SpawnDeathEffect(transform.position);     
             hasCounted = true;    // Ensures no double-counting edge case
             GoldManager.Instance.GiveGold(goldYield);
         }

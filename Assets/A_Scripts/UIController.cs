@@ -86,6 +86,7 @@ public class UIController : MonoBehaviour
         if (levelWinPanel != null) levelWinPanel.SetActive(false);
         if (winGamePanel != null) winGamePanel.SetActive(false);
         if (loseGamePanel != null) loseGamePanel.SetActive(false);
+        controlPanel.SetActive(true);
 
         if (pendingGameReset)
         {
@@ -157,8 +158,6 @@ public class UIController : MonoBehaviour
             }
             castleHealthText.text = $"Castle HP: {CastleStats.Instance.CurrentHealth}/{CastleStats.Instance.MaxHealth}";
         }
-        castleHealthText.text = $"Castle HP: {CastleStats.Instance.CurrentHealth}/{CastleStats.Instance.MaxHealth}";
-
         totalGoldText.text = $"Gold: {GoldManager.Instance.CurrentGold}";
         goldPerSecText.text = $"Gold/Sec: {GoldManager.Instance.GoldPerSec()}";
 

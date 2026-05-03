@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BasicEnemy
   baseHealth: 150
   currentHealth: 0
-  damage: 15
+  damage: 5
   attackDelay: 0.5
   goldYield: 4
 --- !u!114 &4347838833515199365

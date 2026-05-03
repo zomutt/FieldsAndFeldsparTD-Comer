@@ -152,9 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a96b11993652ce419e28cda9cc8b657, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasicEnemy
-  baseHealth: 1100
+  baseHealth: 1600
   currentHealth: 0
-  damage: 30
+  damage: 15
   attackDelay: 0.5
   goldYield: 25
 --- !u!114 &4347838833515199365

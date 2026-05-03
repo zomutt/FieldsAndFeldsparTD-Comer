@@ -19,23 +19,35 @@ public class AoeProjectile : ProjectileBase
         canDamage = true;
         isBurning = false;
         burnRoutineStarted = false;
+
+        // Since it's fire, the fire should fizzle out if it doesn't land fast enough.
+        // This helps balance the tower compared to the amethyst shooter.
+        StartCoroutine(FizzleOut());
+
+        foreach (ParticleSystem ps in GetComponentsInChildren<ParticleSystem>())
+        {
+            // Ensures the flames on the projectile start playing upon reuse
+            ps.Play();
+        }
     }
     protected override void Update()
     {
         if (isBurning)
         {
-            return; // Stop base movement and auto-despawn while burning
+            return;
         }
-        base.Update();      // Handles targeting and deactivation if target null, also handles movement
-
-        // Tracks distance between projectile and target, and if it's close enough, applies damage and deactivates.
+        base.Update();
+        // Tracks distance between projectile and target, and if it's close enough, applies damage.
         // This is needed because the projectile can move fast enough to skip over the target's collider.
+        if (enemyTarget == null)
+        {
+            return;
+        }
         float distance = Vector3.Distance(transform.position, enemyTarget.transform.position);
         if (distance <= hitRadius)
         {
             enemyTarget.TakeDamage(towerStats.AoeDamage);
             Debug.Log($"AOE Hit for {towerStats.AoeDamage}");
-            gameObject.SetActive(false);
         }
     }
     protected override void OnDisable()
@@ -51,6 +63,13 @@ public class AoeProjectile : ProjectileBase
         if (orbRenderer != null)
         {
             orbRenderer.enabled = true;
+        }
+
+        // Stop all particle systems on disable so they don't linger
+        foreach (ParticleSystem particles in GetComponentsInChildren<ParticleSystem>())
+        {
+            particles.Stop();
+            particles.Clear();
         }
     }
     protected override void OnTriggerEnter(Collider other)
@@ -74,7 +93,10 @@ public class AoeProjectile : ProjectileBase
     }
     private void OnTriggerStay(Collider other)
     {
-        if (!isBurning) return;
+        if (!isBurning)
+        {
+            return;
+        }
         if (other.CompareTag("Enemy") && canDamage)
         {
             if (other.TryGetComponent<EnemyBase>(out EnemyBase enemy))
@@ -96,7 +118,7 @@ public class AoeProjectile : ProjectileBase
             canDamage = false;
 
             // Wait until next tick
-            yield return new WaitForSeconds(1f / 3f);
+            yield return new WaitForSeconds(.33f);
         }
         EndBurn();
     }
@@ -106,6 +128,16 @@ public class AoeProjectile : ProjectileBase
         isBurning = false;
         burnRoutineStarted = false;
         gameObject.SetActive(false);
+    }
+    private IEnumerator FizzleOut()
+    {
+        // Since it's fire, the fire should fizzle out if it doesn't land fast enough.
+        // This helps balance the tower compared to the amethyst shooter.
+        yield return new WaitForSeconds(3f);
+        if (!isBurning)
+        {
+            gameObject.SetActive(false);
+        }
     }
 }
 

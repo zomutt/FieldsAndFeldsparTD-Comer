@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
     private int currentLevel;
     public int CurrentLevel => currentLevel;    // Used by EnemyBase.cs because maxHealth is calculated as (baseHealth * currentLevel)
     private int totalKills;
-    private bool isPaused;     // Here in case I need a flag. I have a feeling I will, have a feeling I won't. We shall see.
 
     // This is used to increase the cost of towers and gold farm each level, making the game more difficult as the player progresses. It is set in the inspector for easy tuning.
     [SerializeField] private int costIncreasePerLevel = 100;
@@ -32,7 +31,6 @@ public class GameManager : MonoBehaviour
         // Freezes time at the beginning of the game until the player hits the start button
         PauseGame();        
         UIManagerObj.SetActive(true);    // Set active because I often turn it off while dev'ing
-        isPaused = false;
     }
     public void StartNewGame()
     {
@@ -94,6 +92,7 @@ public class GameManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        GoldManager.Instance.ZeroFarmCount();
         if (isResetting)
         {
             isResetting = false;
@@ -131,7 +130,7 @@ public class GameManager : MonoBehaviour
         PauseGame();
         SaveAllStats();    // Saves any upgrades the player may have obtained
 
-        if (currentLevel < 4)
+        if (currentLevel < 3)
         {
             UIController.Instance.WinLevel();
         }
@@ -176,12 +175,10 @@ public class GameManager : MonoBehaviour
     }
     public void PauseGame()
     {
-        isPaused = true;
         Time.timeScale = 0f;
     }
     public void ResumeGame()
     {
-        isPaused = false;
         Time.timeScale = 1f;    
     }
 }

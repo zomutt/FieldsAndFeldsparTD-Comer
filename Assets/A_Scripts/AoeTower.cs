@@ -19,7 +19,6 @@ public class AoeTower : TowerBase
         }
         // Calls to get the projectile from spawner script
         GameObject projectile = DamagePool.Instance.GetProjectile(DamagePool.DamageType.AOE);
-
         projectile.transform.position = transform.position;
 
         // Gives the projectile its target and gets the actual projectile script
