@@ -13,6 +13,9 @@ public class TowerStats : ScriptableObject
 
     public static TowerStats Instance { get; private set; }
 
+    [Header("Both")]
+    [SerializeField] private int costIncreasePerLevel;
+
     [Header("Shooter Towers")]
     [SerializeField] private int baseShooterDamage;      // This stays the same, it is the value needed at the beginning of the game. No upgrades. 
     private int shooterDamage;
@@ -24,7 +27,6 @@ public class TowerStats : ScriptableObject
     [SerializeField] private int baseShooterCost;        // This stays the same
     private int shooterCost;
     public int ShooterCost => shooterCost;
-    private int savedShooterCost; 
 
     [Header("AOE Towers")]
     [SerializeField] private int baseAoeDamage;      // This stays the same
@@ -40,7 +42,6 @@ public class TowerStats : ScriptableObject
     [SerializeField] private int baseAoeCost;        
     private int aoeCost;       
     public int AoeCost => aoeCost;
-    private int savedAoeCost;
 
     /// SAVED STATS ///
     private int savedShooterDamage;
@@ -54,34 +55,24 @@ public class TowerStats : ScriptableObject
     {
         // Called at the beginning of the game to set what the base is meant to be. This is important for if the player starts from scratch after playing a game i.e. winning, losing, quitting
         shooterDamage = baseShooterDamage;
-        shooterCost = baseShooterCost;
-
         aoeDamage = baseAoeDamage;
+        shooterCost = baseShooterCost;
         aoeCost = baseAoeCost;
-
         savedShooterDamage = baseShooterDamage;
         savedAoeDamage = baseAoeDamage;
 
-        savedShooterCost = baseShooterCost; 
-        savedAoeCost = baseAoeCost;     
     }
     public void SaveStats()
     {
         // Called when level is won
         savedShooterDamage = shooterDamage;
-        savedShooterCost = shooterCost;
-
         savedAoeDamage = aoeDamage;
-        savedAoeCost = aoeCost;
     }
     public void LoadStats()
     {
         // Called when level is lost
         shooterDamage = savedShooterDamage;
-        shooterCost = savedShooterCost;
-
         aoeDamage = savedAoeDamage;
-        aoeCost = savedAoeCost;
     }
     public void ChangeShooterDamage(int damage)
     {
@@ -93,10 +84,24 @@ public class TowerStats : ScriptableObject
         aoeDamage += damage;
         Debug.Log($"New aoe damage: {aoeDamage}");
     }
-    public void IncreaseAllCosts(int costIncreasePerLevel)
-    { 
-        // Called from GameManager when advancing to next level
-        aoeCost += costIncreasePerLevel;
-        shooterCost += costIncreasePerLevel;
+    public void SetAllCosts()
+    {
+        // Called from GameManager when advancing to next level.
+        // Originally it was a scalable multiplier, but that proved brittle and broke too easily. This was a very last minute fix.
+        if (GameManager.Instance.CurrentLevel == 1)
+        {
+            aoeCost = baseAoeCost;
+            shooterCost = baseShooterCost;
+        }
+        else if (GameManager.Instance.CurrentLevel == 2)
+        {
+            aoeCost = baseAoeCost + costIncreasePerLevel;
+            shooterCost = baseShooterCost + costIncreasePerLevel;
+        }
+        else if (GameManager.Instance.CurrentLevel == 3)
+        {
+            aoeCost = baseAoeCost + (costIncreasePerLevel * 2);
+            shooterCost = baseAoeCost + (costIncreasePerLevel * 2);
+        }
     }
 }

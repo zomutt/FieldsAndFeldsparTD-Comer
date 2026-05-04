@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
 
         GoldManager.Instance.StartGame();   // Gives player their starting gold and income
         UIController.Instance.UpdateUI();
-
+        TowerStats.Instance.SetAllCosts();
         TierManager.Instance.StartLevel();  // Gets the first wave of enemies going after a short delay
         currentLevel = 1;
         Debug.Log("Game starting from GM.");
@@ -56,8 +56,8 @@ public class GameManager : MonoBehaviour
     public void StartNewLevel()
     {
         LoadAllStats();    // Loads stats so that the player can keep their upgrades from previous levels
-        TowerStats.Instance.IncreaseAllCosts(costIncreasePerLevel);
-        GoldManager.Instance.IncreaseGoldCost(costIncreasePerLevel);
+        TowerStats.Instance.SetAllCosts();
+        GoldManager.Instance.IncreaseGoldCost();
         UIController.Instance.UpdateUI();
 
         TierManager.Instance.StartLevel();  // Gets the first wave of enemies going after a short delay

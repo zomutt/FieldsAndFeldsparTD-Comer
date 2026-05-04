@@ -5,6 +5,8 @@ using UnityEngine;
 /// Costs of upgrades increase each time you get them, amount that it upgrades do not. Cost increases to add increasing difficulty.
 /// This will be revisited as the scope increases.
 /// Ex: Shooter Upgrade 1: Costs 50g, +5 dmg. Shooter Upgrade 2: Costs 75g, +5dmg. Etc. etc. (example numbers only)
+/// 
+/// Tracking upgrades is a system that is fully intended to come back.
 /// </summary>
 public class UpgradeManager : MonoBehaviour
 {
@@ -18,8 +20,8 @@ public class UpgradeManager : MonoBehaviour
 
     [SerializeField] private int shooterDMGUpgrade;     // Stays static. This will be revistited once there is a higher scope to the game.
     public int ShooterDMGUpgrade => shooterDMGUpgrade;
-    private int shooterUpgrades;    // Tracks how many upgrades the player has purchased
-    private int savedShooterUpgrades;
+    //private int shooterUpgrades;    // Tracks how many upgrades the player has purchased
+    //private int savedShooterUpgrades;
 
     [Header("AOE")]
     [SerializeField] private int baseAoeUpgradeCost;
@@ -29,8 +31,8 @@ public class UpgradeManager : MonoBehaviour
 
     [SerializeField] private int aoeDMGUpgrade;
     public int AoeDMGUpgrade => aoeDMGUpgrade;
-    private int aoeUpgrades;
-    private int savedAoeUpgrades;
+    //private int aoeUpgrades;
+    //private int savedAoeUpgrades;
 
     [Header("Gold Mine")]
     [SerializeField] private int baseMineUpgradeCost;
@@ -40,8 +42,8 @@ public class UpgradeManager : MonoBehaviour
 
     [SerializeField] private int mineYieldUpgrade;
     public int MineYieldUpgrade => mineYieldUpgrade;
-    private int mineUpgrades;
-    private int savedMineUpgrades;
+    //private int mineUpgrades;
+    //private int savedMineUpgrades;
 
     [Header("General")]
     [SerializeField] private int costIncrease;    // The price increase each category has per upgrade. Ex: 100 for 1st upgrade, 150 for next, 200 for next, etc. etc.
@@ -71,45 +73,44 @@ public class UpgradeManager : MonoBehaviour
         mineUpgradeCost = baseMineUpgradeCost;
         savedMineUpgradeCost = baseMineUpgradeCost;
 
-        shooterUpgrades = 0;
-        savedShooterUpgrades = 0;
+    //    shooterUpgrades = 0;
+    //    savedShooterUpgrades = 0;
 
-        aoeUpgrades = 0;
-        savedAoeUpgrades = 0;
+    //    aoeUpgrades = 0;
+    //    savedAoeUpgrades = 0;
 
-        mineUpgrades = 0;
-        savedMineUpgrades = 0;
+    //    mineUpgrades = 0;
+    //    savedMineUpgrades = 0;
     }
     public void SaveData()
     {
         // Called at level victory
         savedShooterUpgradeCost = shooterUpgradeCost;
-        savedShooterUpgrades = shooterUpgrades;
+        //savedShooterUpgrades = shooterUpgrades;
 
         savedAoeUpgradeCost = aoeUpgradeCost;
-        savedAoeUpgrades = aoeUpgrades;
+        //savedAoeUpgrades = aoeUpgrades;
 
-        savedMineUpgrades = mineUpgrades;
+        //savedMineUpgrades = mineUpgrades;
         savedMineUpgradeCost = mineUpgradeCost;
 
     }
     public void LoadData()
     {
         // Called when restarting a new level. The player is not to keep their upgrades if they lose, they are only rewarded for winning.
-        // Base gold granted at the level start makes up for if the player put themselves in a bad spot if they can figure out how to recover.
+        // Damage values are restored by TowerStats.LoadStats() -- no need to touch them here.
         shooterUpgradeCost = savedShooterUpgradeCost;
-        TowerStats.Instance.ChangeShooterDamage(-shooterDMGUpgrade * (shooterUpgrades - savedShooterUpgrades));
-        shooterUpgrades = savedShooterUpgrades;
+        //shooterUpgrades = savedShooterUpgrades;
 
         aoeUpgradeCost = savedAoeUpgradeCost;
-        TowerStats.Instance.ChangeAoeDamage(-aoeDMGUpgrade * (aoeUpgrades - savedAoeUpgrades));
-        aoeUpgrades = savedAoeUpgrades;
+        //aoeUpgrades = savedAoeUpgrades;
 
-        mineUpgradeCost = savedMineUpgradeCost;        // Does NOT operate as the ones above, doing so introduced a massive display error.
-        mineUpgrades = savedMineUpgrades;
+        mineUpgradeCost = savedMineUpgradeCost;
+        //mineUpgrades = savedMineUpgrades;
 
         UIController.Instance.UpdateUI();
     }
+
     public void UpgradeShooter()
     {
         if (GoldManager.Instance.CurrentGold < shooterUpgradeCost)
@@ -121,7 +122,7 @@ public class UpgradeManager : MonoBehaviour
         GoldManager.Instance.DecreaseGold(shooterUpgradeCost);
 
         shooterUpgradeCost += costIncrease;
-        shooterUpgrades++;
+        //shooterUpgrades++;
         UIController.Instance.UpdateUI();
     }
     public void UpgradeAoe()
@@ -135,7 +136,7 @@ public class UpgradeManager : MonoBehaviour
         GoldManager.Instance.DecreaseGold(aoeUpgradeCost);
 
         aoeUpgradeCost += costIncrease;
-        aoeUpgrades++;
+        //aoeUpgrades++;
         UIController.Instance.UpdateUI();
     }
     public void UpgradeMine()
@@ -149,7 +150,7 @@ public class UpgradeManager : MonoBehaviour
         GoldManager.Instance.DecreaseGold(mineUpgradeCost);
 
         mineUpgradeCost += costIncrease;
-        mineUpgrades++;
+        //mineUpgrades++;
         UIController.Instance.UpdateUI();
     }
 }

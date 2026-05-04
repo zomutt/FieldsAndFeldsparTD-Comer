@@ -4,12 +4,10 @@ public class DevCheats : MonoBehaviour
 {
     [SerializeField] private GameObject devWindow;
     private bool isDevOpen;
-    private bool onWarpSpeed;
     private void Start()
     {
         devWindow.SetActive(false);
         isDevOpen = false;
-        onWarpSpeed = false;
     }
     private void Update()
     {
@@ -33,15 +31,13 @@ public class DevCheats : MonoBehaviour
         }
         if (Input.GetKeyDown (KeyCode.F2))
         {
-            if (!onWarpSpeed)
+            if (Time.timeScale == 1f)
             {
-                Time.timeScale = 4f;
-                onWarpSpeed = true;
+                Time.timeScale = 3f;
             }
-            else if (onWarpSpeed)
+            else if (Time.timeScale == 3f)
             {
-                Time.timeScale = 4f;
-                onWarpSpeed = false;
+                Time.timeScale = 1f;
             }
         }
         if (Input.GetKeyDown(KeyCode.F3))

@@ -17,6 +17,7 @@ public class GoldManager : MonoBehaviour
     [SerializeField] private int basePassiveIncome;
     public int BasePassiveIncome => basePassiveIncome;
     [SerializeField] private int baseFarmCost;
+    [SerializeField] private int costIncreasePerLevel;
 
     [Header("Gameplay-Changable Stats")]
     [SerializeField] private int goldFarmYield;
@@ -136,10 +137,22 @@ public class GoldManager : MonoBehaviour
         currentGold -= amount;
         UIController.Instance.UpdateUI();
     }
-    public void IncreaseGoldCost(int goldIncreasePerLevel)
+    public void IncreaseGoldCost()
     {
-        // Called by GameManager.cs when starting a brand new level
-        goldFarmCost += goldIncreasePerLevel;
+        // Called from GameManager when advancing to next level.
+        // Originally it was a scalable multiplier, but that proved brittle and broke too easily. This was a very last minute fix.
+        if (GameManager.Instance.CurrentLevel == 1)
+        {
+            goldFarmCost = baseFarmCost;
+        }
+        else if (GameManager.Instance.CurrentLevel == 2) 
+        {
+            goldFarmCost = baseFarmCost + costIncreasePerLevel;
+        }
+        else if (GameManager.Instance.CurrentLevel == 3)
+        {
+            goldFarmCost = baseFarmCost + (costIncreasePerLevel * 2);
+        }
         UIController.Instance.UpdateUI();
         Debug.Log($"Gold farm cost increased. New cost: {goldFarmCost}");
     }
