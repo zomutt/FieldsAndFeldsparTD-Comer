@@ -1,5 +1,11 @@
 using UnityEngine;
 
+
+/// <summary>
+/// Handles player movement, tile detection, and tower placement input.
+/// Raycasting downward replaces per-tile Update() checks, significantly reducing overhead since there's 200 or so tiles
+/// The player is whats responsible for which tile is active -- tiles just respond when told.
+/// </summary>
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;

@@ -3,7 +3,6 @@ using UnityEngine;
 public abstract class EnemyBase : MonoBehaviour
 {
     [Header("Base Enemy Stats")]
-    // These are all floats because of how CastleStats.cs handles damage reduction, this reduces issues with conversions.
     [SerializeField] protected int baseHealth;
     [SerializeField] protected int currentHealth;   // Serialized for testing purposes
 
@@ -41,6 +40,7 @@ public abstract class EnemyBase : MonoBehaviour
 
             // WILL IMPLEMENT FOR PORTFOLIO.
             // ParticlePool.Instance.SpawnDeathEffect(transform.position);     
+
             hasCounted = true;    // Ensures no double-counting edge case
             GoldManager.Instance.GiveGold(goldYield);
         }

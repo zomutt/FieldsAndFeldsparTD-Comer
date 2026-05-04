@@ -5,6 +5,8 @@ using UnityEngine;
 /// This prevents the script from having to do a FindObjectsOfType every time it needs to calculate gold generation, which is a very expensive operation.
 /// Also prevents having like 50 gold farms all running update at once. A lot of other process are expensive so I want to save where I can.
 /// Now, the GoldManager.cs script can just keep track of farm amount number as gold farms are added or removed.
+/// 
+/// This will be greatly expanded upon later, but serves to give me a good foundation.
 /// </summary>
 public class GoldFarms : MonoBehaviour
 {

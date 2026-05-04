@@ -1,5 +1,5 @@
-    using System.Collections;
-    using UnityEngine;
+using System.Collections;
+using UnityEngine;
 public class TierManager : MonoBehaviour
 {
     /// <summary>
@@ -44,6 +44,7 @@ public class TierManager : MonoBehaviour
         
     public void StartLevel()
     {
+        StopAllCoroutines();   // Fail-safe for after level reset
         spawners = null;     // Makes sure we're getting the proper references on each scene
         FindSpawners();
         castleTransform = GameObject.FindGameObjectWithTag("Castle").transform;

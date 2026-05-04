@@ -1,7 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering;
-using System.Collections.Generic;
 public class CastleStats : MonoBehaviour
 {
     /// <summary>
@@ -47,12 +45,13 @@ public class CastleStats : MonoBehaviour
         StartCoroutine(PassiveHeal());
     }
 
-    //public void Repair()
-    //{
-    //    currentHealth += repairAmount;
-    //    currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-    //    Debug.Log($"Castle repaired! New castle HP: {currentHealth}");
-    //}
+    public void Repair(int repairAmt)
+    {
+        // Currently for dev cheat use only
+        currentHealth += repairAmt;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        Debug.Log($"Castle repaired! New castle HP: {currentHealth}");
+    }
     public void TakeDamage(int damage)
     {
         if (isInvincible) return;

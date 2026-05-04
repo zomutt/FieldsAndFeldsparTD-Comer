@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int costIncreasePerLevel = 100;
     [SerializeField] private GameObject UIManagerObj;
     private bool isResetting;
+    private bool isFullReset;
     private void Awake()
     {
         if (Instance == null)
@@ -35,6 +35,12 @@ public class GameManager : MonoBehaviour
     public void StartNewGame()
     {
         // This method is only called for level one -- not on level restarts, not on new levels
+
+        if (SceneManager.GetActiveScene().buildIndex != 0)
+        {
+            SceneManager.LoadScene(0);      // Player should already be here, but we need to make SURE they really are.
+            return;
+        }
         InitializeAllStats();   // Initializes all stats to their starting values at the beginning of the game
         ResumeGame();       // Unfreezes time in case the player is starting a new game after losing or winning
         totalKills = 0;
@@ -56,17 +62,6 @@ public class GameManager : MonoBehaviour
 
         TierManager.Instance.StartLevel();  // Gets the first wave of enemies going after a short delay
     }
-    public void ResetEntireGame()
-    {
-        // We're just gonna act like everything is brand new all over again
-        ResumeGame();
-        InitializeAllStats();
-        currentLevel = 1;
-        totalKills = 0;
-        WaveSpawnPool.Instance.ResetPools();
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        SceneManager.LoadScene("LevelOne");
-    }
     public void TrackTotalKills()
     {
         // Total kills accumulate across the entire playthrough intentionally. The kill tracking does nothing gameplay-wise but it can be cool to see.
@@ -81,25 +76,17 @@ public class GameManager : MonoBehaviour
         WaveSpawnPool.Instance.StopAllCoroutines();
         UIController.Instance.LoseGame();
     }
-    private void Update()
-    {
-        // Cheat for testing purposes
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            AdvanceLevel();
-        }
-    }
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
         GoldManager.Instance.ZeroFarmCount();
+
         if (isResetting)
         {
             isResetting = false;
-            GoldManager.Instance.ZeroFarmCount();
             TierManager.Instance.StartLevel();
         }
-        else
+        else if (!UIController.Instance.PendingGameReset)
         {
             StartNewLevel();
         }
@@ -180,5 +167,29 @@ public class GameManager : MonoBehaviour
     public void ResumeGame()
     {
         Time.timeScale = 1f;    
+    }
+    public void ResetWholeGame()
+    {
+        // Do not start game, only clear game. Must be called from any time in games lifecycle.
+        // Only things that really need to be worried about are the non-scene specific scripts.
+        // Everything else has built in mechanisms for this.
+        ResumeGame();
+
+        StopAllCoroutines();      
+        InitializeAllStats();
+
+        currentLevel = 1;
+        totalKills = 0;
+
+        WaveSpawnPool.Instance.StopAllCoroutines();
+        WaveSpawnPool.Instance.ResetPools();
+        TierManager.Instance.StopAllCoroutines();
+        UIController.Instance.TriggerPendingReset();
+        UIController.Instance.StartingUI();       // Resets the UI to pre-game 
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.LoadScene(0);
+
+        PauseGame();
     }
 }

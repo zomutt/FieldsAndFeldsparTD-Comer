@@ -43,7 +43,7 @@ public class EnemyMovement : MonoBehaviour
         float distance = Vector3.Distance(transform.position, currentTarget.position);
         // If the enemy is close enough to its waypoint, then it can start moving towards the castle
         // Waypoints were needed due to the lanes being uneven in length and causing routing issues
-        if (distance < 8)
+        if (distance < 4)   // 4 Chosen because that way it'll register basically no matter what.
         {
             headingToCastle = true;
             currentTarget = castleTransform;

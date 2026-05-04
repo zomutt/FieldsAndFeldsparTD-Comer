@@ -105,7 +105,7 @@ public class UpgradeManager : MonoBehaviour
         TowerStats.Instance.ChangeAoeDamage(-aoeDMGUpgrade * (aoeUpgrades - savedAoeUpgrades));
         aoeUpgrades = savedAoeUpgrades;
 
-        mineUpgradeCost = savedMineUpgradeCost;
+        mineUpgradeCost = savedMineUpgradeCost;        // Does NOT operate as the ones above, doing so introduced a massive display error.
         mineUpgrades = savedMineUpgrades;
 
         UIController.Instance.UpdateUI();

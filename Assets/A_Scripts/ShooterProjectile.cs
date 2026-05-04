@@ -1,4 +1,4 @@
-using UnityEngine;
+ using UnityEngine;
 
 /// <summary>
 /// Small script that goes on our basic projectiles. These are single target and do not apply any status effects (a planned future feature).

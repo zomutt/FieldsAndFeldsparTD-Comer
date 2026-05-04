@@ -11,27 +11,9 @@ public abstract class ProjectileBase : MonoBehaviour
     [SerializeField] protected TowerStats towerStats;
     [SerializeField] protected float hitRadius = 0.2f;     // How close counts as a hit; protects against edge cases.
     protected virtual void Update()
-    {
-        //if (enemyTarget == null)
-        //{
-        //    // For example, if enemy dies from something else, we just need the projectile to go away.
-        //    gameObject.SetActive(false);
-        //    return;
-        //}
-
-        // Move towards target
+    {                
         dir = (enemyTarget.transform.position - transform.position).normalized; 
         transform.position += dir * speed * Time.deltaTime;
-
-        // EXAMPLE OF WHAT IS NEEDED:
-
-        //// Check if we reached the enemy this frame
-        //float distance = Vector3.Distance(transform.position, enemyTarget.transform.position);
-        //if (distance <= hitRadius)
-        //{
-        //    enemyTarget.TakeDamage(towerStats.ShooterDamage);
-        //    gameObject.SetActive(false);
-        //}
     }
     protected virtual void OnDisable()
     {
@@ -49,12 +31,4 @@ public abstract class ProjectileBase : MonoBehaviour
     }
 
     protected abstract void OnTriggerEnter(Collider other);
-    // EXAMPLE OF WHAT IS NEEDED: ^^^
-
-    //if (other.CompareTag("Enemy"))
-    //{
-    //    var enemy = other.gameObject.GetComponent<EnemyBase>();
-    //    enemy.TakeDamage(towerStats.ShooterDamage);
-    //}
-
 }

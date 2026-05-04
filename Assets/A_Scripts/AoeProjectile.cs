@@ -19,9 +19,6 @@ public class AoeProjectile : ProjectileBase
         canDamage = true;
         isBurning = false;
         burnRoutineStarted = false;
-
-        // Since it's fire, the fire should fizzle out if it doesn't land fast enough.
-        // This helps balance the tower compared to the amethyst shooter.
         StartCoroutine(FizzleOut());
 
         foreach (ParticleSystem ps in GetComponentsInChildren<ParticleSystem>())
@@ -47,7 +44,6 @@ public class AoeProjectile : ProjectileBase
         if (distance <= hitRadius)
         {
             enemyTarget.TakeDamage(towerStats.AoeDamage);
-            Debug.Log($"AOE Hit for {towerStats.AoeDamage}");
         }
     }
     protected override void OnDisable()

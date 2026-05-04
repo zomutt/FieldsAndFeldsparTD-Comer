@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -26,11 +25,12 @@ public class GoldManager : MonoBehaviour
     public int GoldFarmCost => goldFarmCost;
     
 
-    [SerializeField] private int currentGold;     // Serialized so I can be a cheater
+    [SerializeField] private int currentGold;     // Serialized for dev purposes
     public int CurrentGold => currentGold;
 
     private int savedGold;    // If player loses, they start with whatever gold they had at the beginning of the level
     private int savedGoldFarmYield;
+    private int savedGoldFarmCost;
 
 
     private int totalGoldFarms;       // GoldFarms are separate from this script in order to avoid situations where like 50 mines are all running update.
@@ -66,6 +66,7 @@ public class GoldManager : MonoBehaviour
         totalGoldFarms = 0;
         savedGold = baseGold;
         savedGoldFarmYield = baseGoldFarmYield;
+        savedGoldFarmCost = baseFarmCost;
     }
     private void Update()
     {
@@ -81,12 +82,14 @@ public class GoldManager : MonoBehaviour
         // Called by GameManager.cs when a level is won
         savedGold = currentGold;
         savedGoldFarmYield = goldFarmYield;
+        savedGoldFarmCost = goldFarmCost;
     }
     public void LoadStats()
     {
         // Called by GameManager.cs when a level is lost
         currentGold = savedGold;
         goldFarmYield = savedGoldFarmYield;
+        goldFarmCost = savedGoldFarmCost;
         UIController.Instance.UpdateUI();
     }
     public int GoldPerSec()

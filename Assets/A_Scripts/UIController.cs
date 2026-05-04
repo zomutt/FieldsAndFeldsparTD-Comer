@@ -1,12 +1,11 @@
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
 /// The UIController has been set to ONLY handle UI. It does not make any game decisions, it only displays information and has buttons that call methods in the GameManager.
-/// Furthermore, with it being a Singleton, I ensured that all references are ONLY to UI objects. This is so that references never get lost.
+/// Furthermore, with it being a Singleton, I ensured that all direct references are ONLY to UI objects. This is so that references never get lost.
 /// The actual UI itself lives as a child of the Singleton UIController.cs GameObject.
 /// </summary>
 public class UIController : MonoBehaviour
@@ -17,12 +16,17 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject mainMenuPanel;
     [SerializeField] private GameObject helpMenu;
     [SerializeField] private GameObject confirmQuitPanel;
+    [SerializeField] private GameObject confirmMainMenuPanel;
 
     [Header("Timer")]
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI roundText;
     private int minutes;
     private int seconds;
+
+    [Header("Level Stats")]      // Displays to the player where they are at in the game
+    [SerializeField] private TextMeshProUGUI roundCountText;
+    [SerializeField] private TextMeshProUGUI levelCountText;
 
     [Header("Castle Stats")]
     [SerializeField] private TextMeshProUGUI castleHealthText;
@@ -67,6 +71,8 @@ public class UIController : MonoBehaviour
 
     // This is needed so that UI controller ONLY resets everything when the player begins a fresh game.
     private bool pendingGameReset = false;
+    public bool PendingGameReset => pendingGameReset;
+
 
     private void Awake()
     {
@@ -83,22 +89,25 @@ public class UIController : MonoBehaviour
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (pendingGameReset)
+        {
+            StartingUI();  // Handles everything for full reset
+            pendingGameReset = false;
+            return; 
+        }
+
+        // For level transitions and resets, just close win/lose panels
         if (levelWinPanel != null) levelWinPanel.SetActive(false);
         if (winGamePanel != null) winGamePanel.SetActive(false);
         if (loseGamePanel != null) loseGamePanel.SetActive(false);
+        if (losePanel != null) losePanel.SetActive(false); 
         controlPanel.SetActive(true);
-
-        if (pendingGameReset)
-        {
-            StartGame();
-            pendingGameReset = false;
-        }
     }
     private void Start()
     {
-        StartGame();
+        StartingUI();
     }
-    private void StartGame()
+    public void StartingUI()
     {
         // Called both in Start() and when the game is supposed to start over from scratch. This ensures that player may start again without having to close the game.
         controlPanel.SetActive(true);
@@ -108,20 +117,16 @@ public class UIController : MonoBehaviour
         winGamePanel.SetActive(false);
         levelWinPanel.SetActive(false);
         helpMenu.SetActive(false);
+        confirmMainMenuPanel.SetActive(false);
 
         pausePanel.SetActive(false);
         pauseText.text = "Pause";
         isPaused = false;
         isHelpOpen = false;
+        pausedByHelp = false;
 
         roundText.text = null;
 
-        minutes = 0;
-        seconds = 0;
-    }
-    public void ResetTimer()
-    {
-        // Called by GameManager.cs when the game is completely reset.
         minutes = 0;
         seconds = 0;
     }
@@ -141,23 +146,14 @@ public class UIController : MonoBehaviour
     }
     public void UpdateUI()
     {
-        if (CastleStats.Instance == null)
+        if (CastleStats.Instance != null)
         {
-            castleHealthText.text = "--/--";    // Displays this while the rest of the game loads. Without, the text briefly flashes red and says 0.
-            castleHealthText.color = Color.black;
-        }
-        else
-        {
-            if (CastleStats.Instance.CurrentHealth <= (CastleStats.Instance.MaxHealth / 3))      // Alerts the player that they are running very low on health.
-            {
-                castleHealthText.color = Color.red;
-            }
-            else
-            {
-                castleHealthText.color = Color.black;
-            }
             castleHealthText.text = $"Castle HP: {CastleStats.Instance.CurrentHealth}/{CastleStats.Instance.MaxHealth}";
         }
+
+        levelCountText.text = $"Level: {GameManager.Instance.CurrentLevel}/3";
+        roundCountText.text = $"Round: {TierManager.Instance.CurrentTier}/4";
+
         totalGoldText.text = $"Gold: {GoldManager.Instance.CurrentGold}";
         goldPerSecText.text = $"Gold/Sec: {GoldManager.Instance.GoldPerSec()}";
 
@@ -177,6 +173,12 @@ public class UIController : MonoBehaviour
         mineUpgradeAmt.text = $"Yield Upgrade: +{UpgradeManager.Instance.MineYieldUpgrade}";
 
         totalKillsText.text = $"Total Kills: {GameManager.Instance.TotalKills}";
+    }
+    public void ResetTimer()
+    {
+        // Called by GameManager.cs when the game is completely reset.
+        minutes = 0;
+        seconds = 0;
     }
     public IEnumerator WaveCountdown(float time, int currentTier)
     {
@@ -209,6 +211,10 @@ public class UIController : MonoBehaviour
 
         // Displays to the player how long it took for them to finish the game
         totalTime.text = timerText.text;    
+    }
+    public void TriggerPendingReset()
+    {
+        pendingGameReset = true;
     }
     public void OnClickPauseGame()
     {
@@ -256,11 +262,13 @@ public class UIController : MonoBehaviour
     }
     public void OnClickStartGame()
     {
+        Debug.Log("Starting game");
         GameManager.Instance.StartNewGame();
         mainMenuPanel.SetActive(false);
     }
     public void OnClickTryAgain()
     {
+        loseGamePanel.SetActive(false);
         GameManager.Instance.ResetLevel();
     }
     public void OnClickOnward()
@@ -293,6 +301,15 @@ public class UIController : MonoBehaviour
     }
     public void OnClickMainMenu()
     {
-        GameManager.Instance.ResetEntireGame();
+        confirmMainMenuPanel.SetActive(true);
+    }
+    public void OnClickDeclineMainMenu()
+    {
+        confirmMainMenuPanel.SetActive(false);
+    }
+    public void OnClickRestartGame()
+    {
+        Debug.Log("UIC: Reset Game called");
+        GameManager.Instance.ResetWholeGame();
     }
 }

@@ -9,8 +9,6 @@ public class TowerStats : ScriptableObject
     /// Upgrades persist through levels, but not through level losses.
     /// Using a ScriptableObject so tower stats live in one place and can be tuned in the Inspector.
     /// This keeps the data out of scene objects and avoids hardcoding values in scripts.
-    /// 
-    /// THIS IS NOT FULLY IMPLEMENTED YET. I have the structure in place, but I have not yet implemented the actual upgrade system in the game.
     /// </summary>
 
     public static TowerStats Instance { get; private set; }
