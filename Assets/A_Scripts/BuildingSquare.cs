@@ -9,7 +9,7 @@ public class BuildingSquare : MonoBehaviour
 {
     public enum TowerType
     {
-        None = 0,   // Intentionally blank in order to keep towers consistent with keybinds. This is where remove tower will live when that is implemented.
+        None = 0,   // Remove tower will go here when that is implemented.
         Shooter = 1,
         AOE = 2,
         Gold = 3

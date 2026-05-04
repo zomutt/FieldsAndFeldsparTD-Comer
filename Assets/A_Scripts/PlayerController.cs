@@ -1,6 +1,4 @@
 using UnityEngine;
-
-
 /// <summary>
 /// Handles player movement, tile detection, and tower placement input.
 /// Raycasting downward replaces per-tile Update() checks, significantly reducing overhead since there's 200 or so tiles
@@ -31,6 +29,7 @@ public class PlayerController : MonoBehaviour
     {
         // Shoots a ray downward to find which tile the player is standing on
         // This replaces Update() checks on the tiles to significantly reduce overhead
+
         if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 5f))
         {
             BuildingSquare square = hit.collider.GetComponent<BuildingSquare>();

@@ -133,7 +133,7 @@ public class WaveSpawnPool : MonoBehaviour
         // Called by EnemySpawner.cs to determine what to spawn
         return pools[tier].Get();
     }
-    public int GetAmountToSpawn(int tier)   // Called by TierManager.cs to determine how many enemies should be spawning
+    public int GetAmountToSpawn(int tier)   
     {
         // Called by TierManager.cs to determine how many enemies should be spawning
         switch (tier)

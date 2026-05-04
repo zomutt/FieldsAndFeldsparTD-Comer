@@ -75,8 +75,7 @@ public class EnemyMovement : MonoBehaviour
     public void SetCastle(Transform castle)
     {
         // Called by EnemySpawner.cs to pass the current scene's castle reference.
-        // This is needed because EnemyMovement persists across scenes via the object pool,
-        // and Start() only fires once on instantiation, not on reuse.
+        // This is needed because EnemyMovement persists across scenes via the object pool
         castleTransform = castle;
         headingToCastle = false;
     }

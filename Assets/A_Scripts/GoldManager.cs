@@ -100,7 +100,6 @@ public class GoldManager : MonoBehaviour
     private void GenerateGold()
     {
         int goldToAdd = (goldFarmYield * totalGoldFarms) + basePassiveIncome;
-        //Debug.Log($"Generating gold: {goldToAdd} (Yield: {goldFarmYield} x Farms: {totalGoldFarms}) + Passive income: {passiveIncome}");
         currentGold += goldToAdd;
         UIController.Instance.UpdateUI();
     }
@@ -126,34 +125,18 @@ public class GoldManager : MonoBehaviour
     }
     public void GiveGold(int amount)
     {
-        // Called when an enemy is killed since enemies drop gold as reward
-        // TierManager.cs also calls this to give player a scaling reward for each round defeated
         currentGold += amount;
         UIController.Instance.UpdateUI();
     }
     public void DecreaseGold(int amount)
     {
-        // Called when purchasing towers or upgrades
         currentGold -= amount;
         UIController.Instance.UpdateUI();
     }
     public void IncreaseGoldCost()
     {
         // Called from GameManager when advancing to next level.
-        // Originally it was a scalable multiplier, but that proved brittle and broke too easily. This was a very last minute fix.
-        if (GameManager.Instance.CurrentLevel == 1)
-        {
-            goldFarmCost = baseFarmCost;
-        }
-        else if (GameManager.Instance.CurrentLevel == 2) 
-        {
-            goldFarmCost = baseFarmCost + costIncreasePerLevel;
-        }
-        else if (GameManager.Instance.CurrentLevel == 3)
-        {
-            goldFarmCost = baseFarmCost + (costIncreasePerLevel * 2);
-        }
+        goldFarmCost += costIncreasePerLevel;
         UIController.Instance.UpdateUI();
-        Debug.Log($"Gold farm cost increased. New cost: {goldFarmCost}");
     }
 }

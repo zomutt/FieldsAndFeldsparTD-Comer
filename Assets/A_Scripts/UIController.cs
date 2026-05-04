@@ -135,14 +135,11 @@ public class UIController : MonoBehaviour
         // If time is frozen, don't update the timer.
         if (Time.timeScale == 0f) return;
 
-
         // Timer is used to give player feedback on how long or short they took to complete the game. This gives the player incentive to try again if they don't like their time.
-
-        // Convert elapsed time into MM:SS format
         minutes = Mathf.FloorToInt(Time.time/60f);
         seconds = Mathf.FloorToInt(Time.time % 60f); // Seconds = remainder after dividing by 60
 
-        timerText.text = $"Time Elapsed: {minutes:00}:{seconds:00}"; // The 00 ensures that 2 digits will always be shown
+        timerText.text = $"Time Elapsed: {minutes:00}:{seconds:00}";
     }
     public void UpdateUI()
     {

@@ -76,32 +76,21 @@ public class TowerStats : ScriptableObject
     }
     public void ChangeShooterDamage(int damage)
     {
+        // Upgrades and resets
         shooterDamage += damage;
         Debug.Log($"New shooter tower damage: {shooterDamage}");
     }
     public void ChangeAoeDamage(int damage)
     {
+        // Upgrades and resets
         aoeDamage += damage;
         Debug.Log($"New aoe damage: {aoeDamage}");
     }
-    public void SetAllCosts()
+    public void IncreaseAllCosts()
     {
         // Called from GameManager when advancing to next level.
-        // Originally it was a scalable multiplier, but that proved brittle and broke too easily. This was a very last minute fix.
-        if (GameManager.Instance.CurrentLevel == 1)
-        {
-            aoeCost = baseAoeCost;
-            shooterCost = baseShooterCost;
-        }
-        else if (GameManager.Instance.CurrentLevel == 2)
-        {
-            aoeCost = baseAoeCost + costIncreasePerLevel;
-            shooterCost = baseShooterCost + costIncreasePerLevel;
-        }
-        else if (GameManager.Instance.CurrentLevel == 3)
-        {
-            aoeCost = baseAoeCost + (costIncreasePerLevel * 2);
-            shooterCost = baseAoeCost + (costIncreasePerLevel * 2);
-        }
+        aoeCost += costIncreasePerLevel;
+        shooterCost += costIncreasePerLevel;
+        UIController.Instance.UpdateUI();
     }
 }
