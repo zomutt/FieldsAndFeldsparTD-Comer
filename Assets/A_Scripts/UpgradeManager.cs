@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using UnityEditor.AdaptivePerformance.Editor;
 using UnityEngine;
 
 /// <summary>
@@ -20,8 +22,6 @@ public class UpgradeManager : MonoBehaviour
 
     [SerializeField] private int shooterDMGUpgrade;     // Stays static. This will be revistited once there is a higher scope to the game.
     public int ShooterDMGUpgrade => shooterDMGUpgrade;
-    //private int shooterUpgrades;    // Tracks how many upgrades the player has purchased
-    //private int savedShooterUpgrades;
 
     [Header("AOE")]
     [SerializeField] private int baseAoeUpgradeCost;
@@ -31,8 +31,6 @@ public class UpgradeManager : MonoBehaviour
 
     [SerializeField] private int aoeDMGUpgrade;
     public int AoeDMGUpgrade => aoeDMGUpgrade;
-    //private int aoeUpgrades;
-    //private int savedAoeUpgrades;
 
     [Header("Gold Mine")]
     [SerializeField] private int baseMineUpgradeCost;
@@ -42,8 +40,19 @@ public class UpgradeManager : MonoBehaviour
 
     [SerializeField] private int mineYieldUpgrade;
     public int MineYieldUpgrade => mineYieldUpgrade;
-    //private int mineUpgrades;
-    //private int savedMineUpgrades;
+
+    [Header("Singe-Target Slow Tower")]
+    [SerializeField] private int baseStSlowUpgradeCost;
+    private int stSlowUpgradeCost;
+    private int savedStSlowUpgradeCost;
+    public int StSlowUpgradeCost => stSlowUpgradeCost;
+    [SerializeField] private float stSlowUpgrade;
+    public float StSlowUpgrade => stSlowUpgrade;
+
+    // There is an upgrade cap so that the player cannot break or exploit things.
+    [SerializeField] private float stSlowUpgradeCap; 
+    public float StSlowUpgradeCap => stSlowUpgradeCap;
+
 
     [Header("General")]
     [SerializeField] private int costIncrease;    // The price increase each category has per upgrade. Ex: 100 for 1st upgrade, 150 for next, 200 for next, etc. etc.
@@ -73,40 +82,31 @@ public class UpgradeManager : MonoBehaviour
         mineUpgradeCost = baseMineUpgradeCost;
         savedMineUpgradeCost = baseMineUpgradeCost;
 
-    //    shooterUpgrades = 0;
-    //    savedShooterUpgrades = 0;
-
-    //    aoeUpgrades = 0;
-    //    savedAoeUpgrades = 0;
-
-    //    mineUpgrades = 0;
-    //    savedMineUpgrades = 0;
+        stSlowUpgradeCost = baseStSlowUpgradeCost;
+        savedStSlowUpgradeCost = baseStSlowUpgradeCost;
     }
     public void SaveData()
     {
         // Called at level victory
         savedShooterUpgradeCost = shooterUpgradeCost;
-        //savedShooterUpgrades = shooterUpgrades;
 
         savedAoeUpgradeCost = aoeUpgradeCost;
-        //savedAoeUpgrades = aoeUpgrades;
 
-        //savedMineUpgrades = mineUpgrades;
         savedMineUpgradeCost = mineUpgradeCost;
 
+        savedStSlowUpgradeCost = stSlowUpgradeCost;
     }
     public void LoadData()
     {
         // Called when restarting a new level. The player is not to keep their upgrades if they lose, they are only rewarded for winning.
         // Damage values are restored by TowerStats.LoadStats() -- no need to touch them here.
         shooterUpgradeCost = savedShooterUpgradeCost;
-        //shooterUpgrades = savedShooterUpgrades;
 
         aoeUpgradeCost = savedAoeUpgradeCost;
-        //aoeUpgrades = savedAoeUpgrades;
 
         mineUpgradeCost = savedMineUpgradeCost;
-        //mineUpgrades = savedMineUpgrades;
+
+        stSlowUpgradeCost = savedStSlowUpgradeCost;
 
         UIController.Instance.UpdateUI();
     }
@@ -122,7 +122,6 @@ public class UpgradeManager : MonoBehaviour
         GoldManager.Instance.DecreaseGold(shooterUpgradeCost);
 
         shooterUpgradeCost += costIncrease;
-        //shooterUpgrades++;
         UIController.Instance.UpdateUI();
     }
     public void UpgradeAoe()
@@ -136,7 +135,6 @@ public class UpgradeManager : MonoBehaviour
         GoldManager.Instance.DecreaseGold(aoeUpgradeCost);
 
         aoeUpgradeCost += costIncrease;
-        //aoeUpgrades++;
         UIController.Instance.UpdateUI();
     }
     public void UpgradeMine()
@@ -150,7 +148,34 @@ public class UpgradeManager : MonoBehaviour
         GoldManager.Instance.DecreaseGold(mineUpgradeCost);
 
         mineUpgradeCost += costIncrease;
-        //mineUpgrades++;
         UIController.Instance.UpdateUI();
+    }
+
+    public void UpgradeStSlow()
+    {
+        if (GoldManager.Instance.CurrentGold < stSlowUpgradeCost)
+        {
+            Debug.Log("You need more gold.");
+            return;
+        }
+        else if (TowerStats.Instance.StSlowAmount == StSlowUpgrade)
+        {
+            Debug.Log("Slow is already capped, nothing happens.");
+            return;
+        }
+        else if ((TowerStats.Instance.StSlowAmount + stSlowUpgrade) > StSlowUpgradeCap)
+        {
+            TowerStats.Instance.CapSlow();
+            Debug.Log("Slow cap reached!");
+            return;
+        }
+        else
+        {
+            TowerStats.Instance.ChangeStSlow(stSlowUpgrade);
+            GoldManager.Instance.DecreaseGold(StSlowUpgradeCost);
+
+            stSlowUpgradeCost += costIncrease;
+            UIController.Instance.UpdateUI();
+        }
     }
 }

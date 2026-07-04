@@ -45,12 +45,11 @@ public class TowerStats : ScriptableObject
 
     [Header("Single Target Slow Towers")]
     [Header("Slow amt acts as %")]
-    [SerializeField] private float baseStSlowAmount;       // Calculated as a %, use .01 - 1
+    [SerializeField] private float baseStSlowAmount;       // Calculated as a %, use 1-100 (do not exceed 65 unless for testing)
     private float stSlowAmount;              
     public float StSlowAmount => stSlowAmount;
 
-    [SerializeField] private float baseStSlowTime;
-    private float stSlowTime;
+    [SerializeField] private float stSlowTime;
     public float StSlowTime => stSlowTime;
 
     [SerializeField] private int baseStSlowCost;
@@ -65,7 +64,6 @@ public class TowerStats : ScriptableObject
     private int savedAoeDamage;
 
     private float savedStSlowAmount;
-    private float savedStSlowTime;
 
     private void OnEnable()
     {
@@ -77,7 +75,11 @@ public class TowerStats : ScriptableObject
         stSlowAmount = Mathf.Clamp(stSlowAmount, 1f, 100f);
         if (stBefore != stSlowAmount)
         {
-            Debug.Log($"ST Clamped! {stBefore} -> {stSlowAmount}. Make sure you are entering in a value between 1-100; it operates as a percentage.");
+            Debug.Log($"Single target slow clamped! {stBefore} -> {stSlowAmount}. Make sure you are entering in a value between 1-100; it operates as a percentage.");
+        }
+        if (stSlowAmount > 65)
+        {
+            Debug.Log($"Slow tower value exceeds recommended cap of slow cap ({UpgradeManager.Instance.StSlowUpgradeCap}). Your value: ({stSlowAmount}). Is this for testing?");
         }
     }
     public void InitializeStats()
@@ -97,10 +99,6 @@ public class TowerStats : ScriptableObject
         // Single-target slow towers
         stSlowAmount = baseStSlowAmount;
         savedStSlowAmount = baseStSlowAmount;
-
-        stSlowTime = baseStSlowTime;
-        savedStSlowTime = baseStSlowTime;
-
         stSlowCost = baseStSlowCost;
     }
     public void SaveStats()
@@ -111,7 +109,6 @@ public class TowerStats : ScriptableObject
         savedAoeDamage = aoeDamage;
 
         savedStSlowAmount = stSlowAmount;
-        savedStSlowTime = stSlowTime;
     }
     public void LoadStats()
     {
@@ -120,7 +117,6 @@ public class TowerStats : ScriptableObject
 
         aoeDamage = savedAoeDamage;
 
-        stSlowTime = savedStSlowTime;
         stSlowAmount = savedStSlowAmount;
     }
     public void ChangeShooterDamage(int damage)
@@ -135,15 +131,15 @@ public class TowerStats : ScriptableObject
         aoeDamage += damage;
         Debug.Log($"New aoe damage: {aoeDamage}");
     }
-    public void ChangeStSlow(float stSlow)
+    public void ChangeStSlow(float slow)
     {
-        stSlow += stSlow;
+        stSlowAmount += slow;
         Debug.Log($"New single-target slow amount: {stSlowAmount}");
     }
-    public void ChangeStSlowTime(float slowTime)
+    public void CapSlow()      // Needed for if the upgrade is higher than the cap, we just essentially clamp it. This should not ever occur, but this catches it if it does.
     {
-        stSlowTime += slowTime;
-        Debug.Log($"New single-target slow time: {stSlowTime}");
+        stSlowAmount = UpgradeManager.Instance.StSlowUpgradeCap;
+        Debug.Log($"Single target slow tower is set to cap. New slow amount: {stSlowAmount}. Fix upgrade amounts to be even.");
     }
     public void IncreaseAllCosts()
     {
@@ -151,6 +147,7 @@ public class TowerStats : ScriptableObject
         aoeCost += costIncreasePerLevel;
         shooterCost += costIncreasePerLevel;
         stSlowCost += costIncreasePerLevel;
+
         UIController.Instance.UpdateUI();
     }
 }

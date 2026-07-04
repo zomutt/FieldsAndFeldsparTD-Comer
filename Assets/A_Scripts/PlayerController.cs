@@ -70,11 +70,11 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
         {
-            currentSquare.SpawnTower(BuildingSquare.TowerType.Gold);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
-        {
             currentSquare.SpawnTower(BuildingSquare.TowerType.STSlow);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha9) || Input.GetKeyDown(KeyCode.Keypad9))
+        {
+            currentSquare.SpawnTower(BuildingSquare.TowerType.Gold);
         }
     }
 }

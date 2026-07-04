@@ -33,6 +33,9 @@ public class CastleStats : MonoBehaviour
     // This works for both the shields and the iframe coroutine.
 
     private bool isInvincible;
+    private bool isDevModeOn;
+
+    [SerializeField] private GameObject shieldVisual;
 
     private void Awake()
     {
@@ -43,6 +46,7 @@ public class CastleStats : MonoBehaviour
         currentHealth = maxHealth;
         isInvincible = false;
         StartCoroutine(PassiveHeal());
+        shieldVisual.SetActive(false);
     }
 
     public void Repair(int repairAmt)
@@ -55,6 +59,8 @@ public class CastleStats : MonoBehaviour
     public void TakeDamage(int damage)
     {
         if (isInvincible) return;
+        if (isDevModeOn) return;
+
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
@@ -86,5 +92,23 @@ public class CastleStats : MonoBehaviour
         isInvincible = true;
         yield return new WaitForSeconds(.4f);
         isInvincible = false;
+    }
+
+    public void ToggleDevInvincible()
+    {
+        if (!isDevModeOn)
+        {
+            isInvincible = true;
+            isDevModeOn = true;
+            shieldVisual.SetActive(true);
+            Debug.Log("Castle is invulnerable");
+        }
+        else
+        {
+            isInvincible = false;
+            isDevModeOn = false;
+            shieldVisual.SetActive(false);
+            Debug.Log("Castle is now vulnerable.");
+        }
     }
 }

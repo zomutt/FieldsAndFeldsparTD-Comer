@@ -44,6 +44,10 @@ public class DevCheats : MonoBehaviour
         {
             CastleStats.Instance.Repair(CastleStats.Instance.MaxHealth);
         }
+        if (Input.GetKeyDown(KeyCode.F4))
+        {
+            CastleStats.Instance.ToggleDevInvincible();
+        }
         if (Input.GetKeyDown(KeyCode.F12))
         {
             GameManager.Instance.AdvanceLevel();

@@ -53,21 +53,34 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI totalTime;       // Displayed at the end of the game
 
     [Header("Towers")]
+
+    [Header("Shooter")]
+    // SHOOTER TOWER
     [SerializeField] private TextMeshProUGUI shooterDMG;
     [SerializeField] private TextMeshProUGUI shooterCost;
     [SerializeField] private TextMeshProUGUI shooterUpgradeCost;
     [SerializeField] private TextMeshProUGUI shooterUpgradeAmt;
 
+    [Header("AOE")]
+    // AOE TOWER
     [SerializeField] private TextMeshProUGUI aoeDMG;
     [SerializeField] private TextMeshProUGUI aoeCost;
     [SerializeField] private TextMeshProUGUI aoeUpgradeCost;
     [SerializeField] private TextMeshProUGUI aoeUpgradeAmt;
 
+    [Header("Single-Target Slow")]
+    // SINGLE-TARGET SLOW TOWER
+    [SerializeField] private TextMeshProUGUI stSlowAmount;
+    [SerializeField] private TextMeshProUGUI stSlowCost;
+    [SerializeField] private TextMeshProUGUI stSlowUpgradeCost;
+    [SerializeField] private TextMeshProUGUI stSlowUpgradeAmt;
+
+    [Header("Gold Mine")]
+    // GOLD MINE
     [SerializeField] private TextMeshProUGUI mineYield;
     [SerializeField] private TextMeshProUGUI mineCost;
     [SerializeField] private TextMeshProUGUI mineUpgradeCost;
     [SerializeField] private TextMeshProUGUI mineUpgradeAmt;
-
 
     // This is needed so that UI controller ONLY resets everything when the player begins a fresh game.
     private bool pendingGameReset = false;
@@ -154,20 +167,38 @@ public class UIController : MonoBehaviour
         totalGoldText.text = $"Gold: {GoldManager.Instance.CurrentGold}";
         goldPerSecText.text = $"Gold/Sec: {GoldManager.Instance.GoldPerSec()}";
 
+        // SHOOTER
         shooterDMG.text = $"Damage: {TowerStats.Instance.ShooterDamage}";
         shooterCost.text = $"Build Cost: {TowerStats.Instance.ShooterCost}";
         shooterUpgradeCost.text = $"Upgrade Cost: {UpgradeManager.Instance.ShooterUpgradeCost}";
         shooterUpgradeAmt.text = $"Dmg Upgrade: +{UpgradeManager.Instance.ShooterDMGUpgrade}";
 
+        // AOE
         aoeDMG.text = $"Damage/Sec: {TowerStats.Instance.AoeDamage}";
         aoeCost.text = $"Build Cost: {TowerStats.Instance.AoeCost}";
         aoeUpgradeCost.text = $"Upgrade Cost: {UpgradeManager.Instance.AoeUpgradeCost}";
         aoeUpgradeAmt.text = $"Dmg Upgrade: +{UpgradeManager.Instance.AoeDMGUpgrade}";
 
+        // MINE
         mineYield.text = $"Gold Yield: {GoldManager.Instance.GoldFarmYield}";
         mineCost.text = $"Build Cost: {GoldManager.Instance.GoldFarmCost}";
         mineUpgradeCost.text = $"Upgrade Cost: {UpgradeManager.Instance.MineUpgradeCost}";
         mineUpgradeAmt.text = $"Yield Upgrade: +{UpgradeManager.Instance.MineYieldUpgrade}";
+
+        // SINGLE TARGET SLOW
+        stSlowAmount.text = $"Slow Power: {TowerStats.Instance.StSlowAmount}";
+        stSlowCost.text = $"Build Cost: {TowerStats.Instance.StSlowCost}";
+
+        if (UpgradeManager.Instance.StSlowUpgradeCap > TowerStats.Instance.StSlowAmount)
+        {
+            stSlowUpgradeCost.text = $"Upgrade Cost: {UpgradeManager.Instance.StSlowUpgradeCost}";
+            stSlowUpgradeAmt.text = $"Slow Upgrade: {UpgradeManager.Instance.StSlowUpgrade}";
+        }
+        else if (UpgradeManager.Instance.StSlowUpgradeCap <= TowerStats.Instance.StSlowAmount)
+        {
+            stSlowUpgradeCost.text = "Upgrade maxed!";
+            stSlowUpgradeAmt.text = "";
+        }
 
         totalKillsText.text = $"Total Kills: {GameManager.Instance.TotalKills}";
     }
@@ -213,6 +244,11 @@ public class UIController : MonoBehaviour
     {
         pendingGameReset = true;
     }
+
+
+
+
+    //PAUSE/HELP: 
     public void OnClickPauseGame()
     {
         if (!isPaused)
@@ -257,21 +293,9 @@ public class UIController : MonoBehaviour
             }
         }
     }
-    public void OnClickStartGame()
-    {
-        Debug.Log("Starting game");
-        GameManager.Instance.StartNewGame();
-        mainMenuPanel.SetActive(false);
-    }
-    public void OnClickTryAgain()
-    {
-        loseGamePanel.SetActive(false);
-        GameManager.Instance.ResetLevel();
-    }
-    public void OnClickOnward()
-    {         
-        GameManager.Instance.AdvanceLevel();
-    }
+
+
+    // QUITTING:
     public void OnClickQuit()
     {
         confirmQuitPanel.SetActive(true);
@@ -284,6 +308,8 @@ public class UIController : MonoBehaviour
     {
         confirmQuitPanel.SetActive(false);
     }
+
+    // UPGRADES:
     public void OnClickShooterUpgrade()
     {
         UpgradeManager.Instance.UpgradeShooter();
@@ -292,10 +318,17 @@ public class UIController : MonoBehaviour
     {
         UpgradeManager.Instance.UpgradeAoe();
     }
+
+    public void OnClickStSlowUpgrade()
+    {
+        UpgradeManager.Instance.UpgradeStSlow();
+    }
     public void OnClickMineUpgrade()
     {
         UpgradeManager.Instance.UpgradeMine();
     }
+
+    // MENU:
     public void OnClickMainMenu()
     {
         confirmMainMenuPanel.SetActive(true);
@@ -304,9 +337,27 @@ public class UIController : MonoBehaviour
     {
         confirmMainMenuPanel.SetActive(false);
     }
+
+    // LEVELS/RESTARTING/ETC: 
     public void OnClickRestartGame()
     {
         Debug.Log("UIC: Reset Game called");
         GameManager.Instance.ResetWholeGame();
+    }
+
+    public void OnClickStartGame()
+    {
+        Debug.Log("Starting game");
+        GameManager.Instance.StartNewGame();
+        mainMenuPanel.SetActive(false);
+    }
+    public void OnClickTryAgain()
+    {
+        loseGamePanel.SetActive(false);
+        GameManager.Instance.ResetLevel();
+    }
+    public void OnClickOnward()
+    {
+        GameManager.Instance.AdvanceLevel();
     }
 }
