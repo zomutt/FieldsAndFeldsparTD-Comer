@@ -13,7 +13,7 @@ public class TowerStats : ScriptableObject
 
     public static TowerStats Instance { get; private set; }
 
-    [Header("Both")]
+    [Header("All")]
     [SerializeField] private int costIncreasePerLevel;
 
     [Header("Shooter Towers")]
@@ -43,40 +43,89 @@ public class TowerStats : ScriptableObject
     private int aoeCost;       
     public int AoeCost => aoeCost;
 
+    [Header("Single Target Slow Towers")]
+    [Header("Slow amt acts as %")]
+    [SerializeField] private float baseStSlowAmount;       // Calculated as a %, use .01 - 1
+    private float stSlowAmount;              
+    public float StSlowAmount => stSlowAmount;
+
+    [SerializeField] private float baseStSlowTime;
+    private float stSlowTime;
+    public float StSlowTime => stSlowTime;
+
+    [SerializeField] private int baseStSlowCost;
+    private int stSlowCost;
+    public int StSlowCost => stSlowCost;
+    [SerializeField] private float stSlowCD;
+    public float StSlowCD => stSlowCD;
+
     /// SAVED STATS ///
     private int savedShooterDamage;
+
     private int savedAoeDamage;
+
+    private float savedStSlowAmount;
+    private float savedStSlowTime;
 
     private void OnEnable()
     {
         Instance = this;
     }
+    private void OnValidate()
+    {
+        float stBefore = stSlowAmount;
+        stSlowAmount = Mathf.Clamp(stSlowAmount, 1f, 100f);
+        if (stBefore != stSlowAmount)
+        {
+            Debug.Log($"ST Clamped! {stBefore} -> {stSlowAmount}. Make sure you are entering in a value between 1-100; it operates as a percentage.");
+        }
+    }
     public void InitializeStats()
     {
-        // Called at the beginning of the game to set what the base is meant to be. This is important for if the player starts from scratch after playing a game i.e. winning, losing, quitting
-        shooterDamage = baseShooterDamage;
-        aoeDamage = baseAoeDamage;
-        shooterCost = baseShooterCost;
-        aoeCost = baseAoeCost;
-        savedShooterDamage = baseShooterDamage;
-        savedAoeDamage = baseAoeDamage;
+        // Called at the beginning of the game to set what the base is meant to be. This is important for if the player starts from scratch after playing a game i.e. winning, losing, quitting.
 
+        // Shooter towers
+        shooterDamage = baseShooterDamage;
+        savedShooterDamage = baseShooterDamage;
+        shooterCost = baseShooterCost;
+
+        // AOE towers
+        aoeDamage = baseAoeDamage;
+        savedAoeDamage = baseAoeDamage;
+        aoeCost = baseAoeCost;
+
+        // Single-target slow towers
+        stSlowAmount = baseStSlowAmount;
+        savedStSlowAmount = baseStSlowAmount;
+
+        stSlowTime = baseStSlowTime;
+        savedStSlowTime = baseStSlowTime;
+
+        stSlowCost = baseStSlowCost;
     }
     public void SaveStats()
     {
         // Called when level is won
         savedShooterDamage = shooterDamage;
+
         savedAoeDamage = aoeDamage;
+
+        savedStSlowAmount = stSlowAmount;
+        savedStSlowTime = stSlowTime;
     }
     public void LoadStats()
     {
         // Called when level is lost
         shooterDamage = savedShooterDamage;
+
         aoeDamage = savedAoeDamage;
+
+        stSlowTime = savedStSlowTime;
+        stSlowAmount = savedStSlowAmount;
     }
     public void ChangeShooterDamage(int damage)
     {
-        // Upgrades and resets
+        // Upgrades and resets 
         shooterDamage += damage;
         Debug.Log($"New shooter tower damage: {shooterDamage}");
     }
@@ -86,11 +135,22 @@ public class TowerStats : ScriptableObject
         aoeDamage += damage;
         Debug.Log($"New aoe damage: {aoeDamage}");
     }
+    public void ChangeStSlow(float stSlow)
+    {
+        stSlow += stSlow;
+        Debug.Log($"New single-target slow amount: {stSlowAmount}");
+    }
+    public void ChangeStSlowTime(float slowTime)
+    {
+        stSlowTime += slowTime;
+        Debug.Log($"New single-target slow time: {stSlowTime}");
+    }
     public void IncreaseAllCosts()
     {
-        // Called from GameManager when advancing to next level.
+        // Called from GameManager ONLY when advancing to next level.
         aoeCost += costIncreasePerLevel;
         shooterCost += costIncreasePerLevel;
+        stSlowCost += costIncreasePerLevel;
         UIController.Instance.UpdateUI();
     }
 }

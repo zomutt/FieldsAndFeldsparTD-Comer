@@ -128,13 +128,11 @@ MonoBehaviour:
   towerPrefabs:
   - type: 0
     prefab: {fileID: 5267861018364839273, guid: 7ad20453d4313724e8e0661a364782e3, type: 3}
-    cost: 0
   - type: 1
-    prefab: {fileID: 8348273855749368682, guid: 638dd2eb0822e61478ae372a20081f67, type: 3}
-    cost: 100
+    prefab: {fileID: 4789475237812295282, guid: 73924d10decf93c4aa02a0769ec3d768, type: 3}
   - type: 2
     prefab: {fileID: 9058770150661347140, guid: c8d7883154070ed4982468660f33ea30, type: 3}
-    cost: 150
   - type: 3
     prefab: {fileID: 4976981367152659711, guid: f6ffae2823b8d0c4589e6c0970b6d76c, type: 3}
-    cost: 200
+  - type: 4
+    prefab: {fileID: 6690539343210856366, guid: ddbee1229d46be0438b872363e71ed47, type: 3}

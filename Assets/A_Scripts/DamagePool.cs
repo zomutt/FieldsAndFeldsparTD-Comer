@@ -13,16 +13,19 @@ public class DamagePool : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] private GameObject shooterPrefab;
     [SerializeField] private GameObject aoePrefab;
+    [SerializeField] private GameObject slowPrefab;
 
     [Header("Pool Sizes")]
     [SerializeField] private int shooterPoolSize = 20;
     [SerializeField] private int aoePoolSize = 20;
+    [SerializeField] private int slowPoolSize = 20;
 
     // I opted to use an enum despite there only being two towers at the moment for scope scaling purposes
     public enum DamageType
     {
         Shooter,
-        AOE
+        AOE,
+        Slow
     }
     private Dictionary<DamageType, GameObject> prefabPairs;      // Links the damage types to their pool limit
     private Dictionary<DamageType, ObjectPool<GameObject>> pools; // Maps each damage type to its ObjectPool
@@ -35,14 +38,16 @@ public class DamagePool : MonoBehaviour
         prefabPairs = new Dictionary<DamageType, GameObject>
         {
             { DamageType.Shooter, shooterPrefab },
-            { DamageType.AOE, aoePrefab }
+            { DamageType.AOE, aoePrefab },
+            { DamageType.Slow, slowPrefab }
         };
 
         // Then links the pool to it's type too
         pools = new Dictionary<DamageType, ObjectPool<GameObject>>
         {
             { DamageType.Shooter, CreatePool(DamageType.Shooter, shooterPoolSize) },
-            { DamageType.AOE, CreatePool(DamageType.AOE, aoePoolSize) }
+            { DamageType.AOE, CreatePool(DamageType.AOE, aoePoolSize) },
+            { DamageType.Slow, CreatePool(DamageType.Slow, slowPoolSize) }
         };
     }
 

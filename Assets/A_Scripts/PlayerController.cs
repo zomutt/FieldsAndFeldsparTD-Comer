@@ -60,17 +60,21 @@ public class PlayerController : MonoBehaviour
     {
         if (currentSquare == null) return;
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
         {
             currentSquare.SpawnTower(BuildingSquare.TowerType.Shooter);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
         {
             currentSquare.SpawnTower(BuildingSquare.TowerType.AOE);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
         {
             currentSquare.SpawnTower(BuildingSquare.TowerType.Gold);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
+        {
+            currentSquare.SpawnTower(BuildingSquare.TowerType.STSlow);
         }
     }
 }

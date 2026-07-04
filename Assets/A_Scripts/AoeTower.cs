@@ -2,6 +2,11 @@ using UnityEngine;
 
 public class AoeTower : TowerBase
 {
+    protected override void Start()
+    {
+        base.Start();
+        timeBetweenAttacks = TowerStats.Instance.AoeCD;      // Functions as attack speed
+    }
     protected override void Update()
     {
         base.Update();  

@@ -6,11 +6,11 @@ using UnityEngine;
 /// </summary>
 public class TowerBase : MonoBehaviour
 {
-    protected List<EnemyBase> targetsInRange = new();
+    [HideInInspector] protected List<EnemyBase> targetsInRange = new();
     protected EnemyBase currentTarget;
 
     protected float damage;
-    protected float timeBetweenAttacks;
+    [HideInInspector] protected float timeBetweenAttacks;
     protected float cooldown;
 
     protected Vector3 towerLocation;
@@ -18,7 +18,6 @@ public class TowerBase : MonoBehaviour
     protected virtual void Start()
     {
         towerLocation = transform.position;
-        timeBetweenAttacks = TowerStats.Instance.ShooterCD;      // Functions as attack speed
     }
     protected virtual void Update()
     {
@@ -33,7 +32,6 @@ public class TowerBase : MonoBehaviour
     {
         return cooldown <= 0f;
     }
-
     protected void ResetCooldown()
     {
         cooldown = timeBetweenAttacks;
@@ -70,7 +68,7 @@ public class TowerBase : MonoBehaviour
             currentTarget = null;
         }
     }
-    private void GetCurrentTarget()
+    protected virtual void GetCurrentTarget()
     {
         // Null-check is edgecase-safe, checking for activeinHierarchy ensures we can find another target if the first target dies
         static bool IsInvalidEnemy(EnemyBase enemy)

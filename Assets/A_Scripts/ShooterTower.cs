@@ -5,6 +5,11 @@ using UnityEngine;
 /// </summary>
 public class ShooterTower : TowerBase
 {
+    protected override void Start()
+    {
+        base.Start();
+        timeBetweenAttacks = TowerStats.Instance.ShooterCD;      // Functions as attack speed
+    }
     protected override void Update()
     {
         base.Update();

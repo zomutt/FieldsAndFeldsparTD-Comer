@@ -12,7 +12,8 @@ public class BuildingSquare : MonoBehaviour
         None = 0,   // Remove tower will go here when that is implemented.
         Shooter = 1,
         AOE = 2,
-        Gold = 3
+        Gold = 3,
+        STSlow = 4,
         // Add more tower types here as needed
     }
 
@@ -21,7 +22,6 @@ public class BuildingSquare : MonoBehaviour
     {
         public TowerType type;      // Which tower this entry represents
         public GameObject prefab;   // The prefab to spawn for that tower
-        public int cost;
     }
 
     [Header("Towers (Type to Prefab pairs)")]
@@ -60,13 +60,13 @@ public class BuildingSquare : MonoBehaviour
         if (isOccupied) return;
 
         var tower = prefabLookup[type];
-        if (GoldManager.Instance.CurrentGold < tower.cost)
+        if (GoldManager.Instance.CurrentGold < BuildCost(type))
         {
             Debug.Log("Not enough gold to build this tower.");
             return;
         }
 
-        GoldManager.Instance.DecreaseGold(tower.cost);
+        GoldManager.Instance.DecreaseGold(BuildCost(type));
         Instantiate(tower.prefab, transform.position + new Vector3(0f, 2f, 0f), transform.rotation);
 
         isOccupied = true;  // Prevents more than one tower being built on this tile
@@ -78,5 +78,24 @@ public class BuildingSquare : MonoBehaviour
     public void OnPlayerExit()
     {
         towerSR.material.color = startColor;
+    }
+    private int BuildCost(TowerType type)
+    {
+        switch (type)
+        { 
+            case TowerType.None:
+                return 0;
+            case TowerType.Shooter:
+                return TowerStats.Instance.ShooterCost;
+            case TowerType.AOE:
+                return TowerStats.Instance.AoeCost;
+            case TowerType.Gold:
+                return GoldManager.Instance.GoldFarmCost;
+            case TowerType.STSlow:
+                return TowerStats.Instance.StSlowCost;
+            default:
+                Debug.Log("Building square cannot get tower cost!");
+                return 0;
+        }
     }
 }

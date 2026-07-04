@@ -20,3 +20,7 @@ MonoBehaviour:
   aoeDuration: 3
   aoeCD: 0.7
   baseAoeCost: 150
+  baseStSlowAmount: 25
+  baseStSlowTime: 4
+  baseStSlowCost: 150
+  stSlowCD: 1.25
