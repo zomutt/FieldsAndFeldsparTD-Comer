@@ -38,10 +38,12 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject losePanel;
     [SerializeField] private GameObject controlPanel;
 
-    [Header("Pause/Help")]   // Honestly these two really just go hand in hand
+    [Header("Pause")]
     [SerializeField] private GameObject pausePanel;     // Black overlay that displays when game is paused
     [SerializeField] private TextMeshProUGUI pauseText;
     private bool isPaused;
+
+    [Header("Help")]
     [SerializeField] private GameObject helpPanel;
     private bool isHelpOpen;
     private bool pausedByHelp;         // This is to try to help the bug that is occuring where closing from help keeps the game paused when it should not.
@@ -248,7 +250,7 @@ public class UIController : MonoBehaviour
 
 
 
-    //PAUSE/HELP: 
+    // PAUSE/HELP: 
     public void OnClickPauseGame()
     {
         if (!isPaused)
