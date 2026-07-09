@@ -201,7 +201,6 @@ public class UIController : MonoBehaviour
             stSlowUpgradeCost.text = "Upgrade maxed!";
             stSlowUpgradeAmt.text = "";
         }
-
         totalKillsText.text = $"Total Kills: {GameManager.Instance.TotalKills}";
     }
     public void ResetTimer()
