@@ -184,7 +184,7 @@ public class GameManager : MonoBehaviour
         WaveSpawnPool.Instance.ResetPools();
         TierManager.Instance.StopAllCoroutines();
         UIController.Instance.TriggerPendingReset();
-        UIController.Instance.StartingUI();       // Resets the UI to pre-game 
+        UIController.Instance.StartingUI();       // Resets the UI to pre-game
 
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.LoadScene(0);

@@ -1,5 +1,7 @@
 using TMPro;
+using Unity.AppUI.UI;
 using UnityEngine;
+using UnityEngine.UI;
 /// <summary>
 /// This script was created to avoid overflowing the main UIController.cs script since this has a large amount of specific job duties.
 /// HelpUI.cs handles all of the behaviour that lives inside of the help screen -- the help screen is still toggled on and off by UIManager.cs while the pausing is handled by GameManager.cs
@@ -7,6 +9,7 @@ using UnityEngine;
 public class HelpUI : MonoBehaviour
 {
     public static HelpUI Instance;
+
     // AESTHETICS
     [SerializeField] private GameObject horizontalPebbles;         // Needed for enemies and towers info
 
@@ -17,6 +20,12 @@ public class HelpUI : MonoBehaviour
     [SerializeField] private GameObject towerInfoPanel;
     [SerializeField] private GameObject[] towerInfoPrefabs;        // Prefabs include text and image
     private int towerInt;
+
+    [Header("Upgrade Info")]
+    [SerializeField] private GameObject mainMenuPanel;      // Needed so the upgrades can't be toggled while in the main menu 
+    [SerializeField] private UnityEngine.UI.Button upgradeButton;
+    [SerializeField] private TextMeshProUGUI upgradeCostText;
+    [SerializeField] private TextMeshProUGUI upgradeLevelText;
 
     [Header("Amethyst")]
     [SerializeField] private TextMeshProUGUI amethystDmg;
@@ -44,6 +53,9 @@ public class HelpUI : MonoBehaviour
         ClearAllTabs();
         howToPlay.SetActive(true);
         towerInt = 0;
+
+        upgradeCostText.text = string.Empty;
+        UpdateTowerHelpUI();
     }
     public void UpdateTowerHelpUI()
     {
@@ -53,11 +65,44 @@ public class HelpUI : MonoBehaviour
         aoeDmg.text = $"Damage/sec: {TowerStats.Instance.AoeDamage}";
         aoeCost.text = $"Cost: {TowerStats.Instance.AoeCost}";
 
-        slowAmt.text = $"Slow: {TowerStats.Instance.StSlowAmount}";
+        slowAmt.text = $"Slow: {TowerStats.Instance.StSlowAmount}%";
         slowCost.text = $"Cost: {TowerStats.Instance.StSlowCost}";
 
         goldAmt.text = $"Gold/sec: {GoldManager.Instance.GoldFarmYield}";
         goldCost.text = $"Cost: {GoldManager.Instance.GoldFarmCost}";
+        UpdateUpgradeInfoText();
+    }
+    public void UpdateUpgradeInfoText()
+    {
+        switch(towerInt)
+        {
+            case 0:
+                upgradeCostText.text = $"Upgrade Cost: {UpgradeManager.Instance.ShooterUpgradeCost}";
+                upgradeLevelText.text = $"Level: {UpgradeManager.Instance.ShooterUpgradeLevel}";
+                break;
+            case 1:
+                upgradeCostText.text = $"Upgrade Cost: {UpgradeManager.Instance.AoeUpgradeCost}";
+                upgradeLevelText.text = $"Level: {UpgradeManager.Instance.AoeUpgradeLevel}";
+                break;
+            case 2:
+                if (!UpgradeManager.Instance.IsStSlowMaxed())
+                {
+                    upgradeCostText.text = $"Upgrade Cost: {UpgradeManager.Instance.StSlowUpgradeCost}";
+                    upgradeLevelText.text = $"Level: {UpgradeManager.Instance.StSlowUpgradeLevel}";
+                }
+                else
+                {
+                    upgradeCostText.text = string.Empty;
+                    upgradeLevelText.text = "Max level!";
+                }
+                break;
+            case 3:
+                {
+                    upgradeCostText.text = $"Upgrade Cost: {UpgradeManager.Instance.MineUpgradeCost}";
+                    upgradeLevelText.text = $"Level: {UpgradeManager.Instance.MineUpgradeLevel}";
+                    break;
+                }
+        }
     }
     private void ClearAllTabs()
     {
@@ -83,6 +128,16 @@ public class HelpUI : MonoBehaviour
             tower.SetActive(false);
         }
         towerInfoPrefabs[towerInt].SetActive(true);
+
+        if (!mainMenuPanel.activeSelf)
+        {
+            upgradeButton.interactable = true;
+        }
+        else
+        {
+            upgradeButton.interactable = false;
+        }
+        UpdateUpgradeInfoText();
     }
     public void OnClickNextTower()
     {
@@ -93,6 +148,7 @@ public class HelpUI : MonoBehaviour
             towerInt = 0;
         }
         towerInfoPrefabs[(towerInt)].SetActive(true);
+        UpdateUpgradeInfoText();
     }
     public void OnClickPrevTower()
     {
@@ -103,6 +159,7 @@ public class HelpUI : MonoBehaviour
             towerInt = towerInfoPrefabs.Length - 1;
         }
         towerInfoPrefabs[(towerInt)].SetActive(true);
+        UpdateUpgradeInfoText();
     }
     public void OnClickUpgradeTower()
     {
@@ -130,5 +187,6 @@ public class HelpUI : MonoBehaviour
             }
         }
         UpdateTowerHelpUI();
+        UpdateUpgradeInfoText();
     }
 }

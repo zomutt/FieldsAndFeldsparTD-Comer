@@ -136,7 +136,7 @@ public class TowerStats : ScriptableObject
         stSlowAmount += slow;
         Debug.Log($"New single-target slow amount: {stSlowAmount}");
     }
-    public void CapSlow()      // Needed for if the upgrade is higher than the cap, we just essentially clamp it. This should not ever occur, but this catches it if it does.
+    public void CapSlow()      // Needed for if the upgrade is higher than the cap
     {
         stSlowAmount = UpgradeManager.Instance.StSlowUpgradeCap;
         Debug.Log($"Single target slow tower is set to cap. New slow amount: {stSlowAmount}. Fix upgrade amounts to be even.");

@@ -158,6 +158,7 @@ public class UIController : MonoBehaviour
     }
     public void UpdateUI()
     {
+        HelpUI.Instance.UpdateTowerHelpUI();      // Catch-all
         if (CastleStats.Instance != null)
         {
             castleHealthText.text = $"Castle HP: {CastleStats.Instance.CurrentHealth}/{CastleStats.Instance.MaxHealth}";
@@ -173,19 +174,19 @@ public class UIController : MonoBehaviour
         shooterDMG.text = $"Damage: {TowerStats.Instance.ShooterDamage}";
         shooterCost.text = $"Build Cost: {TowerStats.Instance.ShooterCost}";
         shooterUpgradeCost.text = $"Upgrade Cost: {UpgradeManager.Instance.ShooterUpgradeCost}";
-        shooterUpgradeAmt.text = $"Dmg Upgrade: +{UpgradeManager.Instance.ShooterDMGUpgrade}";
+        shooterUpgradeAmt.text = $"Dmg Upgrade: +{UpgradeManager.Instance.ShooterUpgradeLevel}";
 
         // AOE
         aoeDMG.text = $"Damage/Sec: {TowerStats.Instance.AoeDamage}";
         aoeCost.text = $"Build Cost: {TowerStats.Instance.AoeCost}";
         aoeUpgradeCost.text = $"Upgrade Cost: {UpgradeManager.Instance.AoeUpgradeCost}";
-        aoeUpgradeAmt.text = $"Dmg Upgrade: +{UpgradeManager.Instance.AoeDMGUpgrade}";
+        aoeUpgradeAmt.text = $"Dmg Upgrade: +{UpgradeManager.Instance.AoeUpgradeLevel}";
 
         // MINE
         mineYield.text = $"Gold Yield: {GoldManager.Instance.GoldFarmYield}";
         mineCost.text = $"Build Cost: {GoldManager.Instance.GoldFarmCost}";
         mineUpgradeCost.text = $"Upgrade Cost: {UpgradeManager.Instance.MineUpgradeCost}";
-        mineUpgradeAmt.text = $"Yield Upgrade: +{UpgradeManager.Instance.MineYieldUpgrade}";
+        mineUpgradeAmt.text = $"Yield Upgrade: +{UpgradeManager.Instance.MineUpgradeLevel}";
 
         // SINGLE TARGET SLOW
         stSlowAmount.text = $"Slow Power: {TowerStats.Instance.StSlowAmount}";
@@ -194,7 +195,7 @@ public class UIController : MonoBehaviour
         if (UpgradeManager.Instance.StSlowUpgradeCap > TowerStats.Instance.StSlowAmount)
         {
             stSlowUpgradeCost.text = $"Upgrade Cost: {UpgradeManager.Instance.StSlowUpgradeCost}";
-            stSlowUpgradeAmt.text = $"Slow Upgrade: {UpgradeManager.Instance.StSlowUpgrade}";
+            stSlowUpgradeAmt.text = $"Slow Upgrade: {UpgradeManager.Instance.StSlowUpgradeLevel}";
         }
         else if (UpgradeManager.Instance.StSlowUpgradeCap <= TowerStats.Instance.StSlowAmount)
         {
