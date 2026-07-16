@@ -31,6 +31,9 @@ public class BuildingSquare : MonoBehaviour
 
     private bool isOccupied;
 
+    private GameObject activeChild;
+    private int storedCost;     // Stores the cost of the tower so that it can be partially refunded
+
     // The player should be able to clearly see which tile they are considered to be on
     private Renderer towerSR;
     private Color startColor;
@@ -65,9 +68,9 @@ public class BuildingSquare : MonoBehaviour
             Debug.Log("Not enough gold to build this tower.");
             return;
         }
-
+        storedCost = BuildCost(type);
         GoldManager.Instance.DecreaseGold(BuildCost(type));
-        Instantiate(tower.prefab, transform.position + new Vector3(0f, 2f, 0f), transform.rotation);
+        activeChild = Instantiate(tower.prefab, transform.position + new Vector3(0f, 2f, 0f), transform.rotation);
 
         isOccupied = true;  // Prevents more than one tower being built on this tile
     }
@@ -78,6 +81,16 @@ public class BuildingSquare : MonoBehaviour
     public void OnPlayerExit()
     {
         towerSR.material.color = startColor;
+    }
+    public void DestroyTower()
+    {
+        if (!isOccupied) return;
+        else
+        {
+            Destroy(activeChild);
+            isOccupied = false;
+            GoldManager.Instance.GiveGold(Mathf.RoundToInt(storedCost / 3));
+        }
     }
     private int BuildCost(TowerType type)
     {

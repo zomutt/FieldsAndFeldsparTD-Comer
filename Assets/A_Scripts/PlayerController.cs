@@ -76,5 +76,9 @@ public class PlayerController : MonoBehaviour
         {
             currentSquare.SpawnTower(BuildingSquare.TowerType.Gold);
         }
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            currentSquare.DestroyTower();
+        }
     }
 }

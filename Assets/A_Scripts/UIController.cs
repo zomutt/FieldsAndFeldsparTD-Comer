@@ -39,8 +39,6 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject controlPanel;
 
     [Header("Pause")]
-    [SerializeField] private GameObject pausePanel;     // Black overlay that displays when game is paused
-    [SerializeField] private TextMeshProUGUI pauseText;
     private bool isPaused;
 
     [Header("Help")]
@@ -55,7 +53,6 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI totalTime;       // Displayed at the end of the game
 
     [Header("Towers")]
-
     [Header("Shooter")]
     // SHOOTER TOWER
     [SerializeField] private TextMeshProUGUI shooterDMG;
@@ -134,8 +131,6 @@ public class UIController : MonoBehaviour
         helpMenu.SetActive(false);
         confirmMainMenuPanel.SetActive(false);
 
-        pausePanel.SetActive(false);
-        pauseText.text = "Pause";
         isPaused = false;
         isHelpOpen = false;
         pausedByHelp = false;
@@ -257,15 +252,11 @@ public class UIController : MonoBehaviour
         {
             GameManager.Instance.PauseGame();
             isPaused = true;
-            pausePanel.SetActive(true);
-            pauseText.text = "Play";       // Switches the text to actually make sense
         }
         else
         {
             GameManager.Instance.ResumeGame();
             isPaused = false;
-            pausePanel.SetActive(false);
-            pauseText.text = "Pause";
         }
     }
     public void OnClickToggleHelp()
@@ -276,7 +267,6 @@ public class UIController : MonoBehaviour
             {
                 GameManager.Instance.PauseGame();
                 isPaused = true;
-                pausePanel.SetActive(true);
                 pausedByHelp = true;  
             }
             helpMenu.SetActive(true);
@@ -290,7 +280,6 @@ public class UIController : MonoBehaviour
             {
                 GameManager.Instance.ResumeGame();
                 isPaused = false;
-                pausePanel.SetActive(false);
                 pausedByHelp = false;
             }
         }
@@ -333,6 +322,7 @@ public class UIController : MonoBehaviour
     // MENU:
     public void OnClickMainMenu()
     {
+        if (mainMenuPanel.activeSelf) return;
         confirmMainMenuPanel.SetActive(true);
     }
     public void OnClickDeclineMainMenu()

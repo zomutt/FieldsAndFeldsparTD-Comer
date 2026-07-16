@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using UnityEditor.AdaptivePerformance.Editor;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 /// <summary>
@@ -61,8 +62,9 @@ public class UpgradeManager : MonoBehaviour
     public float StSlowUpgradeCap => stSlowUpgradeCap;
 
 
-    [Header("General")]
-    [SerializeField] private int basicCostIncrease;    // The price increase each category has per upgrade. Ex: 100 for 1st upgrade, 150 for next, 200 for next, etc. etc. Works for standard towers.
+    [Header("Costs")]
+    [SerializeField] private float costMultiplier;
+    [SerializeField] private float slowCostMultiplier;      // Meant to be more expensive than regular towers
 
     private void Awake()
     {
@@ -148,7 +150,7 @@ public class UpgradeManager : MonoBehaviour
         TowerStats.Instance.ChangeShooterDamage(shooterUpgradeLevel);
         GoldManager.Instance.DecreaseGold(shooterUpgradeCost);
 
-        shooterUpgradeCost += basicCostIncrease;
+        shooterUpgradeCost = Mathf.RoundToInt(shooterUpgradeCost * costMultiplier);
         shooterUpgradeLevel++;
         UIController.Instance.UpdateUI();
     }
@@ -162,7 +164,7 @@ public class UpgradeManager : MonoBehaviour
         TowerStats.Instance.ChangeAoeDamage(aoeUpgradeLevel);
         GoldManager.Instance.DecreaseGold(aoeUpgradeCost);
 
-        aoeUpgradeCost += basicCostIncrease;
+        aoeUpgradeCost = Mathf.RoundToInt(aoeUpgradeCost * costMultiplier);
         aoeUpgradeLevel++;
         UIController.Instance.UpdateUI();
     }
@@ -176,7 +178,7 @@ public class UpgradeManager : MonoBehaviour
         GoldManager.Instance.ChangeGoldYield(mineUpgradeLevel);
         GoldManager.Instance.DecreaseGold(mineUpgradeCost);
 
-        mineUpgradeCost += basicCostIncrease;
+        mineUpgradeCost = Mathf.RoundToInt(mineUpgradeCost * costMultiplier);
         mineUpgradeLevel++;
         UIController.Instance.UpdateUI();
     }
@@ -208,7 +210,7 @@ public class UpgradeManager : MonoBehaviour
         }
 
         stSlowUpgradeLevel++;
-        stSlowUpgradeCost += basicCostIncrease;
+        stSlowUpgradeCost = Mathf.RoundToInt(stSlowUpgradeCost * costMultiplier);
         UIController.Instance.UpdateUI();
     }
 }
