@@ -130,6 +130,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CastleStats
   currentHealth: 0
   maxHealth: 150
+  repairAmount: 30
+  baseRepairCost: 100
+  repairCostIncreasePerUse: 50
   passiveHealAmount: 1
   shieldVisual: {fileID: 7695429551966548732}
 --- !u!208 &6187032236267796128

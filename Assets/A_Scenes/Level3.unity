@@ -8771,20 +8771,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4753047836288752625, guid: b22671dec865f56489b8abca40feb57e, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: cd9d9cefb3b55ac4abe38bfe341b20ac, type: 2}
     - target: {fileID: 7061800582199262544, guid: b22671dec865f56489b8abca40feb57e, type: 3}
       propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7061800582199262544, guid: b22671dec865f56489b8abca40feb57e, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7061800582199262544, guid: b22671dec865f56489b8abca40feb57e, type: 3}
-      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -1,7 +1,5 @@
 using TMPro;
-using Unity.AppUI.UI;
 using UnityEngine;
-using UnityEngine.UI;
 /// <summary>
 /// This script was created to avoid overflowing the main UIController.cs script since this has a large amount of specific job duties.
 /// HelpUI.cs handles all of the behaviour that lives inside of the help screen -- the help screen is still toggled on and off by UIManager.cs while the pausing is handled by GameManager.cs

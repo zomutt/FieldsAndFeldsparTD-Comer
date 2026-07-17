@@ -1,6 +1,3 @@
-using System.Runtime.CompilerServices;
-using UnityEditor.AdaptivePerformance.Editor;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 /// <summary>

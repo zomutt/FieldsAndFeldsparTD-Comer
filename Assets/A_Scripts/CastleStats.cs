@@ -73,12 +73,12 @@ public class CastleStats : MonoBehaviour
         {
             return;
         }
-
+        int workingHealth = currentHealth;     // For debugging purposes
         currentHealth += repairAmount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
         GoldManager.Instance.DecreaseGold(currentRepairCost);
-        Debug.Log($"Castle repaired! New castle HP: {currentHealth}");
+        Debug.Log($"Castle repaired for {currentHealth - workingHealth} ! New castle HP: {currentHealth}");
 
         currentRepairCost += repairCostIncreasePerUse;
         UIController.Instance.UpdateUI();

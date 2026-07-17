@@ -4023,7 +4023,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &223982199
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6973,17 +6973,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 934104615907862734, guid: b22671dec865f56489b8abca40feb57e, type: 3}
-      propertyPath: moveSpeed
-      value: 20
-      objectReference: {fileID: 0}
     - target: {fileID: 1381589180591419371, guid: b22671dec865f56489b8abca40feb57e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.2
       objectReference: {fileID: 0}
     - target: {fileID: 1381589180591419371, guid: b22671dec865f56489b8abca40feb57e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.7500005
+      value: 2.602
       objectReference: {fileID: 0}
     - target: {fileID: 1381589180591419371, guid: b22671dec865f56489b8abca40feb57e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -7017,28 +7013,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2120032001540912071, guid: b22671dec865f56489b8abca40feb57e, type: 3}
-      propertyPath: m_Radius
-      value: 0.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 2120032001540912071, guid: b22671dec865f56489b8abca40feb57e, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4753047836288752625, guid: b22671dec865f56489b8abca40feb57e, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: cd9d9cefb3b55ac4abe38bfe341b20ac, type: 2}
     - target: {fileID: 7061800582199262544, guid: b22671dec865f56489b8abca40feb57e, type: 3}
       propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7061800582199262544, guid: b22671dec865f56489b8abca40feb57e, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7061800582199262544, guid: b22671dec865f56489b8abca40feb57e, type: 3}
-      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -7147,7 +7123,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &431458888
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9751,7 +9727,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1819878753}
-  - {fileID: 1588815624}
   - {fileID: 519506426}
   - {fileID: 1025081811}
   - {fileID: 726368010}
@@ -12246,6 +12221,7 @@ RectTransform:
   m_LocalScale: {x: 0.56565, y: 0.56565, z: 0.56565}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1588815624}
   - {fileID: 193090892}
   - {fileID: 1860694796}
   - {fileID: 1024451584}
@@ -12253,9 +12229,9 @@ RectTransform:
   - {fileID: 1783465687}
   m_Father: {fileID: 565482661}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 129, y: 94.631096}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 125.73999, y: -520}
   m_SizeDelta: {x: 425.5336, y: 968.7156}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &726368011
@@ -14755,7 +14731,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &891399955
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18721,7 +18697,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -21, y: 247}
+  m_AnchoredPosition: {x: -20.999878, y: 247}
   m_SizeDelta: {x: -295.4707, y: -70.0804}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1135032579
@@ -21404,7 +21380,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1269624331
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22235,7 +22211,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: A volcanic eruption that pelts foes with magma, dealing area-of-effect
-    damage and leaving a lingering flame where it lands.
+    damage and leaving a lingering flame where it lands. These are best used at choke
+    or cluster points.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e20aa8a6e42bace479fdacd29ae4ed67, type: 2}
   m_sharedMaterial: {fileID: -3328911761906374347, guid: e20aa8a6e42bace479fdacd29ae4ed67, type: 2}
@@ -26570,15 +26547,15 @@ RectTransform:
   m_GameObject: {fileID: 1588815623}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.7678778, y: 1.7678778, z: 1.7678778}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 544698571}
-  m_Father: {fileID: 565482661}
+  m_Father: {fileID: 726368010}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -834.26, y: -134}
+  m_AnchoredPosition: {x: 0.000061035156, y: -400}
   m_SizeDelta: {x: 213.9345, y: 56.7218}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1588815625
@@ -68105,7 +68082,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7030733263085448258, guid: 6c4e412a28b81d84aa97956ae6908078, type: 3}
       propertyPath: baseGold
-      value: 500
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 7030733263085448258, guid: 6c4e412a28b81d84aa97956ae6908078, type: 3}
       propertyPath: currentGold
@@ -68226,11 +68203,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1913497103432878247, guid: aded6ab4d6fa23a4e978a80d98306ef3, type: 3}
       propertyPath: tier2ToPool
-      value: 3
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 1913497103432878247, guid: aded6ab4d6fa23a4e978a80d98306ef3, type: 3}
       propertyPath: tier3ToPool
-      value: 90
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 1913497103432878247, guid: aded6ab4d6fa23a4e978a80d98306ef3, type: 3}
       propertyPath: tier4ToPool
@@ -79110,18 +79087,6 @@ PrefabInstance:
     - target: {fileID: 1696503899066454883, guid: ba3b6f6ce8b71054dbd275cb91d596f4, type: 3}
       propertyPath: m_Name
       value: Castle
-      objectReference: {fileID: 0}
-    - target: {fileID: 1811108516669697185, guid: ba3b6f6ce8b71054dbd275cb91d596f4, type: 3}
-      propertyPath: repairAmount
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 1811108516669697185, guid: ba3b6f6ce8b71054dbd275cb91d596f4, type: 3}
-      propertyPath: baseRepairCost
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 1811108516669697185, guid: ba3b6f6ce8b71054dbd275cb91d596f4, type: 3}
-      propertyPath: repairCostIncreasePerUse
-      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3824464852092898307, guid: ba3b6f6ce8b71054dbd275cb91d596f4, type: 3}
       propertyPath: m_LocalPosition.x
