@@ -42,9 +42,12 @@ public class HelpUI : MonoBehaviour
     [Header("Gold")]
     [SerializeField] private TextMeshProUGUI goldAmt;
     [SerializeField] private TextMeshProUGUI goldCost; 
+
     // HOW TO PLAY
     [SerializeField] private GameObject howToPlay;
 
+    // MISC
+    [SerializeField] private GameObject closeButton;
     private void Start()
     {
         Instance = this;
@@ -56,6 +59,8 @@ public class HelpUI : MonoBehaviour
 
         upgradeCostText.text = string.Empty;
         UpdateTowerHelpUI();
+
+        closeButton.SetActive(true);
     }
     public void UpdateTowerHelpUI()
     {
@@ -163,6 +168,8 @@ public class HelpUI : MonoBehaviour
     }
     public void OnClickUpgradeTower()
     {
+        if (mainMenuPanel.activeSelf) return;
+
         switch (towerInt)
         {
             case 0:

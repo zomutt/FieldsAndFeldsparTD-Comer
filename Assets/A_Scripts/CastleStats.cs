@@ -20,8 +20,15 @@ public class CastleStats : MonoBehaviour
     // TEMP DISABLED. MAY COME BACK FOR PORTFOLIO.
     // Passive heal is replacing shield/repair mechanics for fairness.
 
-    //[SerializeField] private int repairAmount;
-    //public int RepairAmount => repairAmount;
+    [SerializeField] private int repairAmount;
+    public int RepairAmount => repairAmount;
+
+    [SerializeField] private int baseRepairCost;
+    private int currentRepairCost;
+    public int CurrentRepairCost => currentRepairCost;
+    [SerializeField] private int repairCostIncreasePerUse;
+    private int savedRepairCost;
+    
 
 
     // The player may purchase a shield in an emergency to grant temporary invulnerability. TEMP DISABLED. MAY COME BACK FOR PORTFOLIO.
@@ -48,13 +55,33 @@ public class CastleStats : MonoBehaviour
         StartCoroutine(PassiveHeal());
         shieldVisual.SetActive(false);
     }
-
-    public void Repair(int repairAmt)
+    public void InitializeStats()
     {
-        // Currently for dev cheat use only
-        currentHealth += repairAmt;
+        savedRepairCost = baseRepairCost;
+    }
+    public void LoadStats()
+    {
+        currentRepairCost = savedRepairCost;
+    }
+    public void SaveStats()
+    {
+        savedRepairCost = currentRepairCost;
+    }
+    public void Repair()
+    {
+        if (GoldManager.Instance.CurrentGold < currentRepairCost || currentHealth >= maxHealth)
+        {
+            return;
+        }
+
+        currentHealth += repairAmount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        GoldManager.Instance.DecreaseGold(currentRepairCost);
         Debug.Log($"Castle repaired! New castle HP: {currentHealth}");
+
+        currentRepairCost += repairCostIncreasePerUse;
+        UIController.Instance.UpdateUI();
     }
     public void TakeDamage(int damage)
     {

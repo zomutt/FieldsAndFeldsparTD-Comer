@@ -72,11 +72,11 @@ public class PlayerController : MonoBehaviour
         {
             currentSquare.SpawnTower(BuildingSquare.TowerType.STSlow);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha9) || Input.GetKeyDown(KeyCode.Keypad9))
+        if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
         {
             currentSquare.SpawnTower(BuildingSquare.TowerType.Gold);
         }
-        if(Input.GetKeyDown(KeyCode.C))
+        if(Input.GetKeyDown(KeyCode.X))
         {
             currentSquare.DestroyTower();
         }

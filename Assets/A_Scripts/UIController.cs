@@ -19,24 +19,21 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject confirmMainMenuPanel;
 
     [Header("Timer")]
-    [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI roundText;
-    private int minutes;
-    private int seconds;
 
     [Header("Level Stats")]      // Displays to the player where they are at in the game
     [SerializeField] private TextMeshProUGUI roundCountText;
     [SerializeField] private TextMeshProUGUI levelCountText;
 
-    [Header("Castle Stats")]
+    [Header("Castle Stats & Repair")]
     [SerializeField] private TextMeshProUGUI castleHealthText;
     [SerializeField] private TextMeshProUGUI totalGoldText;
     [SerializeField] private TextMeshProUGUI goldPerSecText;
     [SerializeField] private TextMeshProUGUI totalKillsText;
+    [SerializeField] private TextMeshProUGUI repairCostText;
 
     [Header("In-Game Panels")]
     [SerializeField] private GameObject losePanel;
-    [SerializeField] private GameObject controlPanel;
 
     [Header("Pause")]
     private bool isPaused;
@@ -53,29 +50,27 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI totalTime;       // Displayed at the end of the game
 
     [Header("Towers")]
+    [SerializeField] private GameObject towerPanel;
+
     [Header("Shooter")]
-    // SHOOTER TOWER
     [SerializeField] private TextMeshProUGUI shooterDMG;
     [SerializeField] private TextMeshProUGUI shooterCost;
     [SerializeField] private TextMeshProUGUI shooterUpgradeCost;
     [SerializeField] private TextMeshProUGUI shooterUpgradeAmt;
 
     [Header("AOE")]
-    // AOE TOWER
     [SerializeField] private TextMeshProUGUI aoeDMG;
     [SerializeField] private TextMeshProUGUI aoeCost;
     [SerializeField] private TextMeshProUGUI aoeUpgradeCost;
     [SerializeField] private TextMeshProUGUI aoeUpgradeAmt;
 
     [Header("Single-Target Slow")]
-    // SINGLE-TARGET SLOW TOWER
     [SerializeField] private TextMeshProUGUI stSlowAmount;
     [SerializeField] private TextMeshProUGUI stSlowCost;
     [SerializeField] private TextMeshProUGUI stSlowUpgradeCost;
     [SerializeField] private TextMeshProUGUI stSlowUpgradeAmt;
 
     [Header("Gold Mine")]
-    // GOLD MINE
     [SerializeField] private TextMeshProUGUI mineYield;
     [SerializeField] private TextMeshProUGUI mineCost;
     [SerializeField] private TextMeshProUGUI mineUpgradeCost;
@@ -112,8 +107,8 @@ public class UIController : MonoBehaviour
         if (levelWinPanel != null) levelWinPanel.SetActive(false);
         if (winGamePanel != null) winGamePanel.SetActive(false);
         if (loseGamePanel != null) loseGamePanel.SetActive(false);
-        if (losePanel != null) losePanel.SetActive(false); 
-        controlPanel.SetActive(true);
+        if (losePanel != null) losePanel.SetActive(false);
+        towerPanel.SetActive(true);
     }
     private void Start()
     {
@@ -122,7 +117,6 @@ public class UIController : MonoBehaviour
     public void StartingUI()
     {
         // Called both in Start() and when the game is supposed to start over from scratch. This ensures that player may start again without having to close the game.
-        controlPanel.SetActive(true);
         mainMenuPanel.SetActive(true);
         losePanel.SetActive(false);
         confirmQuitPanel.SetActive(false);
@@ -136,20 +130,6 @@ public class UIController : MonoBehaviour
         pausedByHelp = false;
 
         roundText.text = null;
-
-        minutes = 0;
-        seconds = 0;
-    }
-    private void Update()
-    {
-        // If time is frozen, don't update the timer.
-        if (Time.timeScale == 0f) return;
-
-        // Timer is used to give player feedback on how long or short they took to complete the game. This gives the player incentive to try again if they don't like their time.
-        minutes = Mathf.FloorToInt(Time.time/60f);
-        seconds = Mathf.FloorToInt(Time.time % 60f); // Seconds = remainder after dividing by 60
-
-        timerText.text = $"Time Elapsed: {minutes:00}:{seconds:00}";
     }
     public void UpdateUI()
     {
@@ -198,12 +178,9 @@ public class UIController : MonoBehaviour
             stSlowUpgradeAmt.text = "";
         }
         totalKillsText.text = $"Total Kills: {GameManager.Instance.TotalKills}";
-    }
-    public void ResetTimer()
-    {
-        // Called by GameManager.cs when the game is completely reset.
-        minutes = 0;
-        seconds = 0;
+
+        // CASTLE STUFF
+        repairCostText.text = $"Cost: {CastleStats.Instance.CurrentRepairCost}";
     }
     public IEnumerator WaveCountdown(float time, int currentTier)
     {
@@ -222,28 +199,19 @@ public class UIController : MonoBehaviour
     public void LoseGame()
     {
         losePanel.SetActive(true);
-        controlPanel.SetActive(false);
     }
     public void WinLevel()
     {
         levelWinPanel.SetActive(true);
-        controlPanel.SetActive(false);
     }
     public void WinGame()
     { 
         winGamePanel.SetActive(true);
-        controlPanel.SetActive(false);
-
-        // Displays to the player how long it took for them to finish the game
-        totalTime.text = timerText.text;    
     }
     public void TriggerPendingReset()
     {
         pendingGameReset = true;
     }
-
-
-
 
     // PAUSE/HELP: 
     public void OnClickPauseGame()
@@ -330,7 +298,14 @@ public class UIController : MonoBehaviour
         confirmMainMenuPanel.SetActive(false);
     }
 
-    // LEVELS/RESTARTING/ETC: 
+
+    // CASTLE REPAIR:
+    public void OnClickRepair()
+    {
+        CastleStats.Instance.Repair();
+    }
+
+    // LEVELS/RESTARTING/ETC:    
     public void OnClickRestartGame()
     {
         Debug.Log("UIC: Reset Game called");

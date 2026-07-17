@@ -58,7 +58,8 @@ public class WaveSpawnPool : MonoBehaviour
             int remainder = poolSizes[i] % 3;
             if (remainder != 0)
             {
-                poolSizes[i] -= remainder;
+                // poolSizes[i] -= remainder;  This is annoying. Simply put things in properly.
+                Debug.Log("Enemy spawn count is not divisible by 3. Fix this.");
             }
         }
         tier1ToPool = poolSizes[0];

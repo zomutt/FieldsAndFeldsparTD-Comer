@@ -42,7 +42,7 @@ public class DevCheats : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.F3))
         {
-            CastleStats.Instance.Repair(CastleStats.Instance.MaxHealth);
+            CastleStats.Instance.Repair();
         }
         if (Input.GetKeyDown(KeyCode.F4))
         {

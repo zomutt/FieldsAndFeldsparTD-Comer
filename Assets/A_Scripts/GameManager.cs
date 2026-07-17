@@ -61,13 +61,6 @@ public class GameManager : MonoBehaviour
 
         TierManager.Instance.StartLevel();  // Gets the first wave of enemies going after a short delay
     }
-    public void TrackTotalKills()
-    {
-        // Total kills accumulate across the entire playthrough intentionally. The kill tracking does nothing gameplay-wise but it can be cool to see.
-        // This is because honestly, it can feel nice for the player to see big number go big if they're getting demoralized from losing.
-        totalKills++;
-        UIController.Instance.UpdateUI();
-    }
     public int TotalKills { get { return totalKills; } }
     public void CastleDestroyed()
     {
@@ -143,6 +136,7 @@ public class GameManager : MonoBehaviour
         GoldManager.Instance.LoadStats();
         UpgradeManager.Instance.LoadData();
         UIController.Instance.UpdateUI();
+        CastleStats.Instance.LoadStats();
     }
     private void SaveAllStats()
     {
@@ -150,6 +144,7 @@ public class GameManager : MonoBehaviour
         TowerStats.Instance.SaveStats();
         GoldManager.Instance.SaveStats();
         UpgradeManager.Instance.SaveData();
+        CastleStats.Instance.SaveStats();
     }
     private void InitializeAllStats()
     {
@@ -157,6 +152,7 @@ public class GameManager : MonoBehaviour
         GoldManager.Instance.InitializeStats();
         TowerStats.Instance.InitializeStats();
         UpgradeManager.Instance.InitializeData();
+        CastleStats.Instance.InitializeStats();
         UIController.Instance.UpdateUI();
     }
     public void PauseGame()
