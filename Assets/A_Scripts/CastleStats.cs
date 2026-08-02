@@ -43,6 +43,7 @@ public class CastleStats : MonoBehaviour
     private bool isDevModeOn;
 
     [SerializeField] private GameObject shieldVisual;
+    [SerializeField] private GameObject[] flames = new GameObject[7];
 
     private void Awake()
     {
@@ -58,6 +59,7 @@ public class CastleStats : MonoBehaviour
     public void InitializeStats()
     {
         savedRepairCost = baseRepairCost;
+        DisableFlames();
     }
     public void LoadStats()
     {
@@ -99,6 +101,7 @@ public class CastleStats : MonoBehaviour
             Debug.Log("CastleStats: Castle destroyed! Game over.");
             GameManager.Instance.CastleDestroyed();
         }
+        FlameDeterminator();
     }
     private IEnumerator PassiveHeal()
     {
@@ -111,7 +114,38 @@ public class CastleStats : MonoBehaviour
                 currentHealth += passiveHealAmount;
                 currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
                 UIController.Instance.UpdateUI();
+                FlameDeterminator();
             }
+        }
+    }
+    private void DisableFlames()
+    {
+        for (int i = 0; i < flames.Length; i++)
+        {
+            flames[i].SetActive(false);
+        }
+    }
+    private void FlameDeterminator()
+    { 
+        // This method handles the display of status effect flames on the castle.
+        // There is a better way to do this that I will get back around to after I take math.
+
+        int flameCount = 0;
+
+        float healthPercent = (currentHealth / maxHealth) * 100f;
+
+        if (healthPercent <= 100 && healthPercent > 85) flameCount = 0;
+        else if (healthPercent <= 85 && healthPercent > 70) flameCount = 1;
+        else if (healthPercent <= 70 && healthPercent > 55) flameCount = 2;
+        else if (healthPercent <= 55 && healthPercent > 40) flameCount = 3;
+        else if (healthPercent <= 40 && healthPercent > 25) flameCount = 4;
+        else if (healthPercent <= 25 && healthPercent > 10) flameCount = 5;
+        else if (healthPercent <= 10) flameCount = flames.Length;
+        else Debug.Log("Flames error.");
+
+        for (int i = 0; i < flames.Length; i++)
+        {
+            flames[i].SetActive(i < flameCount);
         }
     }
     private IEnumerator Iframe()
