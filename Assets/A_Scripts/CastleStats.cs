@@ -55,15 +55,17 @@ public class CastleStats : MonoBehaviour
         isInvincible = false;
         StartCoroutine(PassiveHeal());
         shieldVisual.SetActive(false);
+        FlameDeterminator();
     }
     public void InitializeStats()
     {
         savedRepairCost = baseRepairCost;
-        DisableFlames();
+        FlameDeterminator();
     }
     public void LoadStats()
     {
         currentRepairCost = savedRepairCost;
+        FlameDeterminator();
     }
     public void SaveStats()
     {
@@ -118,21 +120,15 @@ public class CastleStats : MonoBehaviour
             }
         }
     }
-    private void DisableFlames()
-    {
-        for (int i = 0; i < flames.Length; i++)
-        {
-            flames[i].SetActive(false);
-        }
-    }
     private void FlameDeterminator()
     { 
         // This method handles the display of status effect flames on the castle.
-        // There is a better way to do this that I will get back around to after I take math.
+        // There is a better way to do this that I will get back around to after I take a math class.
 
         int flameCount = 0;
 
-        float healthPercent = (currentHealth / maxHealth) * 100f;
+        // Cast to float before dividing -- int division truncates to 0 until health drops below max, which was slamming flameCount to max (all flames) on any damage at all.
+        float healthPercent = ((float)currentHealth / maxHealth) * 100f;
 
         if (healthPercent <= 100 && healthPercent > 85) flameCount = 0;
         else if (healthPercent <= 85 && healthPercent > 70) flameCount = 1;
