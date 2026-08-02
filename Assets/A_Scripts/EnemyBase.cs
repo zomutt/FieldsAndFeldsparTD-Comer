@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public abstract class EnemyBase : MonoBehaviour
@@ -11,6 +12,13 @@ public abstract class EnemyBase : MonoBehaviour
     protected float cooldown;
     [SerializeField] protected int goldYield;   // How much gold the player gets for killing this enemy
     protected bool hasCounted;     // If the kill has been logged or not
+    [SerializeField] protected float timeBeforeDespawn = 1.5f;   // Time before the enemy despawns after death animation plays
+
+    // ANIMATIONS
+    private Animation anim;
+    private const string ATTACK = "Anim_Attack";
+    private const string DEATH = "Anim_Death";
+    private EnemyMovement movement;
     
     protected virtual void OnEnable()
     {
@@ -18,6 +26,9 @@ public abstract class EnemyBase : MonoBehaviour
         cooldown = attackDelay;
         gameObject.tag = "Enemy";
         hasCounted = false;
+
+        anim = GetComponentInChildren<Animation>();
+        movement = GetComponent<EnemyMovement>();
     }
     protected virtual void Update()
     {
@@ -37,13 +48,13 @@ public abstract class EnemyBase : MonoBehaviour
         {
             TierManager.Instance.RecordKill();     // Tracks how many kills have occurred vs. how many mobs spawn in the tier
 
-            // WILL IMPLEMENT FOR PORTFOLIO.
-            // ParticlePool.Instance.SpawnDeathEffect(transform.position);     
+            ParticlePool.Instance.SpawnDeathEffect(transform.position);     
 
             hasCounted = true;    // Ensures no double-counting edge case
             GoldManager.Instance.GiveGold(goldYield);
         }
-        gameObject.SetActive(false);
+        StopAllCoroutines();
+        StartCoroutine(DespawnDelay());
     }
     protected virtual void OnTriggerStay(Collider other)
     {
@@ -58,5 +69,27 @@ public abstract class EnemyBase : MonoBehaviour
         if (cooldown > 0f) return;
         CastleStats.Instance.TakeDamage(damage);      // Castle is the only thing enemy can attack, so I'm not going to over-engineer this one.
         cooldown = attackDelay;      // CD reset
+
+        movement.isAttacking = true;
+        anim.CrossFade(ATTACK);
+        StartCoroutine(ResetAttackFlag(anim[ATTACK].length));
+    }
+    protected virtual IEnumerator ResetAttackFlag(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        movement.isAttacking = false;
+    }
+
+    protected virtual IEnumerator DespawnDelay()
+    {
+        movement.isAttacking = true;
+        movement.Agent.isStopped = true;
+
+        anim.CrossFade(DEATH);
+
+        yield return new WaitForSeconds(timeBeforeDespawn);
+
+        movement.Agent.isStopped = false;
+        gameObject.SetActive(false);
     }
 }

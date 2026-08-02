@@ -9,6 +9,7 @@ using UnityEngine.AI;
 public class EnemyMovement : MonoBehaviour
 {
     NavMeshAgent agent;
+    public NavMeshAgent Agent => agent;
     // The castle, aka the enemies objective
     private Transform castleTransform;
     private Transform currentTarget;
@@ -19,9 +20,17 @@ public class EnemyMovement : MonoBehaviour
     public float Speed => speed;          // Needed so that enemy can never out-run projectiles
     [SerializeField] private float originalSpeed;          // Needed for slow towers
     [HideInInspector] public bool isSlowed;
+
+    // ANIMATIONS
+    [SerializeField] private GameObject mesh;
+    private Animation anim;
+    [HideInInspector] public bool isAttacking;
+    private const string RUN = "Anim_Run";
+    private const string IDLE = "Anim_Idle";
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        anim = mesh.GetComponent<Animation>();
     }
     private void OnEnable()
     {
@@ -59,7 +68,21 @@ public class EnemyMovement : MonoBehaviour
             agent.SetDestination(castleTransform.position);
         }
         agent.speed = speed;
+        WalkAnimation();
     }
+    public void WalkAnimation()
+    {
+        if (isAttacking) return;
+
+        if (agent.velocity.magnitude > 0.1f)
+        {
+            anim.Play(RUN);
+        }
+        else
+        {
+            anim.Play(IDLE);
+        }
+    }    
     private void OnDisable()
     {
         // Ensures that the enemies start with a clean slate for the next level. Fail-safe.
