@@ -37,5 +37,4 @@ public class Animation_Test : MonoBehaviour {
 	public void DeathAni (){
 		anim.CrossFade (DEATH);
 	}
-
 }

@@ -22,7 +22,6 @@ public class TowerBase : MonoBehaviour
     protected virtual void Update()
     {
         GetCurrentTarget();
-
         if (cooldown > 0f)
         {
             cooldown -= Time.deltaTime;
@@ -73,8 +72,9 @@ public class TowerBase : MonoBehaviour
         // Null-check is edgecase-safe, checking for activeinHierarchy ensures we can find another target if the first target dies
         static bool IsInvalidEnemy(EnemyBase enemy)
         {
-            return enemy == null || !enemy.gameObject.activeInHierarchy;
+            return enemy == null || !enemy.gameObject.activeInHierarchy || enemy.isDead;
         }
+
         targetsInRange.RemoveAll(IsInvalidEnemy);
 
         // FIFO targeting: first enemy that entered the radius = first enemy that gets attacked

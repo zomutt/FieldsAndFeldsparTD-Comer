@@ -19,13 +19,14 @@ public abstract class EnemyBase : MonoBehaviour
     private const string ATTACK = "Anim_Attack";
     private const string DEATH = "Anim_Death";
     private EnemyMovement movement;
-    
+    public bool isDead;   // Used so that the enemy is no longer attacked after death
     protected virtual void OnEnable()
     {
         currentHealth = (baseHealth * GameManager.Instance.CurrentLevel);
         cooldown = attackDelay;
         gameObject.tag = "Enemy";
         hasCounted = false;
+        isDead = false;
 
         anim = GetComponentInChildren<Animation>();
         movement = GetComponent<EnemyMovement>();
@@ -86,7 +87,7 @@ public abstract class EnemyBase : MonoBehaviour
         movement.Agent.isStopped = true;
 
         anim.CrossFade(DEATH);
-
+        isDead = true;
         yield return new WaitForSeconds(timeBeforeDespawn);
 
         movement.Agent.isStopped = false;
