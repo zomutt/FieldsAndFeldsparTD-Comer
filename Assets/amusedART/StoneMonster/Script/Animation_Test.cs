@@ -15,7 +15,6 @@ public class Animation_Test : MonoBehaviour {
 	void Start () {
 
 		anim = GetComponent<Animation>();
-		
 	}
 	
 	public void IdleAni (){
