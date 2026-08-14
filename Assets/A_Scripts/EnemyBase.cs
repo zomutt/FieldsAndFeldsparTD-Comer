@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public abstract class EnemyBase : MonoBehaviour
 {
@@ -27,6 +28,9 @@ public abstract class EnemyBase : MonoBehaviour
         gameObject.tag = "Enemy";
         hasCounted = false;
         isDead = false;
+
+        GetComponent<Collider>().enabled = true;
+        GetComponent<NavMeshAgent>().enabled = true;
 
         anim = GetComponentInChildren<Animation>();
         movement = GetComponent<EnemyMovement>();
@@ -86,11 +90,18 @@ public abstract class EnemyBase : MonoBehaviour
         movement.isAttacking = true;
         movement.Agent.isStopped = true;
 
+        // So that the enemies do not trip over dead corpses. Pile-ups happen without.
+        GetComponent<Collider>().enabled = false;
+        GetComponent<NavMeshAgent>().enabled = false;
+
         anim.CrossFade(DEATH);
         isDead = true;
+
         yield return new WaitForSeconds(timeBeforeDespawn);
 
         movement.Agent.isStopped = false;
+        GetComponent<Collider>().enabled = true;
+        GetComponent<NavMeshAgent>().enabled = true;
         gameObject.SetActive(false);
     }
 }
